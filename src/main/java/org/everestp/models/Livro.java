@@ -1,10 +1,11 @@
 package org.everestp.models;
 
-public class Livro {
+public class Livro implements Model {
     private int id;
-    private String titulo, autor, genero, descricao, ano;
+    private String titulo, autor, genero, descricao;
+    private int ano;
 
-    public Livro(int id, String titulo, String autor, String genero, String descricao, String ano) {
+    public Livro(int id, String titulo, String autor, String genero, String descricao, int ano) {
         this.id = id;
         this.titulo = titulo;
         this.autor = autor;
@@ -33,7 +34,7 @@ public class Livro {
         return descricao;
     }
 
-    public String getAno() {
+    public int getAno() {
         return ano;
     }
 }

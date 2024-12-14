@@ -2,7 +2,7 @@ package org.everestp.models;
 
 import java.time.LocalDate;
 
-public class Emprestimo {
+public class Emprestimo implements Model {
     private int id, exemplarFk;
     private String cpfFk;
     private LocalDate dtEmprestimo, dtDevolucao, dtPrazo;

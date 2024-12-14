@@ -2,7 +2,7 @@ package org.everestp.models;
 
 import java.time.LocalDate;
 
-public class Renovacao {
+public class Renovacao implements Model {
     private int id, emprestimoFk, usuarioFk;
     private LocalDate dtRenovacao;
 

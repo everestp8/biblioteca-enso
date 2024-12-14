@@ -1,6 +1,6 @@
 package org.everestp.models;
 
-public class Exemplar {
+public class Exemplar implements Model {
     private int id, livroFk;
     private String idFisico;
 

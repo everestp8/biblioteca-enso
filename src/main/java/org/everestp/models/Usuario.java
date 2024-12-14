@@ -1,6 +1,6 @@
 package org.everestp.models;
 
-public class Usuario {
+public class Usuario implements Model {
     private int id, papel;
     private String email, senha, cpf;
 
