@@ -32,8 +32,9 @@ public class DaoBase<T extends Model> {
         int idx = 0;
         for (T t : this.objects) {
             if (t.getId() == id)
-                this.objects.remove(idx);
+                break;
             idx++;
         }
+        this.objects.remove(idx);
     }
 }
