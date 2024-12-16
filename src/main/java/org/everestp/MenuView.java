@@ -10,20 +10,42 @@ public class MenuView {
     private boolean autenticado;
     public MenuView() {
         int opcao;
+        boolean sair;
         do {
-            opcao = autenticado ? lerOpcao() : lerOpcaoDesautenticado();
-            switch (opcao) {
-                case 0:
-                    break;
-                case 1:
-                    this.autenticado = this.view.fazerLogin() == 0;
-                    break;
-                case 2:
-                    this.view.cadastrarCliente();
-                    this.autenticado = true;
-                    break;
-            }
+            opcao = autenticado ? this.lerOpcao() : this.lerOpcaoDesautenticado();
+            sair = autenticado ? this.handleOpcao(opcao) : this.handleOpcaoDesautenticado(opcao);
         } while (opcao != 0);
+    }
+
+    private boolean handleOpcaoDesautenticado(int opcao) {
+        boolean sair = false;
+        switch (opcao) {
+            case 0:
+                sair = true;
+                break;
+            case 1:
+                this.autenticado = this.view.fazerLogin() == 0;
+                break;
+            case 2:
+                this.view.cadastrarCliente();
+                this.autenticado = true;
+                break;
+        }
+        return sair;
+    }
+
+    private boolean handleOpcao(int opcao) {
+        boolean sair = false;
+        switch (opcao) {
+            case 0:
+                sair = true;
+                break;
+            case 1:
+                break;
+            case 2:
+                break;
+        }
+        return sair;
     }
 
     private int lerOpcaoDesautenticado() {
