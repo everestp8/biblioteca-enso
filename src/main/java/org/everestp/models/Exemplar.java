@@ -14,6 +14,10 @@ public class Exemplar implements Model {
         return id;
     }
 
+    public void setId(int id) {
+        this.id = id;
+    }
+
     public int getLivroFk() {
         return livroFk;
     }

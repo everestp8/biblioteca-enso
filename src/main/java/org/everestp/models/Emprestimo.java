@@ -20,6 +20,10 @@ public class Emprestimo implements Model {
         return id;
     }
 
+    public void setId(int id) {
+        this.id = id;
+    }
+
     public int getExemplarFk() {
         return exemplarFk;
     }

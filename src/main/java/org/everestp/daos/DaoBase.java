@@ -17,6 +17,7 @@ public class DaoBase<T extends Model> {
         return this.objects;
     }
     public void save(T t) {
+        t.setId(this.objects.size() + 1);
         this.objects.add(t);
     }
     public void update(T newT) {

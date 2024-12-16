@@ -1,43 +1,71 @@
 package org.everestp;
 
+import org.everestp.services.View;
+
 import java.util.Scanner;
 
 public class MenuView {
-
+    private Scanner scan = new Scanner(System.in);
+    private View view = new View();
+    private boolean autenticado;
     public MenuView() {
-        Scanner scan = new Scanner(System.in);
+        int opcao;
+        do {
+            opcao = autenticado ? lerOpcao() : lerOpcaoDesautenticado();
+            switch (opcao) {
+                case 0:
+                    break;
+                case 1:
+                    this.autenticado = this.view.fazerLogin() == 0;
+                    break;
+                case 2:
+                    this.view.cadastrarCliente();
+                    this.autenticado = true;
+                    break;
+            }
+        } while (opcao != 0);
+    }
+
+    private int lerOpcaoDesautenticado() {
+        System.out.println("Escolha uma dessas opções abaixo:\n");
+        System.out.println("0 - Sair;");
+        System.out.println("1 - Login;");
+        System.out.println("2 - Cadastar.");
+        return this.scan.nextInt();
+    }
+    private int lerOpcao() {
         System.out.println("Escolha uma dessas opções abaixo:\n");
         System.out.println("""
                            +----+----------------------------+
-                           | 1  | Login                      |
+                           | 0  | Sair                       |
                            +----+----------------------------+
-                           | 2  | Alterar dados da conta     |
+                           | 1  | Alterar dados da conta     |
                            +----+----------------------------+
-                           | 3  | Alterar dados de um livro  |
+                           | 2  | Alterar dados de um livro  |
                            +----+----------------------------+
-                           | 4  | Cadastrar bibliotecário    |
+                           | 3  | Cadastrar bibliotecário    |
                            +----+----------------------------+
-                           | 5  | Cadastrar cliente          |
+                           | 4  | Cadastrar usuário          |
                            +----+----------------------------+
-                           | 6  | Acessar catálogo de livros |
+                           | 5  | Acessar catálogo de livros |
                            +----+----------------------------+
-                           | 7  | Devolver livro             |
+                           | 6  | Devolver livro             |
                            +----+----------------------------+
-                           | 8  | Emprestar livro            |
+                           | 7  | Emprestar livro            |
                            +----+----------------------------+
-                           | 9  | Excluir conta              |
+                           | 8  | Excluir conta              |
                            +----+----------------------------+
-                           | 10 | Histórico de empréstimos   |
+                           | 9 | Histórico de empréstimos    |
                            +----+----------------------------+
-                           | 11 | Inserir livro              |
+                           | 10 | Inserir livro              |
                            +----+----------------------------+
-                           | 12 | Remover bibliotecário      |
+                           | 11 | Remover bibliotecário      |
                            +----+----------------------------+
-                           | 13 | Remover livro              |
+                           | 12 | Remover livro              |
                            +----+----------------------------+
-                           | 14 | Renovar empréstimo         |
+                           | 13 | Renovar empréstimo         |
                            +----+----------------------------+""");
         System.out.print("> ");
-        int opcao = scan.nextInt();
+        return scan.nextInt();
     }
 }
