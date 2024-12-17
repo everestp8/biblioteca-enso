@@ -5,7 +5,9 @@ import org.everestp.dtos.UsuarioDTO;
 import org.everestp.models.Usuario;
 
 public class UsuarioService {
+
     private final UsuarioDAO usuarioDAO;
+
     public UsuarioService(UsuarioDAO usuarioDAO) {
         this.usuarioDAO = usuarioDAO;
     }
@@ -22,10 +24,12 @@ public class UsuarioService {
 
     public int autenticarUsuario(String email, String senha) {
         Usuario usuario = this.usuarioDAO.getByEmail(email);
-        if (usuario == null)
+        if (usuario == null) {
             return 1;
-        if (!usuario.getSenha().equals(senha))
+        }
+        if (!usuario.getSenha().equals(senha)) {
             return 2;
+        }
         return 0;
     }
 

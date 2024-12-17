@@ -1,12 +1,15 @@
-package org.everestp.services;
+package org.everestp;
 
 import org.everestp.daos.UsuarioDAO;
 import org.everestp.dtos.UsuarioDTO;
 import org.everestp.models.Usuario;
 
 import java.util.Scanner;
+import org.everestp.services.UsuarioService;
+import org.everestp.services.UsuarioService;
 
 public class View {
+
     private Scanner scan = new Scanner(System.in);
     private Scanner scanLines = new Scanner(System.in);
     private UsuarioDAO usuarioDAO = new UsuarioDAO();
@@ -33,6 +36,7 @@ public class View {
 
     public void cadastrarUsuario() {
         System.out.println("# Cadatro de usuário");
+        
         System.out.println("Digite o e-mail: ");
         String email = scan.next();
         System.out.println("Digite sua senha: ");
@@ -44,6 +48,8 @@ public class View {
         UsuarioDTO dadosUsuario = new UsuarioDTO(email, senha, cpf, papel);
 
         this.usuarioService.cadastrarUsuario(dadosUsuario);
+        System.out.println("Usuário cadastrado!");
+
     }
 
     public int excluirConta(int usuarioId) {
