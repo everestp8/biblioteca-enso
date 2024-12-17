@@ -7,8 +7,10 @@ import org.everestp.models.Usuario;
 import java.util.Scanner;
 
 public class View {
+
     private Scanner scan = new Scanner(System.in);
     private Scanner scanLines = new Scanner(System.in);
+    private Usuario usuario;
     private UsuarioDAO usuarioDAO = new UsuarioDAO();
     private UsuarioService usuarioService = new UsuarioService(this.usuarioDAO);
 
@@ -44,6 +46,39 @@ public class View {
         UsuarioDTO dadosUsuario = new UsuarioDTO(email, senha, cpf, papel);
 
         this.usuarioService.cadastrarUsuario(dadosUsuario);
+    }
+
+    public void cadastrarBibliotecário() {
+        char sair;
+        do {
+            System.out.println("\n# Cadatro de bibliotecário");
+            System.out.println("Digite o seu papel (0 - Admin, 1 - Bibliotecário, 2 - Cliente): ");
+            int papel = scan.nextInt();
+
+            if (this.usuario.getPapel() == 2) {
+                System.out.println("ACESSO NEGADO: User is client.");
+            }
+            if (this.usuario.getPapel() == 1) {
+                System.out.println("ACESSO NEGADO: User is client.");
+            }
+            if (this.usuario.getPapel() == 0) {
+                System.out.println("ACESSO LIBERADO: User is admin");
+
+                System.out.println("Digite o e-mail: ");
+                String email = scan.next();
+                System.out.println("Digite sua senha: ");
+                String senha = scanLines.nextLine();
+                System.out.println("Digite o seu CPF: ");
+                String cpf = scan.next();
+                UsuarioDTO dadosUsuario = new UsuarioDTO(email, senha, cpf, papel);
+
+                this.usuarioService.cadastrarUsuario(dadosUsuario);
+            }
+
+            System.out.println("\nContinuar cadastro? (Sim/Não)");
+            sair = scan.next().toUpperCase().charAt(0);
+
+        } while (sair == 'S');
     }
 
     public int excluirConta(int usuarioId) {

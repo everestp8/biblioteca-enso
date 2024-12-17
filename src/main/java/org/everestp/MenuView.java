@@ -6,6 +6,7 @@ import org.everestp.services.View;
 import java.util.Scanner;
 
 public class MenuView {
+
     private final Scanner scan = new Scanner(System.in);
     private final View view = new View();
     private Usuario usuario;
@@ -48,6 +49,7 @@ public class MenuView {
             case 2:
                 break;
             case 3:
+                this.view.cadastrarBibliotecário();
                 break;
             case 4:
                 break;
@@ -59,8 +61,9 @@ public class MenuView {
                 break;
             case 8:
                 int aux = this.view.excluirConta(this.usuario.getId());
-                if (aux == 0)
+                if (aux == 0) {
                     this.usuario = null;
+                }
                 break;
             case 9:
                 break;
@@ -86,6 +89,7 @@ public class MenuView {
         System.out.println("2 - Cadastar.");
         return this.scan.nextInt();
     }
+
     private int lerOpcao() {
         System.out.println("Escolha uma dessas opções abaixo: ");
         System.out.println();
@@ -93,7 +97,7 @@ public class MenuView {
         System.out.println("01 - Alterar dados da conta;");
         System.out.println("02 - Alterar dados de um livro;");
         System.out.println("03 - Cadastrar bilbliotecário;");
-        System.out.println("04 - Cadastrar usuário;");
+        //System.out.println("04 - Cadastrar usuário;");
         System.out.println("05 - Acessar catálogo de livros;");
         System.out.println("06 - Devolver livro;");
         System.out.println("07 - Emprestar livro;");
