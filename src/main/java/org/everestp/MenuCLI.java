@@ -1,21 +1,26 @@
 package org.everestp;
 
 import org.everestp.models.Usuario;
-import org.everestp.services.View;
 
 import java.util.Scanner;
 
-public class MenuView {
+public class MenuCLI {
 
     private final Scanner scan = new Scanner(System.in);
     private final View view = new View();
     private Usuario usuario;
 
-    public MenuView() {
+    public MenuCLI() {
         int opcao;
         boolean sair;
         do {
-            opcao = this.estaAutenticado() ? this.lerOpcao() : this.lerOpcaoDesautenticado();
+            if (this.estaAutenticado()) {
+                this.mostrarMenu();
+            } else {
+                this.mostrarMenuDesautenticado();
+            }
+            
+            opcao = this.lerOpcao();
             sair = this.estaAutenticado() ? this.handleOpcao(opcao) : this.handleOpcaoDesautenticado(opcao);
         } while (!sair);
     }
@@ -49,21 +54,27 @@ public class MenuView {
             case 2:
                 break;
             case 3:
-                this.view.cadastrarBibliotecário();
                 break;
             case 4:
                 break;
             case 5:
                 break;
             case 6:
-                break;
-            case 7:
-                break;
-            case 8:
                 int aux = this.view.excluirConta(this.usuario.getId());
                 if (aux == 0) {
                     this.usuario = null;
                 }
+                break;
+            default:
+                if (this.usuario.getPapel() < 2)
+                    break;
+                System.out.println("Opção inválida!");
+        }
+        
+        switch (opcao) {
+            case 7:
+                break;
+            case 8:
                 break;
             case 9:
                 break;
@@ -71,42 +82,60 @@ public class MenuView {
                 break;
             case 11:
                 break;
+            default:
+                if (this.usuario.getPapel() < 1)
+                    break;
+                System.out.println("Opção inválida!");
+        }
+        
+        switch (opcao) {
             case 12:
+                this.view.cadastrarUsuario();
                 break;
             case 13:
                 break;
             default:
                 System.out.println("Opção inválida!");
         }
+        
         return sair;
     }
 
-    private int lerOpcaoDesautenticado() {
+    private void mostrarMenuDesautenticado() {
         System.out.println("Escolha uma dessas opções abaixo: ");
         System.out.println();
         System.out.println("0 - Sair;");
         System.out.println("1 - Login;");
         System.out.println("2 - Cadastar.");
-        return this.scan.nextInt();
     }
 
-    private int lerOpcao() {
+    private void mostrarMenu() {
         System.out.println("Escolha uma dessas opções abaixo: ");
         System.out.println();
         System.out.println("00 - Sair;");
         System.out.println("01 - Alterar dados da conta;");
-        System.out.println("02 - Alterar dados de um livro;");
-        System.out.println("03 - Cadastrar bilbliotecário;");
-        //System.out.println("04 - Cadastrar usuário;");
-        System.out.println("05 - Acessar catálogo de livros;");
-        System.out.println("06 - Devolver livro;");
-        System.out.println("07 - Emprestar livro;");
-        System.out.println("08 - Excluir conta;");
-        System.out.println("09 - Histórico de empréstimos;");
-        System.out.println("10 - Inserir livro;");
-        System.out.println("11 - Remover bibliotecário;");
-        System.out.println("12 - Remover livro;");
-        System.out.println("13 - Renovar empréstimo;");
+        System.out.println("02 - Acessar catálogo de livros;");
+        System.out.println("03 - Devolver livro;");
+        System.out.println("04 - Histórico de empréstimos;");
+        System.out.println("05 - Renovar empréstimo;");
+        System.out.println("06 - Excluir conta;");
+        
+        if (this.usuario.getPapel() >= 2)
+            return;
+        
+        System.out.println("08 - Inserir livro;");
+        System.out.println("09 - Remover livro;");
+        System.out.println("10 - Alterar dados de um livro;");
+        System.out.println("11 - Emprestar livro;");
+        
+        if (this.usuario.getPapel() >= 1)
+            return;
+        
+        System.out.println("12 - Cadastrar usuário;");
+        System.out.println("13 - Remover usuário;");
+    }
+    
+    private int lerOpcao() {
         System.out.print("> ");
         return scan.nextInt();
     }
