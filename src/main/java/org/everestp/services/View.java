@@ -71,7 +71,7 @@ public class View {
 
     public Usuario cadastrarCliente() {
         System.out.println("# Cadatro de usuário");
-        System.out.println("Digite o email: ");
+        System.out.println("Digite o e-mail: ");
         String email = scan.next();
         System.out.println("Digite sua senha: ");
         String senha = scanLines.nextLine();
