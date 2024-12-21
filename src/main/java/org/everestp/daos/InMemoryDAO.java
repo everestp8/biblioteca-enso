@@ -5,7 +5,7 @@ import org.everestp.models.Model;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DaoBase<T extends Model> {
+public class InMemoryDAO<T extends Model> implements DAO<T> {
     private List<T> objects = new ArrayList<>();
     public T getById(int id) {
         for (T t : this.objects)
@@ -28,7 +28,7 @@ public class DaoBase<T extends Model> {
             idx++;
         }
     }
-    public void delete(int id)  {
+    public void delete(int id) {
         int idx = 0;
         for (T t : this.objects) {
             if (t.getId() == id)

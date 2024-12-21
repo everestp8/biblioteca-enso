@@ -83,7 +83,7 @@ public class MenuCLI {
             case 11:
                 break;
             default:
-                if (this.usuario.getPapel() < 1)
+                if (this.usuario == null || this.usuario.getPapel() < 1)
                     break;
                 System.out.println("Opção inválida!");
         }
