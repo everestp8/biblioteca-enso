@@ -12,8 +12,27 @@ public class UsuarioService {
         this.usuarioDAO = usuarioDAO;
     }
 
-    public Usuario getUsuario(String email) {
+    public Usuario getUserByEmail(String email) {
         return this.usuarioDAO.getByEmail(email);
+    }
+
+    public Usuario getUserByCpf(String cpf) {
+        return this.usuarioDAO.getByEmail(cpf);
+    }
+
+    public void atualizarUsuario(UsuarioDTO dadosAtualizados) {
+        Usuario usuarioExistente = this.usuarioDAO.getByEmail(dadosAtualizados.email());
+
+        if (usuarioExistente == null) {
+            System.out.println("Usuário não encontrado para atualização.");
+            return;
+        }
+        usuarioExistente.setEmail(dadosAtualizados.email());
+        usuarioExistente.setSenha(dadosAtualizados.senha());
+        usuarioExistente.setCpf(dadosAtualizados.cpf());
+
+        this.usuarioDAO.save(usuarioExistente);
+        System.out.println("Usuário atualizado com sucesso!");
     }
 
     public Usuario cadastrarUsuario(UsuarioDTO dados) {
