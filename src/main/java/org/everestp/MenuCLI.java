@@ -19,7 +19,7 @@ public class MenuCLI {
             } else {
                 this.mostrarMenuDesautenticado();
             }
-            
+
             opcao = this.lerOpcao();
             sair = this.estaAutenticado() ? this.handleOpcao(opcao) : this.handleOpcaoDesautenticado(opcao);
         } while (!sair);
@@ -50,6 +50,7 @@ public class MenuCLI {
                 sair = true;
                 break;
             case 1:
+                this.view.alterarDadosDaConta();
                 break;
             case 2:
                 break;
@@ -66,11 +67,12 @@ public class MenuCLI {
                 }
                 break;
             default:
-                if (this.usuario.getPapel() < 2)
+                if (this.usuario.getPapel() < 2) {
                     break;
+                }
                 System.out.println("Opção inválida!");
         }
-        
+
         switch (opcao) {
             case 7:
                 break;
@@ -83,11 +85,12 @@ public class MenuCLI {
             case 11:
                 break;
             default:
-                if (this.usuario == null || this.usuario.getPapel() < 1)
+                if (this.usuario == null || this.usuario.getPapel() < 1) {
                     break;
+                }
                 System.out.println("Opção inválida!");
         }
-        
+
         switch (opcao) {
             case 12:
                 this.view.cadastrarUsuario();
@@ -97,7 +100,7 @@ public class MenuCLI {
             default:
                 System.out.println("Opção inválida!");
         }
-        
+
         return sair;
     }
 
@@ -110,7 +113,7 @@ public class MenuCLI {
     }
 
     private void mostrarMenu() {
-        System.out.println("Escolha uma dessas opções abaixo: ");
+        System.out.println("\nEscolha uma dessas opções abaixo: ");
         System.out.println();
         System.out.println("00 - Sair;");
         System.out.println("01 - Alterar dados da conta;");
@@ -119,22 +122,24 @@ public class MenuCLI {
         System.out.println("04 - Histórico de empréstimos;");
         System.out.println("05 - Renovar empréstimo;");
         System.out.println("06 - Excluir conta;");
-        
-        if (this.usuario.getPapel() >= 2)
+
+        if (this.usuario.getPapel() >= 2) {
             return;
-        
+        }
+
         System.out.println("08 - Inserir livro;");
         System.out.println("09 - Remover livro;");
         System.out.println("10 - Alterar dados de um livro;");
         System.out.println("11 - Emprestar livro;");
-        
-        if (this.usuario.getPapel() >= 1)
+
+        if (this.usuario.getPapel() >= 1) {
             return;
-        
+        }
+
         System.out.println("12 - Cadastrar usuário;");
         System.out.println("13 - Remover usuário;");
     }
-    
+
     private int lerOpcao() {
         System.out.print("> ");
         return scan.nextInt();
