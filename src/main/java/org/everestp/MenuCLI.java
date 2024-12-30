@@ -96,6 +96,7 @@ public class MenuCLI {
                 this.view.cadastrarUsuario();
                 break;
             case 13:
+                this.view.removerUsuario();
                 break;
             default:
                 System.out.println("Opção inválida!");

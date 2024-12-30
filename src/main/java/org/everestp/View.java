@@ -17,7 +17,7 @@ public class View {
     private UsuarioService usuarioService = new UsuarioService(this.usuarioDAO);
 
     public Usuario fazerLogin() {
-        System.out.println("# Login");
+        System.out.println("\n# Login");
         System.out.println("Digite seu e-mail: ");
         String email = scan.next();
         System.out.println("Digite sua senha: ");
@@ -36,7 +36,7 @@ public class View {
     }
 
     public void cadastrarUsuario() {
-        System.out.println("# Cadatro de usuário");
+        System.out.println("\n# Cadatro de usuário");
 
         System.out.println("Digite o e-mail: ");
         String email = scan.next();
@@ -54,7 +54,7 @@ public class View {
     }
 
     public int excluirConta(int usuarioId) {
-        System.out.println("# Excluir conta");
+        System.out.println("\n# Excluir conta");
         System.out.println("Digite o e-mail: ");
         String email = scan.next();
         System.out.println("Digite sua senha: ");
@@ -62,13 +62,13 @@ public class View {
 
         int code = this.usuarioService.autenticarUsuario(email, senha);
         if (code != 0) {
-            System.out.println("Não foi possível excluir a conta.");
+            System.out.println("Erro: Não foi possível excluir a conta.");
             return 1;
         }
 
         code = this.usuarioService.excluirUsuario(usuarioId);
         if (code != 0) {
-            System.out.println("Não foi possível excluir a conta.");
+            System.out.println("Erro: Não foi possível excluir a conta.");
             return 1;
         }
 
@@ -77,7 +77,7 @@ public class View {
     }
 
     public Usuario cadastrarCliente() {
-        System.out.println("# Cadatro de usuário");
+        System.out.println("\n# Cadatro de usuário");
         System.out.println("Digite o e-mail: ");
         String email = scan.next();
         System.out.println("Digite sua senha: ");
@@ -90,8 +90,8 @@ public class View {
     }
 
     public void alterarDadosDaConta() {
-        System.out.println("# Alteração de dados da conta");
-        System.out.print("Digite o email da conta para alteração: ");
+        System.out.println("\n# Alteração de dados da conta");
+        System.out.print("Digite o email da conta a ser alterada para verificar sua autenticação: ");
         String email = scan.next();
 
         this.usuario = this.usuarioService.getUserByEmail(email);
@@ -101,12 +101,12 @@ public class View {
             return;
         }
 
-        System.out.println("O que você deseja alterar? (0 - Email, 1 - Senha, 2 - CPF): ");
+        System.out.println("O que você deseja alterar? (0 - Email, 1 - Senha: ");
         int alterarDados = scan.nextInt();
 
         switch (alterarDados) {
             case 0:
-                System.out.println("# Alterar Email.");
+                System.out.println("\n# Alterar Email.");
                 System.out.print("Digite um novo email: ");
                 String newEmail = scan.next();
 
@@ -119,7 +119,7 @@ public class View {
                 break;
 
             case 1:
-                System.out.println("# Alterar Senha.");
+                System.out.println("\n# Alterar Senha.");
                 System.out.print("Digite uma nova senha: ");
                 String newSenha = scanLines.nextLine();
 
@@ -131,27 +131,43 @@ public class View {
                 }
                 break;
 
-            case 2:
-                System.out.println("# Alterar CPF.");
-                System.out.print("Digite um novo CPF: ");
-                String newCpf = scan.next();
-
-                if (this.usuarioService.getUserByCpf(newCpf) != null) {
-                    System.out.println("CPF já cadastrado. Por favor, tente outro.");
-                } else {
-                    this.usuario.setCpf(newCpf);
-                    System.out.println("CPF alterado com sucesso.");
-                }
-                break;
-
             default:
                 System.out.println("Opção inválida. Por favor, selecione uma opção válida.");
-                break;
+                return;
         }
 
         UsuarioDTO dadosAtualizados = new UsuarioDTO(this.usuario.getEmail(), this.usuario.getSenha(), this.usuario.getCpf(), this.usuario.getPapel());
 
         this.usuarioService.atualizarUsuario(dadosAtualizados);
         System.out.println("Dados da conta atualizados com sucesso!");
+    }
+
+    public void removerUsuario() {
+        System.out.println("\n# Remoção de usuário");
+        System.out.print("Digite o email da conta a ser removida para verificar sua autenticação: ");
+        String email = scan.next();
+
+        this.usuario = this.usuarioService.getUserByEmail(email);
+
+        if (this.usuario == null) {
+            System.out.println("Erro: Usuário não encontrado. Por favor, verifique o email fornecido.");
+            return;
+        }
+        
+        System.out.println("Usuário encontrado.");
+        System.out.print("Digite o CPF do usuário a ser removido: ");
+        String cpf = scan.next();
+
+        this.usuario = this.usuarioDAO.getByCpf(cpf);
+
+        if (this.usuario == null) {
+            System.out.println("Erro: Usuário não encontrado. Por favor, verifique o CPF fornecido.");
+            return;
+        }
+        if (this.usuario != null) {
+            this.usuario.setAtivo(false);
+            this.usuarioService.excluirUsuario(0);
+        }
+        System.out.println("Usuário removido com sucesso!");
     }
 }

@@ -4,37 +4,39 @@ public class Usuario implements Model {
 
     private int id, papel;
     private String email, senha, cpf;
+    private boolean ativo;
 
-    public Usuario(int id, String email, String senha, String cpf, int papel) {
+    public Usuario(int id, String email, String senha, String cpf, int papel, boolean ativo) {
         this.id = id;
         this.email = email;
         this.senha = senha;
         this.cpf = cpf;
         this.papel = papel;
-    }
-
-    public void setId(int id) {
-        this.id = id;
+        this.ativo = ativo;
     }
 
     public int getId() {
         return id;
     }
 
-    public void setPapel(int papel) {
-        this.papel = papel;
+    public void setId(int id) {
+        this.id = id;
     }
 
     public int getPapel() {
         return papel;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setPapel(int papel) {
+        this.papel = papel;
     }
 
     public String getEmail() {
         return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getSenha() {
@@ -45,11 +47,19 @@ public class Usuario implements Model {
         this.senha = senha;
     }
 
+    public String getCpf() {
+        return cpf;
+    }
+
     public void setCpf(String cpf) {
         this.cpf = cpf;
     }
 
-    public String getCpf() {
-        return cpf;
+    public boolean getAtivo() {
+        return ativo;
+    }
+
+    public void setAtivo(boolean ativo) {
+        this.ativo = ativo;
     }
 }

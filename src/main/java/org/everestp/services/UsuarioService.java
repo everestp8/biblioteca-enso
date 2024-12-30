@@ -36,7 +36,7 @@ public class UsuarioService {
     }
 
     public Usuario cadastrarUsuario(UsuarioDTO dados) {
-        Usuario usuario = new Usuario(0, dados.email(), dados.senha(), dados.cpf(), dados.papel());
+        Usuario usuario = new Usuario(0, dados.email(), dados.senha(), dados.cpf(), dados.papel(), true);
         this.usuarioDAO.save(usuario);
         return usuario;
     }
