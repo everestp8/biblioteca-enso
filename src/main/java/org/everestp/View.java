@@ -16,7 +16,7 @@ public class View {
     private UsuarioService usuarioService = new UsuarioService(this.usuarioDAO);
 
     private int autenticarUsuario() {
-        System.out.println("Digite o e-mail: ");
+        System.out.println("Digite seu e-mail: ");
         String email = scan.next();
         System.out.println("Digite sua senha: ");
         String senha = scanLines.nextLine();
@@ -104,13 +104,18 @@ public class View {
         if (code != 0)
             return;
 
-        System.out.println("Apenas dê <Enter> nas propriedades que deseja conservar.");
-        System.out.println("Digite seu novo e-mail: ");
-        String email = scan.next();
-        System.out.println("Digite sua nova senha: ");
-        String senha = scanLines.nextLine();
-        System.out.println("Digite um novo CPF: ");
-        String cpf = scan.next();
+        System.out.println("Digite . nas propriedades que deseja conservar.");
+        String aux;
+
+        System.out.println("Digite seu novo e-mail (ou .): ");
+        aux = scan.next();
+        String email = aux.charAt(0) == '.' ? null : aux ;
+        System.out.println("Digite sua nova senha (ou .): ");
+        aux = scanLines.nextLine();
+        String senha = aux.charAt(0) == '.' ? null : aux ;
+        System.out.println("Digite um novo CPF (ou .): ");
+        aux = scan.next();
+        String cpf = aux.charAt(0) == '.' ? null : aux ;
 
         UsuarioDTO dadosAtualizados = new UsuarioDTO(email, senha, cpf, 2);
 
