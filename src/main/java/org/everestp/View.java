@@ -12,9 +12,23 @@ public class View {
 
     private Scanner scan = new Scanner(System.in);
     private Scanner scanLines = new Scanner(System.in);
-    private Usuario usuario;
     private UsuarioDAO usuarioDAO = new UsuarioDAO();
     private UsuarioService usuarioService = new UsuarioService(this.usuarioDAO);
+
+    private int autenticarUsuario() {
+        System.out.println("Digite o e-mail: ");
+        String email = scan.next();
+        System.out.println("Digite sua senha: ");
+        String senha = scanLines.nextLine();
+
+        int code = this.usuarioService.autenticarUsuario(email, senha);
+        if (code != 0) {
+            System.out.println("Erro: Não foi possível autenticar.");
+            return 1;
+        }
+
+        return 0;
+    }
 
     public Usuario fazerLogin() {
         System.out.println("\n# Login");
@@ -36,7 +50,7 @@ public class View {
     }
 
     public void cadastrarUsuario() {
-        System.out.println("\n# Cadatro de usuário");
+        System.out.println("\n# Cadastro de usuário");
 
         System.out.println("Digite o e-mail: ");
         String email = scan.next();
@@ -55,16 +69,10 @@ public class View {
 
     public int excluirConta(int usuarioId) {
         System.out.println("\n# Excluir conta");
-        System.out.println("Digite o e-mail: ");
-        String email = scan.next();
-        System.out.println("Digite sua senha: ");
-        String senha = scanLines.nextLine();
+        int code = this.autenticarUsuario();
 
-        int code = this.usuarioService.autenticarUsuario(email, senha);
-        if (code != 0) {
-            System.out.println("Erro: Não foi possível excluir a conta.");
-            return 1;
-        }
+        if (code != 0)
+            return code;
 
         code = this.usuarioService.excluirUsuario(usuarioId);
         if (code != 0) {
@@ -77,7 +85,7 @@ public class View {
     }
 
     public Usuario cadastrarCliente() {
-        System.out.println("\n# Cadatro de usuário");
+        System.out.println("\n# Cadastro de cliente");
         System.out.println("Digite o e-mail: ");
         String email = scan.next();
         System.out.println("Digite sua senha: ");
@@ -89,84 +97,50 @@ public class View {
         return this.usuarioService.cadastrarUsuario(dadosUsuario);
     }
 
-    public void alterarDadosDaConta() {
+    public void alterarDadosDaConta(int usuarioId) {
         System.out.println("\n# Alteração de dados da conta");
-        System.out.print("Digite o email da conta a ser alterada para verificar sua autenticação: ");
+        int code = this.autenticarUsuario();
+
+        if (code != 0)
+            return;
+
+        System.out.println("Apenas dê <Enter> nas propriedades que deseja conservar.");
+        System.out.println("Digite seu novo e-mail: ");
         String email = scan.next();
+        System.out.println("Digite sua nova senha: ");
+        String senha = scanLines.nextLine();
+        System.out.println("Digite um novo CPF: ");
+        String cpf = scan.next();
 
-        this.usuario = this.usuarioService.getUserByEmail(email);
+        UsuarioDTO dadosAtualizados = new UsuarioDTO(email, senha, cpf, 2);
 
-        if (this.usuario == null) {
-            System.out.println("Erro: Usuário não encontrado. Por favor, verifique o email fornecido.");
+        code = this.usuarioService.atualizarUsuario(usuarioId, dadosAtualizados);
+
+        if (code != 0) {
+            System.out.println("Não foi possível alterar os dados da conta ;(");
             return;
         }
 
-        System.out.println("O que você deseja alterar? (0 - Email, 1 - Senha: ");
-        int alterarDados = scan.nextInt();
-
-        switch (alterarDados) {
-            case 0:
-                System.out.println("\n# Alterar Email.");
-                System.out.print("Digite um novo email: ");
-                String newEmail = scan.next();
-
-                if (this.usuarioService.getUserByEmail(newEmail) != null) {
-                    System.out.println("Email já cadastrado. Por favor, tente outro.");
-                } else {
-                    this.usuario.setEmail(newEmail);
-                    System.out.println("Email alterado com sucesso.");
-                }
-                break;
-
-            case 1:
-                System.out.println("\n# Alterar Senha.");
-                System.out.print("Digite uma nova senha: ");
-                String newSenha = scanLines.nextLine();
-
-                if (newSenha.equals(this.usuario.getSenha())) {
-                    System.out.println("A nova senha não pode ser igual à senha atual.");
-                } else {
-                    this.usuario.setSenha(newSenha);
-                    System.out.println("Senha alterada com sucesso.");
-                }
-                break;
-
-            default:
-                System.out.println("Opção inválida. Por favor, selecione uma opção válida.");
-                return;
-        }
-
-        UsuarioDTO dadosAtualizados = new UsuarioDTO(this.usuario.getEmail(), this.usuario.getSenha(), this.usuario.getCpf(), this.usuario.getPapel());
-
-        this.usuarioService.atualizarUsuario(dadosAtualizados);
         System.out.println("Dados da conta atualizados com sucesso!");
     }
 
     public void removerUsuario() {
         System.out.println("\n# Remoção de usuário");
-        System.out.print("Digite o email da conta a ser removida para verificar sua autenticação: ");
+
+        System.out.println("Digite o email da conta a ser removida: ");
         String email = scan.next();
 
-        this.usuario = this.usuarioService.getUserByEmail(email);
+        Usuario usuario = this.usuarioService.getUserByEmail(email);
 
-        if (this.usuario == null) {
+        if (usuario == null) {
             System.out.println("Erro: Usuário não encontrado. Por favor, verifique o email fornecido.");
             return;
         }
-        
-        System.out.println("Usuário encontrado.");
-        System.out.print("Digite o CPF do usuário a ser removido: ");
-        String cpf = scan.next();
 
-        this.usuario = this.usuarioDAO.getByCpf(cpf);
-
-        if (this.usuario == null) {
-            System.out.println("Erro: Usuário não encontrado. Por favor, verifique o CPF fornecido.");
+        int code = this.usuarioService.excluirUsuario(usuario.getId());
+        if (code != 0) {
+            System.out.println("Erro: Não foi possível excluir a conta.");
             return;
-        }
-        if (this.usuario != null) {
-            this.usuario.setAtivo(false);
-            this.usuarioService.excluirUsuario(0);
         }
         System.out.println("Usuário removido com sucesso!");
     }
