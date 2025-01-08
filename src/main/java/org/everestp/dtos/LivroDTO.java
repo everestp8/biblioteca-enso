@@ -1,4 +1,4 @@
 package org.everestp.dtos;
 
-public record LivroDTO(String titulo, String genero, String descricao, String autor, int ano) {
+public record LivroDTO(String titulo, String autor, String genero, String descricao, Integer ano) {
 }

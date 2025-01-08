@@ -1,6 +1,7 @@
 package org.everestp;
 
 import org.everestp.models.Usuario;
+import org.everestp.models.Livro;
 
 import java.util.Scanner;
 
@@ -8,7 +9,9 @@ public class MenuCLI {
 
     private final Scanner scan = new Scanner(System.in);
     private final View view = new View();
+    private final ViewLivro viewLivro = new ViewLivro();
     private Usuario usuario;
+    private Livro livro;
 
     public MenuCLI() {
         int opcao;
@@ -81,10 +84,13 @@ public class MenuCLI {
             case 7:
                 break;
             case 8:
+                this.viewLivro.inserirLivro();
                 break;
             case 9:
+                this.viewLivro.removerLivro();
                 break;
             case 10:
+                this.viewLivro.alterarDadosDoLivro(this.livro.getId());
                 break;
             case 11:
                 break;

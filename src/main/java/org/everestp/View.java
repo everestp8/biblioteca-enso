@@ -6,7 +6,6 @@ import org.everestp.models.Usuario;
 
 import java.util.Scanner;
 import org.everestp.services.UsuarioService;
-import org.everestp.services.UsuarioService;
 
 public class View {
 
@@ -71,8 +70,9 @@ public class View {
         System.out.println("\n# Excluir conta");
         int code = this.autenticarUsuario();
 
-        if (code != 0)
+        if (code != 0) {
             return code;
+        }
 
         code = this.usuarioService.excluirUsuario(usuarioId);
         if (code != 0) {
@@ -101,21 +101,22 @@ public class View {
         System.out.println("\n# Alteração de dados da conta");
         int code = this.autenticarUsuario();
 
-        if (code != 0)
+        if (code != 0) {
             return;
+        }
 
         System.out.println("Digite . nas propriedades que deseja conservar.");
         String aux;
 
         System.out.println("Digite seu novo e-mail (ou .): ");
         aux = scan.next();
-        String email = aux.charAt(0) == '.' ? null : aux ;
+        String email = aux.charAt(0) == '.' ? null : aux;
         System.out.println("Digite sua nova senha (ou .): ");
         aux = scanLines.nextLine();
-        String senha = aux.charAt(0) == '.' ? null : aux ;
+        String senha = aux.charAt(0) == '.' ? null : aux;
         System.out.println("Digite um novo CPF (ou .): ");
         aux = scan.next();
-        String cpf = aux.charAt(0) == '.' ? null : aux ;
+        String cpf = aux.charAt(0) == '.' ? null : aux;
 
         UsuarioDTO dadosAtualizados = new UsuarioDTO(email, senha, cpf, 2);
 
@@ -131,12 +132,10 @@ public class View {
 
     public void removerUsuario() {
         System.out.println("\n# Remoção de usuário");
-
         System.out.println("Digite o email da conta a ser removida: ");
         String email = scan.next();
 
         Usuario usuario = this.usuarioService.getUserByEmail(email);
-
         if (usuario == null) {
             System.out.println("Erro: Usuário não encontrado. Por favor, verifique o email fornecido.");
             return;
