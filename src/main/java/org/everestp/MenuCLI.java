@@ -1,5 +1,7 @@
 package org.everestp;
 
+import org.everestp.daos.LivroDAO;
+import org.everestp.daos.UsuarioDAO;
 import org.everestp.models.Usuario;
 import org.everestp.models.Livro;
 import org.everestp.views.LivroView;
@@ -10,12 +12,21 @@ import java.util.Scanner;
 public class MenuCLI {
 
     private final Scanner scan = new Scanner(System.in);
-    private final UsuarioView view = new UsuarioView();
-    private final LivroView viewLivro = new LivroView();
+
+    private final UsuarioDAO usuarioDAO;
+    private final LivroDAO livroDAO;
+
+    private final UsuarioView usuarioView;
+    private final LivroView livroView;
     private Usuario usuario;
-    private Livro livro;
 
     public MenuCLI() {
+        this.usuarioDAO = new UsuarioDAO();
+        this.livroDAO = new LivroDAO();
+
+        this.usuarioView = new UsuarioView(this.usuarioDAO);
+        this.livroView = new LivroView(this.livroDAO, this.usuarioDAO);
+
         int opcao;
         boolean sair;
         do {
@@ -37,10 +48,10 @@ public class MenuCLI {
                 sair = true;
                 break;
             case 1:
-                this.usuario = this.view.fazerLogin();
+                this.usuario = this.usuarioView.fazerLogin();
                 break;
             case 2:
-                this.usuario = this.view.cadastrarCliente();
+                this.usuario = this.usuarioView.cadastrarCliente();
                 break;
             default:
                 System.out.println("Opção inválida!");
@@ -57,7 +68,7 @@ public class MenuCLI {
                 sair = true;
                 break;
             case 1:
-                this.view.alterarDadosDaConta(this.usuario.getId());
+                this.usuarioView.alterarDadosDaConta(this.usuario.getId());
                 break;
             case 2:
                 break;
@@ -68,7 +79,7 @@ public class MenuCLI {
             case 5:
                 break;
             case 6:
-                int aux = this.view.excluirConta(this.usuario.getId());
+                int aux = this.usuarioView.excluirConta(this.usuario.getId());
                 if (aux == 0) {
                     this.usuario = null;
                     return sair;
@@ -86,13 +97,13 @@ public class MenuCLI {
             case 7:
                 break;
             case 8:
-                this.viewLivro.inserirLivro();
+                this.livroView.inserirLivro();
                 break;
             case 9:
-                this.viewLivro.removerLivro();
+                this.livroView.removerLivro();
                 break;
             case 10:
-                this.viewLivro.alterarDadosDoLivro(this.livro.getId());
+                this.livroView.alterarDadosDoLivro();
                 break;
             case 11:
                 break;
@@ -106,10 +117,10 @@ public class MenuCLI {
 
         switch (opcao) {
             case 12:
-                this.view.cadastrarUsuario();
+                this.usuarioView.cadastrarUsuario();
                 break;
             case 13:
-                this.view.removerUsuario();
+                this.usuarioView.removerUsuario();
                 break;
             default:
                 if (matched1 || matched2 || this.usuario.getPapel() != 0)

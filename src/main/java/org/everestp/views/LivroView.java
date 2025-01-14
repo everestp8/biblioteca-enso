@@ -11,14 +11,14 @@ import org.everestp.services.LivroService;
 
 public class LivroView {
 
-    private Scanner scan = new Scanner(System.in);
-    private Scanner scanLines = new Scanner(System.in);
+    private final Scanner scan;
+    private final Scanner scanLines;
     private final UsuarioService usuarioService;
-    private final LivroDAO livroDAO = new LivroDAO();
-    private LivroService livroService = new LivroService(this.livroDAO);
-    private UsuarioDAO usuarioDAO;
+    private final LivroService livroService;
 
-    public LivroView() {
+    public LivroView(LivroDAO livroDAO, UsuarioDAO usuarioDAO) {
+        this.scan = new Scanner(System.in);
+        this.scanLines = new Scanner(System.in);
         this.usuarioService = new UsuarioService(usuarioDAO);
         this.livroService = new LivroService(livroDAO);
     }
@@ -71,16 +71,14 @@ public class LivroView {
         System.out.println("Livro removido com sucesso!");
     }
 
-    public void alterarDadosDoLivro(int livroId) {
+    public void alterarDadosDoLivro() {
         System.out.println("# Alteração de dados de um livro.");
-        System.out.println("Digite seu e-mail: ");
-        String email = scan.next();
-        System.out.println("Digite sua senha: ");
-        String senha = scanLines.nextLine();
+        System.out.println("Digite o título do livro a ser alterado: ");
+        String tituloParaBusca = scanLines.nextLine();
 
-        int code = this.usuarioService.autenticarUsuario(email, senha);
-        if (code != 0) {
-            System.out.println("Erro: Não foi possível autenticar. Por favor, verificar o email ou senha.");
+        Livro livro = this.livroService.getLivroByTitulo(tituloParaBusca);
+        if (livro == null) {
+            System.out.println("Erro: Livro não encontrado. Por favor, verifique o título fornecido.");
             return;
         }
 
@@ -112,7 +110,7 @@ public class LivroView {
         }
 
         LivroDTO dadosAtualizados = new LivroDTO(titulo, autor, genero, descricao, ano);
-        code = this.livroService.atualizarLivro(livroId, dadosAtualizados);
+        int code = this.livroService.atualizarLivro(livro.getId(), dadosAtualizados);
 
         if (code != 0) {
             System.out.println("Não foi possível alterar os dados do livro;(");

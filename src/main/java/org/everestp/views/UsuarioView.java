@@ -9,10 +9,16 @@ import org.everestp.services.UsuarioService;
 
 public class UsuarioView {
 
-    private Scanner scan = new Scanner(System.in);
-    private Scanner scanLines = new Scanner(System.in);
-    private UsuarioDAO usuarioDAO = new UsuarioDAO();
-    private UsuarioService usuarioService = new UsuarioService(this.usuarioDAO);
+    private final Scanner scan;
+    private final Scanner scanLines;
+    private final UsuarioService usuarioService ;
+
+    public UsuarioView(UsuarioDAO usuarioDAO) {
+        this.scan = new Scanner(System.in);
+        this.scanLines = new Scanner(System.in);
+        this.usuarioService = new UsuarioService(usuarioDAO);
+
+    }
 
     private int autenticarUsuario() {
         System.out.println("Digite seu e-mail: ");

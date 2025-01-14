@@ -22,14 +22,6 @@ public class LivroService {
         return livro;
     }
 
-    public int autenticarLivro(String titulo, String senha) {
-        Livro livro = this.getLivroByTitulo(titulo);
-        if (livro == null) {
-            return 1;
-        }
-        return 0;
-    }
-
     public int excluirLivro(int livroID) {
         this.livroDAO.delete(livroID);
         return 0;
@@ -47,9 +39,9 @@ public class LivroService {
         String novoGenero = dadosAtualizados.genero()!= null ? dadosAtualizados.genero(): livroExistente.getGenero();
         String novaDescricao = dadosAtualizados.descricao()!= null ? dadosAtualizados.descricao(): livroExistente.getDescricao();
         Integer novoAno = dadosAtualizados.ano()!= null ? dadosAtualizados.ano(): livroExistente.getAno();
-        livroAtualizado = new Livro(livroExistente.getId(), novoTitulo, novoAutor, novoGenero, novaDescricao, 0);
+        livroAtualizado = new Livro(livroExistente.getId(), novoTitulo, novoAutor, novoGenero, novaDescricao, novoAno);
 
-        this.livroDAO.update(livroExistente);
+        this.livroDAO.update(livroAtualizado);
         return 0;
     }
 }
