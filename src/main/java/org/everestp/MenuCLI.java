@@ -1,16 +1,32 @@
 package org.everestp;
 
+import org.everestp.daos.LivroDAO;
+import org.everestp.daos.UsuarioDAO;
 import org.everestp.models.Usuario;
+import org.everestp.models.Livro;
+import org.everestp.views.LivroView;
+import org.everestp.views.UsuarioView;
 
 import java.util.Scanner;
 
 public class MenuCLI {
 
     private final Scanner scan = new Scanner(System.in);
-    private final View view = new View();
+
+    private final UsuarioDAO usuarioDAO;
+    private final LivroDAO livroDAO;
+
+    private final UsuarioView usuarioView;
+    private final LivroView livroView;
     private Usuario usuario;
 
     public MenuCLI() {
+        this.usuarioDAO = new UsuarioDAO();
+        this.livroDAO = new LivroDAO();
+
+        this.usuarioView = new UsuarioView(this.usuarioDAO);
+        this.livroView = new LivroView(this.livroDAO, this.usuarioDAO);
+
         int opcao;
         boolean sair;
         do {
@@ -19,7 +35,7 @@ public class MenuCLI {
             } else {
                 this.mostrarMenuDesautenticado();
             }
-            
+
             opcao = this.lerOpcao();
             sair = this.estaAutenticado() ? this.handleOpcao(opcao) : this.handleOpcaoDesautenticado(opcao);
         } while (!sair);
@@ -32,10 +48,10 @@ public class MenuCLI {
                 sair = true;
                 break;
             case 1:
-                this.usuario = this.view.fazerLogin();
+                this.usuario = this.usuarioView.fazerLogin();
                 break;
             case 2:
-                this.usuario = this.view.cadastrarCliente();
+                this.usuario = this.usuarioView.cadastrarCliente();
                 break;
             default:
                 System.out.println("Opção inválida!");
@@ -45,11 +61,14 @@ public class MenuCLI {
 
     private boolean handleOpcao(int opcao) {
         boolean sair = false;
+        boolean matched1 = true, matched2 = true;
+
         switch (opcao) {
             case 0:
                 sair = true;
                 break;
             case 1:
+                this.usuarioView.alterarDadosDaConta(this.usuario.getId());
                 break;
             case 2:
                 break;
@@ -60,44 +79,55 @@ public class MenuCLI {
             case 5:
                 break;
             case 6:
-                int aux = this.view.excluirConta(this.usuario.getId());
+                int aux = this.usuarioView.excluirConta(this.usuario.getId());
                 if (aux == 0) {
                     this.usuario = null;
+                    return sair;
                 }
                 break;
             default:
-                if (this.usuario.getPapel() < 2)
+                matched1 = false;
+                if (this.usuario.getPapel() != 2)
                     break;
                 System.out.println("Opção inválida!");
+                return sair;
         }
-        
+
         switch (opcao) {
             case 7:
                 break;
             case 8:
+                this.livroView.inserirLivro();
                 break;
             case 9:
+                this.livroView.removerLivro();
                 break;
             case 10:
+                this.livroView.alterarDadosDoLivro();
                 break;
             case 11:
                 break;
             default:
-                if (this.usuario == null || this.usuario.getPapel() < 1)
+                matched2 = false;
+                if (matched1 || this.usuario.getPapel() != 1)
                     break;
-                System.out.println("Opção inválida!");
+                System.out.println("Opção inválida!!");
+                return sair;
         }
-        
+
         switch (opcao) {
             case 12:
-                this.view.cadastrarUsuario();
+                this.usuarioView.cadastrarUsuario();
                 break;
             case 13:
+                this.usuarioView.removerUsuario();
                 break;
             default:
-                System.out.println("Opção inválida!");
+                if (matched1 || matched2 || this.usuario.getPapel() != 0)
+                    break;
+                System.out.println("Opção inválida!!!");
         }
-        
+
         return sair;
     }
 
@@ -110,7 +140,7 @@ public class MenuCLI {
     }
 
     private void mostrarMenu() {
-        System.out.println("Escolha uma dessas opções abaixo: ");
+        System.out.println("\nEscolha uma dessas opções abaixo: ");
         System.out.println();
         System.out.println("00 - Sair;");
         System.out.println("01 - Alterar dados da conta;");
@@ -119,22 +149,22 @@ public class MenuCLI {
         System.out.println("04 - Histórico de empréstimos;");
         System.out.println("05 - Renovar empréstimo;");
         System.out.println("06 - Excluir conta;");
-        
+
         if (this.usuario.getPapel() >= 2)
             return;
-        
+
         System.out.println("08 - Inserir livro;");
         System.out.println("09 - Remover livro;");
         System.out.println("10 - Alterar dados de um livro;");
         System.out.println("11 - Emprestar livro;");
-        
+
         if (this.usuario.getPapel() >= 1)
             return;
-        
+
         System.out.println("12 - Cadastrar usuário;");
         System.out.println("13 - Remover usuário;");
     }
-    
+
     private int lerOpcao() {
         System.out.print("> ");
         return scan.nextInt();

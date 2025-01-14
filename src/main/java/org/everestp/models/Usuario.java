@@ -1,8 +1,10 @@
 package org.everestp.models;
 
 public class Usuario implements Model {
-    private int id, papel;
+
+    private int id;
     private String email, senha, cpf;
+    private Integer papel;
 
     public Usuario(int id, String email, String senha, String cpf, int papel) {
         this.id = id;
@@ -20,10 +22,6 @@ public class Usuario implements Model {
         this.id = id;
     }
 
-    public int getPapel() {
-        return papel;
-    }
-
     public String getEmail() {
         return email;
     }
@@ -35,4 +33,9 @@ public class Usuario implements Model {
     public String getCpf() {
         return cpf;
     }
+
+    public Integer getPapel() {
+        return papel;
+    }
+
 }
