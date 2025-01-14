@@ -1,4 +1,4 @@
-package org.everestp;
+package org.everestp.views;
 
 import org.everestp.daos.LivroDAO;
 import org.everestp.dtos.LivroDTO;
@@ -9,7 +9,7 @@ import org.everestp.daos.UsuarioDAO;
 import org.everestp.services.UsuarioService;
 import org.everestp.services.LivroService;
 
-public class ViewLivro {
+public class LivroView {
 
     private Scanner scan = new Scanner(System.in);
     private Scanner scanLines = new Scanner(System.in);
@@ -18,7 +18,7 @@ public class ViewLivro {
     private LivroService livroService = new LivroService(this.livroDAO);
     private UsuarioDAO usuarioDAO;
 
-    public ViewLivro() {
+    public LivroView() {
         this.usuarioService = new UsuarioService(usuarioDAO);
         this.livroService = new LivroService(livroDAO);
     }

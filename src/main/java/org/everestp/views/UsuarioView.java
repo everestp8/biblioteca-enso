@@ -1,4 +1,4 @@
-package org.everestp;
+package org.everestp.views;
 
 import org.everestp.daos.UsuarioDAO;
 import org.everestp.dtos.UsuarioDTO;
@@ -7,7 +7,7 @@ import org.everestp.models.Usuario;
 import java.util.Scanner;
 import org.everestp.services.UsuarioService;
 
-public class View {
+public class UsuarioView {
 
     private Scanner scan = new Scanner(System.in);
     private Scanner scanLines = new Scanner(System.in);

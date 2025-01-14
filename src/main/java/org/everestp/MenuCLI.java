@@ -2,14 +2,16 @@ package org.everestp;
 
 import org.everestp.models.Usuario;
 import org.everestp.models.Livro;
+import org.everestp.views.LivroView;
+import org.everestp.views.UsuarioView;
 
 import java.util.Scanner;
 
 public class MenuCLI {
 
     private final Scanner scan = new Scanner(System.in);
-    private final View view = new View();
-    private final ViewLivro viewLivro = new ViewLivro();
+    private final UsuarioView view = new UsuarioView();
+    private final LivroView viewLivro = new LivroView();
     private Usuario usuario;
     private Livro livro;
 
