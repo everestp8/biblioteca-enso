@@ -24,6 +24,11 @@ public class MenuCLI {
         this.usuarioDAO = new UsuarioDAO();
         this.livroDAO = new LivroDAO();
 
+        // Remover depois
+        this.livroDAO.save(new Livro(0, "l1", "autor1", "genero1", "desc1", 2001));
+        this.livroDAO.save(new Livro(0, "l2", "autor2", "genero2", "desc2", 2002));
+        this.livroDAO.save(new Livro(0, "l3", "autor3", "genero3", "desc3", 2003));
+
         this.usuarioView = new UsuarioView(this.usuarioDAO);
         this.livroView = new LivroView(this.livroDAO, this.usuarioDAO);
 
@@ -71,6 +76,7 @@ public class MenuCLI {
                 this.usuarioView.alterarDadosDaConta(this.usuario.getId());
                 break;
             case 2:
+                this.livroView.listarCatalogoLivros();
                 break;
             case 3:
                 break;
@@ -153,6 +159,7 @@ public class MenuCLI {
         if (this.usuario.getPapel() >= 2)
             return;
 
+        System.out.println("07 - Adicionar exemplar;");
         System.out.println("08 - Inserir livro;");
         System.out.println("09 - Remover livro;");
         System.out.println("10 - Alterar dados de um livro;");

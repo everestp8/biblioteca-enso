@@ -22,6 +22,20 @@ public class LivroView {
         this.usuarioService = new UsuarioService(usuarioDAO);
         this.livroService = new LivroService(livroDAO);
     }
+    
+    public void listarCatalogoLivros() {
+        System.out.println("# Catálogo de livros: ");
+
+        for (Livro l : this.livroService.getAllLivros()) {
+            System.out.println("Id: " + l.getId());
+            System.out.println("Título: " + l.getTitulo());
+            System.out.println("Autor: " + l.getAutor());
+            System.out.println("Gênero: " + l.getGenero());
+            System.out.println("Descrição: " + l.getDescricao());
+            System.out.println("Ano: " + l.getAno());
+            System.out.println();
+        }
+    }
 
     public void inserirLivro() {
         System.out.println("# Inserindo livro.");
