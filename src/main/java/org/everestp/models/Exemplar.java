@@ -3,11 +3,13 @@ package org.everestp.models;
 public class Exemplar implements Model {
     private int id, livroFk;
     private String idFisico;
+    private Boolean disponivel;
 
-    public Exemplar(int id, int livroFk, String idFisico) {
+    public Exemplar(int id, int livroFk, String idFisico, Boolean disponivel) {
         this.id = id;
         this.livroFk = livroFk;
         this.idFisico = idFisico;
+        this.disponivel = disponivel;
     }
 
     public int getId() {
@@ -24,5 +26,8 @@ public class Exemplar implements Model {
 
     public String getIdFisico() {
         return idFisico;
+    }
+    public boolean getDisponivel() {
+        return disponivel;
     }
 }

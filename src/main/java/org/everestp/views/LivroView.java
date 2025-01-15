@@ -1,11 +1,14 @@
 package org.everestp.views;
 
+import org.everestp.daos.ExemplarDAO;
 import org.everestp.daos.LivroDAO;
 import org.everestp.dtos.LivroDTO;
+import org.everestp.models.Exemplar;
 import org.everestp.models.Livro;
 
 import java.util.Scanner;
 import org.everestp.daos.UsuarioDAO;
+import org.everestp.services.ExemplarService;
 import org.everestp.services.UsuarioService;
 import org.everestp.services.LivroService;
 
@@ -13,14 +16,14 @@ public class LivroView {
 
     private final Scanner scan;
     private final Scanner scanLines;
-    private final UsuarioService usuarioService;
     private final LivroService livroService;
+    private final ExemplarService exemplarService;
 
-    public LivroView(LivroDAO livroDAO, UsuarioDAO usuarioDAO) {
+    public LivroView(LivroDAO livroDAO, ExemplarDAO exemplarDAO) {
         this.scan = new Scanner(System.in);
         this.scanLines = new Scanner(System.in);
-        this.usuarioService = new UsuarioService(usuarioDAO);
         this.livroService = new LivroService(livroDAO);
+        this.exemplarService = new ExemplarService(exemplarDAO, livroDAO);
     }
     
     public void listarCatalogoLivros() {
@@ -29,26 +32,19 @@ public class LivroView {
         for (Livro l : this.livroService.getAllLivros()) {
             System.out.println("Id: " + l.getId());
             System.out.println("Título: " + l.getTitulo());
-            System.out.println("Autor: " + l.getAutor());
+            System.out.printf("Autor: %s, %d\n", l.getAutor(), l.getAno());
             System.out.println("Gênero: " + l.getGenero());
             System.out.println("Descrição: " + l.getDescricao());
-            System.out.println("Ano: " + l.getAno());
+            System.out.println("Exemplares: ");
+            for (Exemplar e : this.exemplarService.getExemplaresByTitulo(l.getTitulo())) {
+                System.out.printf("%s : %s\n", e.getIdFisico(), e.getDisponivel() ? "Disponível" : "Não disponível.");
+            }
             System.out.println();
         }
     }
 
     public void inserirLivro() {
         System.out.println("# Inserindo livro.");
-        System.out.println("Digite seu e-mail: ");
-        String email = scan.next();
-        System.out.println("Digite sua senha: ");
-        String senha = scanLines.nextLine();
-
-        int code = this.usuarioService.autenticarUsuario(email, senha);
-        if (code != 0) {
-            System.out.println("Erro: Não foi possível autenticar. Por favor, verificar o email ou senha.");
-            return;
-        }
 
         System.out.println("Digite o título do livro: ");
         String titulo = scanLines.nextLine();
@@ -58,11 +54,16 @@ public class LivroView {
         String genero = scanLines.nextLine();
         System.out.println("Digite a descrição do livro: ");
         String descricao = scanLines.nextLine();
+        System.out.println("Digite a quantidade de exemplares: ");
+        int quantExemplares = scan.nextInt();
         System.out.println("Por fim, digite o ano em que o livro foi publicado: ");
         int ano = scan.nextInt();
 
         LivroDTO dadosLivro = new LivroDTO(titulo, autor, genero, descricao, ano);
         this.livroService.cadastrarLivro(dadosLivro);
+
+        this.exemplarService.adicionarExemplarPorTitulo(titulo, quantExemplares);
+
         System.out.println("Livro cadastrado com sucesso!");
     }
 
@@ -100,19 +101,19 @@ public class LivroView {
         String aux;
 
         System.out.println("Digite um novo título do livro (ou .): ");
-        aux = scan.next();
+        aux = scanLines.nextLine();
         String titulo = aux.charAt(0) == '.' ? null : aux;
         System.out.println("Digite um novo autor (ou .): ");
         aux = scanLines.nextLine();
         String autor = aux.charAt(0) == '.' ? null : aux;
         System.out.println("Digite um novo gênero (ou .): ");
-        aux = scan.next();
+        aux = scanLines.nextLine();
         String genero = aux.charAt(0) == '.' ? null : aux;
         System.out.println("Digite uma nova descrição para o livro (ou .): ");
-        aux = scan.next();
+        aux = scanLines.nextLine();
         String descricao = aux.charAt(0) == '.' ? null : aux;
         System.out.println("Digite um novo ano de publicação (ou .): ");
-        aux = scan.next();
+        aux = scanLines.nextLine();
         Integer ano = null;
         if (aux.charAt(0) != '.') {
             try {
@@ -127,9 +128,34 @@ public class LivroView {
         int code = this.livroService.atualizarLivro(livro.getId(), dadosAtualizados);
 
         if (code != 0) {
-            System.out.println("Não foi possível alterar os dados do livro;(");
+            System.out.println("Não foi possível alterar os dados do livro ;(");
             return;
         }
         System.out.println("Dados do livro atualizados com sucesso!");
+    }
+
+    public void adicionarExemplarLivro() {
+        System.out.println("# Adicionar exemplar a um livro: ");
+        System.out.println("Digite o título do livro que deseja adicionar exemplares: ");
+        String titulo = scanLines.nextLine();
+        System.out.println("Digite a quantidade de exemplares que deseja adicionar: ");
+        int quantNovosExemplares = scan.nextInt();
+        int code = this.exemplarService.adicionarExemplarPorTitulo(titulo, quantNovosExemplares);
+        if (code != 0) {
+            System.out.println("Não foi possível adicionar os exemplares.");
+            return;
+        }
+        System.out.println("Exemplares adicionados com sucesso!");
+    }
+
+    public void removerExemplarLivro() {
+        System.out.println("# Remover exemplar de um livro: ");
+        System.out.println("Digite o Id físico do exemplar: ");
+        String idFisico = scan.next();
+        int code = this.exemplarService.removerExemplarByIdFisico(idFisico);
+        if (code != 0) {
+            System.out.println("Não foi possível remover o exemplar.");
+        }
+        System.out.println("O exemplar foi removido com sucesso!");
     }
 }
