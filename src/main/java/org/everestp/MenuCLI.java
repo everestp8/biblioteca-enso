@@ -1,11 +1,13 @@
 package org.everestp;
 
+import org.everestp.daos.EmprestimoDAO;
 import org.everestp.daos.ExemplarDAO;
 import org.everestp.daos.LivroDAO;
 import org.everestp.daos.UsuarioDAO;
 import org.everestp.models.Exemplar;
 import org.everestp.models.Usuario;
 import org.everestp.models.Livro;
+import org.everestp.views.EmprestimoView;
 import org.everestp.views.LivroView;
 import org.everestp.views.UsuarioView;
 
@@ -15,36 +17,37 @@ public class MenuCLI {
 
     private final Scanner scan = new Scanner(System.in);
 
-    private final UsuarioDAO usuarioDAO;
-    private final LivroDAO livroDAO;
-
     private final UsuarioView usuarioView;
     private final LivroView livroView;
-    private final ExemplarDAO exemplarDAO;
+    private final EmprestimoView emprestimoView;
+
     private Usuario usuario;
 
     public MenuCLI() {
-        this.usuarioDAO = new UsuarioDAO();
-        this.livroDAO = new LivroDAO();
-        this.exemplarDAO = new ExemplarDAO();
+        UsuarioDAO usuarioDAO = new UsuarioDAO();
+        LivroDAO livroDAO = new LivroDAO();
+        ExemplarDAO exemplarDAO = new ExemplarDAO();
+        EmprestimoDAO emprestimoDAO = new EmprestimoDAO();
 
-        // Dados de Teste
-        this.usuarioDAO.save(new Usuario(0, "@@@", "123", "cpf1", 1));
-        this.usuario = this.usuarioDAO.getById(1);
+        // Dados de Teste -- START
+        usuarioDAO.save(new Usuario(0, "@@@", "123", "cpf1", 1));
+        this.usuario = usuarioDAO.getById(1);
 
-        this.livroDAO.save(new Livro(0, "l1", "autor1", "genero1", "desc1", 2001));
-        this.livroDAO.save(new Livro(0, "l2", "autor2", "genero2", "desc2", 2002));
-        this.livroDAO.save(new Livro(0, "l3", "autor3", "genero3", "desc3", 2003));
+        livroDAO.save(new Livro(0, "l1", "autor1", "genero1", "desc1", 2001));
+        livroDAO.save(new Livro(0, "l2", "autor2", "genero2", "desc2", 2002));
+        livroDAO.save(new Livro(0, "l3", "autor3", "genero3", "desc3", 2003));
 
-        this.exemplarDAO.save(new Exemplar(0, 1, "aaabbb", true));
-        this.exemplarDAO.save(new Exemplar(0, 1, "baabbb", false));
-        this.exemplarDAO.save(new Exemplar(0, 2, "aaabbc", false));
-        this.exemplarDAO.save(new Exemplar(0, 2, "baabbc", false));
-        this.exemplarDAO.save(new Exemplar(0, 2, "caabbc", true));
-        this.exemplarDAO.save(new Exemplar(0, 3, "aaabbd", true));
+        exemplarDAO.save(new Exemplar(0, 1, "aaabbb", true));
+        exemplarDAO.save(new Exemplar(0, 1, "baabbb", false));
+        exemplarDAO.save(new Exemplar(0, 2, "aaabbc", false));
+        exemplarDAO.save(new Exemplar(0, 2, "baabbc", false));
+        exemplarDAO.save(new Exemplar(0, 2, "caabbc", true));
+        exemplarDAO.save(new Exemplar(0, 3, "aaabbd", true));
+        // Dados de Teste -- END
 
-        this.usuarioView = new UsuarioView(this.usuarioDAO);
-        this.livroView = new LivroView(this.livroDAO, this.exemplarDAO);
+        this.usuarioView = new UsuarioView(usuarioDAO);
+        this.livroView = new LivroView(livroDAO, exemplarDAO);
+        this.emprestimoView = new EmprestimoView(emprestimoDAO, exemplarDAO, usuarioDAO);
 
         int opcao;
         boolean sair;
@@ -130,6 +133,7 @@ public class MenuCLI {
                 this.livroView.alterarDadosDoLivro();
                 break;
             case 12:
+                this.emprestimoView.novoEmprestimo();
                 break;
             default:
                 matched2 = false;

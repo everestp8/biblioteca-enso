@@ -62,6 +62,7 @@ public class LivroView {
         LivroDTO dadosLivro = new LivroDTO(titulo, autor, genero, descricao, ano);
         this.livroService.cadastrarLivro(dadosLivro);
 
+        // TODO: Provavelmente essa função deveria estar dentro de LivoService.cadastrarLivro()
         this.exemplarService.adicionarExemplarPorTitulo(titulo, quantExemplares);
 
         System.out.println("Livro cadastrado com sucesso!");
