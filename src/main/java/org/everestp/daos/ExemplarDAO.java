@@ -21,6 +21,12 @@ public class ExemplarDAO extends InMemoryDAO<Exemplar> {
         return exemplares;
     }
 
+    public void setDisponibilidadeById(int exemplarId, boolean disponibilidade) {
+        Exemplar e = this.getById(exemplarId);
+        Exemplar exemplarAtualizado = new Exemplar(e.getId(), e.getLivroFk(), e.getIdFisico(), disponibilidade);
+        this.update(exemplarAtualizado);
+    }
+
     public void deleteByIdFisico(String idFisico) {
         int idx = 0;
         for (Exemplar e : this.getAll()) {

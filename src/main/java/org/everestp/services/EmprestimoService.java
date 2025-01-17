@@ -9,6 +9,7 @@ import org.everestp.models.Exemplar;
 import org.everestp.models.Usuario;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public class EmprestimoService {
     private final EmprestimoDAO emprestimoDAO;
@@ -21,7 +22,7 @@ public class EmprestimoService {
         this.usuarioDAO = usuarioDAO;
     }
 
-    // TODO: Adicionar validação de punição antes de permitir o empréstimo (Sim ela deve ser feita aqui)
+    // TODO: Adicionar validação de punição antes de permitir o empréstimo (Sim ela deve ser feita aqui [ou não?])
     public int fazerEmprestimo(EmprestimoDTO dadosEmprestimo) {
         Exemplar exemplar = this.exemplarDAO.getByIdFisico(dadosEmprestimo.exemplarIdFIsico());
         if (exemplar == null)
@@ -36,9 +37,15 @@ public class EmprestimoService {
                 .now()
                 .plusDays(7);
 
-        Emprestimo novoEmprestimo = new Emprestimo(0, exemplar.getId(), usuario.getId(), dtEmprestimo, dtPrazo, null);
+        Emprestimo novoEmprestimo = new Emprestimo(0, exemplar.getId(), usuario.getId(), dtEmprestimo, null, dtPrazo);
         this.emprestimoDAO.save(novoEmprestimo);
 
+        this.exemplarDAO.setDisponibilidadeById(exemplar.getId(), false);
+
         return 0;
+    }
+
+    public List<Emprestimo> getAllEmprestimosByUsuarioId(int usuarioId) {
+        return this.emprestimoDAO.getByUsuarioFk(usuarioId);
     }
 }

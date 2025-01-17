@@ -79,11 +79,18 @@ public class LivroView {
             return;
         }
 
-        int code = this.livroService.excluirLivro(livro.getId());
+        int code = this.exemplarService.remocveExemplaresByLivroId(livro.getId());
         if (code != 0) {
             System.out.println("Erro: Não foi possível remover o livro.");
             return;
         }
+
+        code = this.livroService.excluirLivro(livro.getId());
+        if (code != 0) {
+            System.out.println("Erro: Não foi possível remover o livro.");
+            return;
+        }
+
         System.out.println("Livro removido com sucesso!");
     }
 

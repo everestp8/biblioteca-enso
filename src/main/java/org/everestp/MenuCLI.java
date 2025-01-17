@@ -47,7 +47,7 @@ public class MenuCLI {
 
         this.usuarioView = new UsuarioView(usuarioDAO);
         this.livroView = new LivroView(livroDAO, exemplarDAO);
-        this.emprestimoView = new EmprestimoView(emprestimoDAO, exemplarDAO, usuarioDAO);
+        this.emprestimoView = new EmprestimoView(emprestimoDAO, exemplarDAO, usuarioDAO, livroDAO);
 
         int opcao;
         boolean sair;
@@ -98,6 +98,7 @@ public class MenuCLI {
             case 3:
                 break;
             case 4:
+                this.emprestimoView.listarEmprestimosUsuario(this.usuario.getId());
                 break;
             case 5:
                 break;

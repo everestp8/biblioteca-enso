@@ -18,6 +18,10 @@ public class LivroService {
         return this.livroDAO.getByTitulo(titulo);
     }
 
+    public Livro getLivroById(int livroId) {
+        return this.livroDAO.getById(livroId);
+    }
+
     public List<Livro> getAllLivros() {
         return this.livroDAO.getAll();
     }

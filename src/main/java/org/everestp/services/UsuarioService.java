@@ -54,6 +54,7 @@ public class UsuarioService {
         return 0;
     }
 
+    // TODO: Não permitir apagar a conta caso haja algum empréstimo pendente
     public int excluirUsuario(int usuarioId) {
         this.usuarioDAO.delete(usuarioId);
         return 0;

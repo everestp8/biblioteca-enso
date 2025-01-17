@@ -5,7 +5,6 @@ import org.everestp.daos.LivroDAO;
 import org.everestp.models.Exemplar;
 import org.everestp.models.Livro;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -30,6 +29,10 @@ public class ExemplarService {
         }
 
         return idFisico.toString();
+    }
+
+    public Exemplar getExemplarById(int exemplarId) {
+        return this.exemplarDAO.getById(exemplarId);
     }
 
     public List<Exemplar> getExemplaresByTitulo(String tituloLivro) {
@@ -60,6 +63,12 @@ public class ExemplarService {
         } catch (Exception e) {
             return 1;
         }
+        return 0;
+    }
+
+    public int remocveExemplaresByLivroId(int livroId) {
+        for (Exemplar e : this.exemplarDAO.getAllByLivroFk(livroId))
+            this.exemplarDAO.delete(e.getId());
         return 0;
     }
 }
