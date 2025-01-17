@@ -7,6 +7,10 @@ import org.everestp.daos.UsuarioDAO;
 import org.everestp.models.Exemplar;
 import org.everestp.models.Usuario;
 import org.everestp.models.Livro;
+import org.everestp.services.EmprestimoService;
+import org.everestp.services.ExemplarService;
+import org.everestp.services.LivroService;
+import org.everestp.services.UsuarioService;
 import org.everestp.views.EmprestimoView;
 import org.everestp.views.LivroView;
 import org.everestp.views.UsuarioView;
@@ -30,7 +34,7 @@ public class MenuCLI {
         EmprestimoDAO emprestimoDAO = new EmprestimoDAO();
 
         // Dados de Teste -- START
-        usuarioDAO.save(new Usuario(0, "@@@", "123", "cpf1", 1));
+        usuarioDAO.save(new Usuario(0, "@@@", "123", "cpf1", 0));
         this.usuario = usuarioDAO.getById(1);
 
         livroDAO.save(new Livro(0, "l1", "autor1", "genero1", "desc1", 2001));
@@ -45,8 +49,13 @@ public class MenuCLI {
         exemplarDAO.save(new Exemplar(0, 3, "aaabbd", true));
         // Dados de Teste -- END
 
-        this.usuarioView = new UsuarioView(usuarioDAO);
-        this.livroView = new LivroView(livroDAO, exemplarDAO);
+        UsuarioService usuarioService = new UsuarioService(usuarioDAO);
+        LivroService livroService = new LivroService(livroDAO);
+        EmprestimoService emprestimoService = new EmprestimoService(emprestimoDAO, exemplarDAO, usuarioDAO);
+        ExemplarService exemplarService = new ExemplarService(exemplarDAO, livroDAO);
+
+        this.usuarioView = new UsuarioView(usuarioService, emprestimoService);
+        this.livroView = new LivroView(livroService, exemplarService);
         this.emprestimoView = new EmprestimoView(emprestimoDAO, exemplarDAO, usuarioDAO, livroDAO);
 
         int opcao;
@@ -96,6 +105,7 @@ public class MenuCLI {
                 this.livroView.listarCatalogoLivros();
                 break;
             case 3:
+                this.emprestimoView.devolverExemplarEmprestado(this.usuario.getId());
                 break;
             case 4:
                 this.emprestimoView.listarEmprestimosUsuario(this.usuario.getId());

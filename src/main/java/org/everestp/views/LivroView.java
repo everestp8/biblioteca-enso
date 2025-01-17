@@ -19,11 +19,11 @@ public class LivroView {
     private final LivroService livroService;
     private final ExemplarService exemplarService;
 
-    public LivroView(LivroDAO livroDAO, ExemplarDAO exemplarDAO) {
+    public LivroView(LivroService livroService, ExemplarService exemplarService) {
         this.scan = new Scanner(System.in);
         this.scanLines = new Scanner(System.in);
-        this.livroService = new LivroService(livroDAO);
-        this.exemplarService = new ExemplarService(exemplarDAO, livroDAO);
+        this.livroService = livroService;
+        this.exemplarService = exemplarService;
     }
     
     public void listarCatalogoLivros() {

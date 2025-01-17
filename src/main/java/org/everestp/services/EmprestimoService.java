@@ -27,6 +27,8 @@ public class EmprestimoService {
         Exemplar exemplar = this.exemplarDAO.getByIdFisico(dadosEmprestimo.exemplarIdFIsico());
         if (exemplar == null)
             return 1;
+        if (!exemplar.getDisponivel())
+            return 2;
 
         Usuario usuario = this.usuarioDAO.getByCpf(dadosEmprestimo.cpfUsuario());
         if (usuario == null)
@@ -43,6 +45,20 @@ public class EmprestimoService {
         this.exemplarDAO.setDisponibilidadeById(exemplar.getId(), false);
 
         return 0;
+    }
+
+    public int deletarEmprestimo(Emprestimo emprestimo) {
+        try {
+            this.emprestimoDAO.delete(emprestimo.getId());
+            this.exemplarDAO.setDisponibilidadeById(emprestimo.getExemplarFk(), true);
+        } catch (Exception e) {
+            return 1;
+        }
+        return 0;
+    }
+
+    public Emprestimo getEemprestimoPendenteByExemplarId(int usuarioId, int exemplarId) {
+        return this.emprestimoDAO.getPendenteByExemplarFk(usuarioId, exemplarId);
     }
 
     public List<Emprestimo> getAllEmprestimosByUsuarioId(int usuarioId) {

@@ -44,15 +44,41 @@ public class EmprestimoView {
             livro = this.livroService.getLivroById(exemplar.getLivroFk());
             System.out.println("Livro: " + livro.getTitulo());
             System.out.println("Exemplar: " + exemplar.getIdFisico());
-            System.out.printf("Data de empréstimo: " + e.getDtEmprestimo().toString());
-            System.out.printf("Prazo de entrega: " + e.getDtPrazo().toString());
+            System.out.println("Data de empréstimo: " + e.getDtEmprestimo().toString());
+            System.out.println("Prazo de entrega: " + e.getDtPrazo().toString());
             if (e.getDtDevolucao() != null) {
-                System.out.printf("Data de devolução: " + e.getDtDevolucao().toString());
+                System.out.println("Data de devolução: " + e.getDtDevolucao().toString());
             } else {
                 System.out.println("Devolução pendente.");
             }
 
         }
+    }
+
+    public void devolverExemplarEmprestado(int usuarioId) {
+        System.out.println("# Devolver livro: ");
+        System.out.println("Digite o id físico do exemplar que deseja devolver: ");
+        String idFisico = scan.next();
+
+        Exemplar exemplar = this.exemplarService.getExemplarByIdFisico(idFisico);
+        if (exemplar == null) {
+            System.out.println("Não foi possível encontrar o exemplar.");
+            return;
+        }
+
+        Emprestimo emprestimo = this.emprestimoService.getEemprestimoPendenteByExemplarId(usuarioId, exemplar.getId());
+        if (emprestimo == null) {
+            System.out.println("Não foi possível encontrar um empréstimo pendente com esse exemplar.");
+            return;
+        }
+
+        int code = this.emprestimoService.deletarEmprestimo(emprestimo);
+        if (code != 0) {
+            System.out.println("Não foi possível devolver livro.");
+            return;
+        }
+
+        System.out.println("Livro devolvido com sucesso!");
     }
 
     public void novoEmprestimo() {
@@ -64,6 +90,10 @@ public class EmprestimoView {
 
         EmprestimoDTO dadosEmprestimo = new EmprestimoDTO(idFisico, cpfUsuario);
         int code = this.emprestimoService.fazerEmprestimo(dadosEmprestimo);
+        if (code == 2) {
+            System.out.println("Exemplar indisponível.");
+            return;
+        }
         if (code != 0) {
             System.out.println("Não foi possível concluir o empréstimo.");
             return;

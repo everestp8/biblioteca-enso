@@ -35,6 +35,10 @@ public class ExemplarService {
         return this.exemplarDAO.getById(exemplarId);
     }
 
+    public Exemplar getExemplarByIdFisico(String idFisico) {
+        return this.exemplarDAO.getByIdFisico(idFisico);
+    }
+
     public List<Exemplar> getExemplaresByTitulo(String tituloLivro) {
         Livro livro = this.livroDAO.getByTitulo(tituloLivro);
 

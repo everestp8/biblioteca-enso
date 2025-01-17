@@ -13,4 +13,14 @@ public class EmprestimoDAO extends InMemoryDAO<Emprestimo> {
                 emprestimos.add(e);
         return emprestimos;
     }
+
+    public Emprestimo getPendenteByExemplarFk(int usuarioId, int exemplarId) {
+        for (Emprestimo e : this.getByUsuarioFk(usuarioId)) {
+            if (e.getDtDevolucao() != null)
+                continue;
+            if (e.getExemplarFk() == exemplarId)
+                return e;
+        }
+        return null;
+    }
 }
