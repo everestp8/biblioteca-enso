@@ -4,6 +4,8 @@ import org.everestp.daos.LivroDAO;
 import org.everestp.dtos.LivroDTO;
 import org.everestp.models.Livro;
 
+import java.util.List;
+
 public class LivroService {
 
     private final LivroDAO livroDAO;
@@ -14,6 +16,14 @@ public class LivroService {
 
     public Livro getLivroByTitulo(String titulo) {
         return this.livroDAO.getByTitulo(titulo);
+    }
+
+    public Livro getLivroById(int livroId) {
+        return this.livroDAO.getById(livroId);
+    }
+
+    public List<Livro> getAllLivros() {
+        return this.livroDAO.getAll();
     }
 
     public Livro cadastrarLivro(LivroDTO dados) {

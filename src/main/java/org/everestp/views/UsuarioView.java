@@ -1,10 +1,11 @@
 package org.everestp.views;
 
-import org.everestp.daos.UsuarioDAO;
 import org.everestp.dtos.UsuarioDTO;
 import org.everestp.models.Usuario;
 
 import java.util.Scanner;
+
+import org.everestp.services.EmprestimoService;
 import org.everestp.services.UsuarioService;
 
 public class UsuarioView {
@@ -12,12 +13,13 @@ public class UsuarioView {
     private final Scanner scan;
     private final Scanner scanLines;
     private final UsuarioService usuarioService ;
+    private final EmprestimoService emprestimoService;
 
-    public UsuarioView(UsuarioDAO usuarioDAO) {
+    public UsuarioView(UsuarioService usuarioService, EmprestimoService emprestimoService) {
         this.scan = new Scanner(System.in);
         this.scanLines = new Scanner(System.in);
-        this.usuarioService = new UsuarioService(usuarioDAO);
-
+        this.usuarioService = usuarioService;
+        this.emprestimoService = emprestimoService;
     }
 
     private int autenticarUsuario() {
@@ -75,9 +77,15 @@ public class UsuarioView {
     public int excluirConta(int usuarioId) {
         System.out.println("\n# Excluir conta");
         int code = this.autenticarUsuario();
-
         if (code != 0) {
             return code;
+        }
+
+        // Isso provavelmente não deveria estar aqui
+        int quantEmprestimos = this.emprestimoService.getAllEmprestimosByUsuarioId(usuarioId).size();
+        if (quantEmprestimos >= 1) {
+            System.out.println("Não é possível prosseguir. Ainda há empréstimos em aberto na conta.");
+            return 1;
         }
 
         code = this.usuarioService.excluirUsuario(usuarioId);

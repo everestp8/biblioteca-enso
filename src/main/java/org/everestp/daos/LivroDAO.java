@@ -5,7 +5,7 @@ import org.everestp.models.Livro;
 public class LivroDAO extends InMemoryDAO<Livro> {
     public Livro getByTitulo(String titulo){
         for (Livro l : this.getAll())
-            if (l.getTitulo().equals(titulo))
+            if (l.getTitulo().equalsIgnoreCase(titulo))
                 return l;
         return null;
     }

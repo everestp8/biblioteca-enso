@@ -1,9 +1,14 @@
 package org.everestp;
 
-import org.everestp.daos.LivroDAO;
-import org.everestp.daos.UsuarioDAO;
+import org.everestp.daos.*;
+import org.everestp.models.Exemplar;
 import org.everestp.models.Usuario;
 import org.everestp.models.Livro;
+import org.everestp.services.EmprestimoService;
+import org.everestp.services.ExemplarService;
+import org.everestp.services.LivroService;
+import org.everestp.services.UsuarioService;
+import org.everestp.views.EmprestimoView;
 import org.everestp.views.LivroView;
 import org.everestp.views.UsuarioView;
 
@@ -13,19 +18,43 @@ public class MenuCLI {
 
     private final Scanner scan = new Scanner(System.in);
 
-    private final UsuarioDAO usuarioDAO;
-    private final LivroDAO livroDAO;
-
     private final UsuarioView usuarioView;
     private final LivroView livroView;
+    private final EmprestimoView emprestimoView;
+
     private Usuario usuario;
 
     public MenuCLI() {
-        this.usuarioDAO = new UsuarioDAO();
-        this.livroDAO = new LivroDAO();
+        UsuarioDAO usuarioDAO = new UsuarioDAO();
+        LivroDAO livroDAO = new LivroDAO();
+        ExemplarDAO exemplarDAO = new ExemplarDAO();
+        EmprestimoDAO emprestimoDAO = new EmprestimoDAO();
+        RenovacaoDAO renovacaoDAO = new RenovacaoDAO();
 
-        this.usuarioView = new UsuarioView(this.usuarioDAO);
-        this.livroView = new LivroView(this.livroDAO, this.usuarioDAO);
+        // Dados de Teste -- START
+        usuarioDAO.save(new Usuario(0, "@@@", "123", "cpf1", 0));
+        this.usuario = usuarioDAO.getById(1);
+
+        livroDAO.save(new Livro(0, "l1", "autor1", "genero1", "desc1", 2001));
+        livroDAO.save(new Livro(0, "l2", "autor2", "genero2", "desc2", 2002));
+        livroDAO.save(new Livro(0, "l3", "autor3", "genero3", "desc3", 2003));
+
+        exemplarDAO.save(new Exemplar(0, 1, "aaabbb", true));
+        exemplarDAO.save(new Exemplar(0, 1, "baabbb", false));
+        exemplarDAO.save(new Exemplar(0, 2, "aaabbc", false));
+        exemplarDAO.save(new Exemplar(0, 2, "baabbc", false));
+        exemplarDAO.save(new Exemplar(0, 2, "caabbc", true));
+        exemplarDAO.save(new Exemplar(0, 3, "aaabbd", true));
+        // Dados de Teste -- END
+
+        UsuarioService usuarioService = new UsuarioService(usuarioDAO);
+        LivroService livroService = new LivroService(livroDAO);
+        EmprestimoService emprestimoService = new EmprestimoService(emprestimoDAO, exemplarDAO, usuarioDAO, renovacaoDAO);
+        ExemplarService exemplarService = new ExemplarService(exemplarDAO, livroDAO);
+
+        this.usuarioView = new UsuarioView(usuarioService, emprestimoService);
+        this.livroView = new LivroView(livroService, exemplarService);
+        this.emprestimoView = new EmprestimoView(emprestimoDAO, exemplarDAO, usuarioDAO, livroDAO, renovacaoDAO);
 
         int opcao;
         boolean sair;
@@ -71,12 +100,16 @@ public class MenuCLI {
                 this.usuarioView.alterarDadosDaConta(this.usuario.getId());
                 break;
             case 2:
+                this.livroView.listarCatalogoLivros();
                 break;
             case 3:
+                this.emprestimoView.devolverExemplarEmprestado(this.usuario.getId());
                 break;
             case 4:
+                this.emprestimoView.listarEmprestimosUsuario(this.usuario.getId());
                 break;
             case 5:
+                this.emprestimoView.renovarEmprestimo(this.usuario.getId());
                 break;
             case 6:
                 int aux = this.usuarioView.excluirConta(this.usuario.getId());
@@ -95,17 +128,22 @@ public class MenuCLI {
 
         switch (opcao) {
             case 7:
+                this.livroView.adicionarExemplarLivro();
                 break;
             case 8:
-                this.livroView.inserirLivro();
+                this.livroView.removerExemplarLivro();
                 break;
             case 9:
-                this.livroView.removerLivro();
+                this.livroView.inserirLivro();
                 break;
             case 10:
-                this.livroView.alterarDadosDoLivro();
+                this.livroView.removerLivro();
                 break;
             case 11:
+                this.livroView.alterarDadosDoLivro();
+                break;
+            case 12:
+                this.emprestimoView.novoEmprestimo();
                 break;
             default:
                 matched2 = false;
@@ -116,10 +154,10 @@ public class MenuCLI {
         }
 
         switch (opcao) {
-            case 12:
+            case 13:
                 this.usuarioView.cadastrarUsuario();
                 break;
-            case 13:
+            case 14:
                 this.usuarioView.removerUsuario();
                 break;
             default:
@@ -153,16 +191,18 @@ public class MenuCLI {
         if (this.usuario.getPapel() >= 2)
             return;
 
-        System.out.println("08 - Inserir livro;");
-        System.out.println("09 - Remover livro;");
-        System.out.println("10 - Alterar dados de um livro;");
-        System.out.println("11 - Emprestar livro;");
+        System.out.println("07 - Adicionar exemplar;");
+        System.out.println("08 - Remover exemplar;");
+        System.out.println("09 - Inserir livro;");
+        System.out.println("10 - Remover livro;");
+        System.out.println("11 - Alterar dados de um livro;");
+        System.out.println("12 - Emprestar livro;");
 
         if (this.usuario.getPapel() >= 1)
             return;
 
-        System.out.println("12 - Cadastrar usuário;");
-        System.out.println("13 - Remover usuário;");
+        System.out.println("13 - Cadastrar usuário;");
+        System.out.println("14 - Remover usuário;");
     }
 
     private int lerOpcao() {
