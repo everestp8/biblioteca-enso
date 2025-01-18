@@ -2,6 +2,7 @@ package org.everestp.daos;
 
 import org.everestp.models.Emprestimo;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,5 +23,11 @@ public class EmprestimoDAO extends InMemoryDAO<Emprestimo> {
                 return e;
         }
         return null;
+    }
+
+    public void setDtPrazo(int emprestimoId, LocalDate novaDtPrazo) {
+        Emprestimo e = this.getById(emprestimoId);
+        Emprestimo novoEmprestimo = new Emprestimo(e.getId(), e.getExemplarFk(), e.getUsuarioFk(), e.getDtEmprestimo(), e.getDtDevolucao(), novaDtPrazo);
+        this.update(novoEmprestimo);
     }
 }

@@ -1,9 +1,6 @@
 package org.everestp;
 
-import org.everestp.daos.EmprestimoDAO;
-import org.everestp.daos.ExemplarDAO;
-import org.everestp.daos.LivroDAO;
-import org.everestp.daos.UsuarioDAO;
+import org.everestp.daos.*;
 import org.everestp.models.Exemplar;
 import org.everestp.models.Usuario;
 import org.everestp.models.Livro;
@@ -32,6 +29,7 @@ public class MenuCLI {
         LivroDAO livroDAO = new LivroDAO();
         ExemplarDAO exemplarDAO = new ExemplarDAO();
         EmprestimoDAO emprestimoDAO = new EmprestimoDAO();
+        RenovacaoDAO renovacaoDAO = new RenovacaoDAO();
 
         // Dados de Teste -- START
         usuarioDAO.save(new Usuario(0, "@@@", "123", "cpf1", 0));
@@ -51,12 +49,12 @@ public class MenuCLI {
 
         UsuarioService usuarioService = new UsuarioService(usuarioDAO);
         LivroService livroService = new LivroService(livroDAO);
-        EmprestimoService emprestimoService = new EmprestimoService(emprestimoDAO, exemplarDAO, usuarioDAO);
+        EmprestimoService emprestimoService = new EmprestimoService(emprestimoDAO, exemplarDAO, usuarioDAO, renovacaoDAO);
         ExemplarService exemplarService = new ExemplarService(exemplarDAO, livroDAO);
 
         this.usuarioView = new UsuarioView(usuarioService, emprestimoService);
         this.livroView = new LivroView(livroService, exemplarService);
-        this.emprestimoView = new EmprestimoView(emprestimoDAO, exemplarDAO, usuarioDAO, livroDAO);
+        this.emprestimoView = new EmprestimoView(emprestimoDAO, exemplarDAO, usuarioDAO, livroDAO, renovacaoDAO);
 
         int opcao;
         boolean sair;
@@ -111,6 +109,7 @@ public class MenuCLI {
                 this.emprestimoView.listarEmprestimosUsuario(this.usuario.getId());
                 break;
             case 5:
+                this.emprestimoView.renovarEmprestimo(this.usuario.getId());
                 break;
             case 6:
                 int aux = this.usuarioView.excluirConta(this.usuario.getId());
