@@ -17,13 +17,11 @@ public class EmprestimoService {
     private final EmprestimoDAO emprestimoDAO;
     private final ExemplarDAO exemplarDAO;
     private final UsuarioDAO usuarioDAO;
-    private final RenovacaoDAO renovacaoDAO;
 
-    public EmprestimoService(EmprestimoDAO emprestimoDAO, ExemplarDAO exemplarDAO, UsuarioDAO usuarioDAO, RenovacaoDAO renovacaoDAO) {
+    public EmprestimoService(EmprestimoDAO emprestimoDAO, ExemplarDAO exemplarDAO, UsuarioDAO usuarioDAO) {
         this.emprestimoDAO = emprestimoDAO;
         this.exemplarDAO = exemplarDAO;
         this.usuarioDAO = usuarioDAO;
-        this.renovacaoDAO = renovacaoDAO;
     }
 
     // TODO: Adicionar validação de punição antes de permitir o empréstimo (Sim ela deve ser feita aqui [ou não?])
@@ -51,13 +49,10 @@ public class EmprestimoService {
         return 0;
     }
 
-    public int deletarEmprestimo(Emprestimo emprestimo) {
+    public int devolverEmprestimo(Emprestimo emprestimo) {
         try {
-            this.emprestimoDAO.delete(emprestimo.getId());
+            this.emprestimoDAO.setDtDevolucao(emprestimo.getId(), LocalDate.now());
             this.exemplarDAO.setDisponibilidadeById(emprestimo.getExemplarFk(), true);
-            List<Renovacao> renovacaos = this.renovacaoDAO.getByUsuarioIdAndEmprestimo(emprestimo.getUsuarioFk(), emprestimo.getId());
-            for (Renovacao r : renovacaos)
-                this.renovacaoDAO.delete(r.getId());
         } catch (Exception e) {
             return 1;
         }

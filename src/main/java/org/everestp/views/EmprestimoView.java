@@ -24,7 +24,7 @@ public class EmprestimoView {
     public EmprestimoView(EmprestimoDAO emprestimoDAO, ExemplarDAO exemplarDAO, UsuarioDAO usuarioDAO, LivroDAO livroDAO, RenovacaoDAO renovacaoDAO) {
         this.scan = new Scanner(System.in);
         this.scanLines = new Scanner(System.in);
-        this.emprestimoService = new EmprestimoService(emprestimoDAO, exemplarDAO, usuarioDAO, renovacaoDAO);
+        this.emprestimoService = new EmprestimoService(emprestimoDAO, exemplarDAO, usuarioDAO);
         this.exemplarService = new ExemplarService(exemplarDAO, livroDAO);
         this.livroService = new LivroService(livroDAO);
         this.renovacaoService = new RenovacaoService(renovacaoDAO, emprestimoDAO);
@@ -73,7 +73,7 @@ public class EmprestimoView {
             return;
         }
 
-        int code = this.emprestimoService.deletarEmprestimo(emprestimo);
+        int code = this.emprestimoService.devolverEmprestimo(emprestimo);
         if (code != 0) {
             System.out.println("Não foi possível devolver livro.");
             return;

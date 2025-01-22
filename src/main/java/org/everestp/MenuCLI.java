@@ -49,7 +49,7 @@ public class MenuCLI {
 
         UsuarioService usuarioService = new UsuarioService(usuarioDAO);
         LivroService livroService = new LivroService(livroDAO);
-        EmprestimoService emprestimoService = new EmprestimoService(emprestimoDAO, exemplarDAO, usuarioDAO, renovacaoDAO);
+        EmprestimoService emprestimoService = new EmprestimoService(emprestimoDAO, exemplarDAO, usuarioDAO);
         ExemplarService exemplarService = new ExemplarService(exemplarDAO, livroDAO);
 
         this.usuarioView = new UsuarioView(usuarioService, emprestimoService);
@@ -174,7 +174,7 @@ public class MenuCLI {
         System.out.println();
         System.out.println("0 - Sair;");
         System.out.println("1 - Login;");
-        System.out.println("2 - Cadastar.");
+        System.out.println("2 - Cadastrar.");
     }
 
     private void mostrarMenu() {

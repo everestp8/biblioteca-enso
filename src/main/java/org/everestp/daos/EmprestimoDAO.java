@@ -30,4 +30,10 @@ public class EmprestimoDAO extends InMemoryDAO<Emprestimo> {
         Emprestimo novoEmprestimo = new Emprestimo(e.getId(), e.getExemplarFk(), e.getUsuarioFk(), e.getDtEmprestimo(), e.getDtDevolucao(), novaDtPrazo);
         this.update(novoEmprestimo);
     }
+
+    public void setDtDevolucao(int emprestimoId, LocalDate novaDtDevolucao) {
+        Emprestimo e = this.getById(emprestimoId);
+        Emprestimo novoEmprestimo = new Emprestimo(e.getId(), e.getExemplarFk(), e.getUsuarioFk(), e.getDtEmprestimo(), novaDtDevolucao, e.getDtPrazo());
+        this.update(novoEmprestimo);
+    }
 }
