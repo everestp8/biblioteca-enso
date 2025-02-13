@@ -1,4 +1,4 @@
-package org.everestp.views;
+package org.everestp.views_cli;
 
 import org.everestp.daos.*;
 import org.everestp.dtos.EmprestimoDTO;

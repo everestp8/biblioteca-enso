@@ -1,9 +1,6 @@
 package org.everestp;
 
-import org.everestp.daos.LivroDAO;
-import org.everestp.daos.UsuarioDAO;
-import org.everestp.models.Livro;
-import org.everestp.models.Usuario;
+import org.everestp.views_cli.MenuCLI;
 
 public class Main {
 

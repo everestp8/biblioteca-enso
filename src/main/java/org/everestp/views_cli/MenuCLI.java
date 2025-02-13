@@ -1,5 +1,6 @@
-package org.everestp;
+package org.everestp.views_cli;
 
+import org.everestp.controllers.UsuarioController;
 import org.everestp.daos.*;
 import org.everestp.models.Exemplar;
 import org.everestp.models.Usuario;
@@ -8,9 +9,6 @@ import org.everestp.services.EmprestimoService;
 import org.everestp.services.ExemplarService;
 import org.everestp.services.LivroService;
 import org.everestp.services.UsuarioService;
-import org.everestp.views.EmprestimoView;
-import org.everestp.views.LivroView;
-import org.everestp.views.UsuarioView;
 
 import java.util.Scanner;
 
@@ -52,7 +50,9 @@ public class MenuCLI {
         EmprestimoService emprestimoService = new EmprestimoService(emprestimoDAO, exemplarDAO, usuarioDAO);
         ExemplarService exemplarService = new ExemplarService(exemplarDAO, livroDAO);
 
-        this.usuarioView = new UsuarioView(usuarioService, emprestimoService);
+        UsuarioController usuarioController = new UsuarioController(usuarioService, emprestimoService);
+
+        this.usuarioView = new UsuarioView(usuarioController);
         this.livroView = new LivroView(livroService, exemplarService);
         this.emprestimoView = new EmprestimoView(emprestimoDAO, exemplarDAO, usuarioDAO, livroDAO, renovacaoDAO);
 
