@@ -1,5 +1,6 @@
-package org.everestp;
+package org.everestp.views_cli;
 
+import org.everestp.controllers.UsuarioController;
 import org.everestp.daos.*;
 import org.everestp.models.Exemplar;
 import org.everestp.models.Usuario;
@@ -8,53 +9,25 @@ import org.everestp.services.EmprestimoService;
 import org.everestp.services.ExemplarService;
 import org.everestp.services.LivroService;
 import org.everestp.services.UsuarioService;
-import org.everestp.views.EmprestimoView;
-import org.everestp.views.LivroView;
-import org.everestp.views.UsuarioView;
 
 import java.util.Scanner;
+import org.everestp.services.RenovacaoService;
 
 public class MenuCLI {
-
     private final Scanner scan = new Scanner(System.in);
 
     private final UsuarioView usuarioView;
     private final LivroView livroView;
     private final EmprestimoView emprestimoView;
-
     private Usuario usuario;
+    
 
-    public MenuCLI() {
-        UsuarioDAO usuarioDAO = new UsuarioDAO();
-        LivroDAO livroDAO = new LivroDAO();
-        ExemplarDAO exemplarDAO = new ExemplarDAO();
-        EmprestimoDAO emprestimoDAO = new EmprestimoDAO();
-        RenovacaoDAO renovacaoDAO = new RenovacaoDAO();
-
-        // Dados de Teste -- START
-        usuarioDAO.save(new Usuario(0, "@@@", "123", "cpf1", 0));
-        this.usuario = usuarioDAO.getById(1);
-
-        livroDAO.save(new Livro(0, "l1", "autor1", "genero1", "desc1", 2001));
-        livroDAO.save(new Livro(0, "l2", "autor2", "genero2", "desc2", 2002));
-        livroDAO.save(new Livro(0, "l3", "autor3", "genero3", "desc3", 2003));
-
-        exemplarDAO.save(new Exemplar(0, 1, "aaabbb", true));
-        exemplarDAO.save(new Exemplar(0, 1, "baabbb", false));
-        exemplarDAO.save(new Exemplar(0, 2, "aaabbc", false));
-        exemplarDAO.save(new Exemplar(0, 2, "baabbc", false));
-        exemplarDAO.save(new Exemplar(0, 2, "caabbc", true));
-        exemplarDAO.save(new Exemplar(0, 3, "aaabbd", true));
-        // Dados de Teste -- END
-
-        UsuarioService usuarioService = new UsuarioService(usuarioDAO);
-        LivroService livroService = new LivroService(livroDAO);
-        EmprestimoService emprestimoService = new EmprestimoService(emprestimoDAO, exemplarDAO, usuarioDAO);
-        ExemplarService exemplarService = new ExemplarService(exemplarDAO, livroDAO);
-
-        this.usuarioView = new UsuarioView(usuarioService, emprestimoService);
+    public MenuCLI(Usuario usuario, UsuarioController usuarioController, LivroService livroService, ExemplarService exemplarService, EmprestimoService emprestimoService, RenovacaoService renovacaoService) {
+        this.usuario = usuario;
+        
+        this.usuarioView = new UsuarioView(usuarioController);
         this.livroView = new LivroView(livroService, exemplarService);
-        this.emprestimoView = new EmprestimoView(emprestimoDAO, exemplarDAO, usuarioDAO, livroDAO, renovacaoDAO);
+        this.emprestimoView = new EmprestimoView(emprestimoService, exemplarService, livroService, renovacaoService);
 
         int opcao;
         boolean sair;

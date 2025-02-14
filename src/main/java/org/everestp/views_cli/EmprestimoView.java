@@ -1,4 +1,4 @@
-package org.everestp.views;
+package org.everestp.views_cli;
 
 import org.everestp.daos.*;
 import org.everestp.dtos.EmprestimoDTO;
@@ -21,13 +21,13 @@ public class EmprestimoView {
     private final LivroService livroService;
     private final RenovacaoService renovacaoService;
 
-    public EmprestimoView(EmprestimoDAO emprestimoDAO, ExemplarDAO exemplarDAO, UsuarioDAO usuarioDAO, LivroDAO livroDAO, RenovacaoDAO renovacaoDAO) {
+    public EmprestimoView(EmprestimoService emprestimoService, ExemplarService exemplarService, LivroService livroService, RenovacaoService renovacaoService) {
         this.scan = new Scanner(System.in);
         this.scanLines = new Scanner(System.in);
-        this.emprestimoService = new EmprestimoService(emprestimoDAO, exemplarDAO, usuarioDAO);
-        this.exemplarService = new ExemplarService(exemplarDAO, livroDAO);
-        this.livroService = new LivroService(livroDAO);
-        this.renovacaoService = new RenovacaoService(renovacaoDAO, emprestimoDAO);
+        this.emprestimoService = emprestimoService;
+        this.exemplarService = exemplarService;
+        this.livroService = livroService;
+        this.renovacaoService = renovacaoService;
     }
 
     public void listarEmprestimosUsuario(int usuarioId) {

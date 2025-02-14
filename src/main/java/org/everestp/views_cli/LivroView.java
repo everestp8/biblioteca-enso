@@ -1,15 +1,12 @@
-package org.everestp.views;
+package org.everestp.views_cli;
 
-import org.everestp.daos.ExemplarDAO;
-import org.everestp.daos.LivroDAO;
 import org.everestp.dtos.LivroDTO;
 import org.everestp.models.Exemplar;
 import org.everestp.models.Livro;
 
 import java.util.Scanner;
-import org.everestp.daos.UsuarioDAO;
+
 import org.everestp.services.ExemplarService;
-import org.everestp.services.UsuarioService;
 import org.everestp.services.LivroService;
 
 public class LivroView {

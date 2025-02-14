@@ -1,25 +1,20 @@
-package org.everestp.views;
+package org.everestp.views_cli;
 
-import org.everestp.dtos.UsuarioDTO;
+import org.everestp.controllers.UsuarioController;
 import org.everestp.models.Usuario;
 
 import java.util.Scanner;
-
-import org.everestp.services.EmprestimoService;
-import org.everestp.services.UsuarioService;
 
 public class UsuarioView {
 
     private final Scanner scan;
     private final Scanner scanLines;
-    private final UsuarioService usuarioService ;
-    private final EmprestimoService emprestimoService;
+    private final UsuarioController usuarioController;
 
-    public UsuarioView(UsuarioService usuarioService, EmprestimoService emprestimoService) {
+    public UsuarioView(UsuarioController usuarioController) {
         this.scan = new Scanner(System.in);
         this.scanLines = new Scanner(System.in);
-        this.usuarioService = usuarioService;
-        this.emprestimoService = emprestimoService;
+        this.usuarioController = usuarioController;
     }
 
     private int autenticarUsuario() {
@@ -28,23 +23,7 @@ public class UsuarioView {
         System.out.println("Digite sua senha: ");
         String senha = scanLines.nextLine();
 
-        int code = this.usuarioService.autenticarUsuario(email, senha);
-        if (code != 0) {
-            System.out.println("Erro: Não foi possível autenticar.");
-            return 1;
-        }
-
-        return 0;
-    }
-
-    public Usuario fazerLogin() {
-        System.out.println("\n# Login");
-        System.out.println("Digite seu e-mail: ");
-        String email = scan.next();
-        System.out.println("Digite sua senha: ");
-        String senha = scanLines.nextLine();
-        int code = this.usuarioService.autenticarUsuario(email, senha);
-
+        int code = this.usuarioController.autenticarUsuario(email, senha);
         if (code == 0) {
             System.out.println("Login efetuado com sucesso!");
         } else if (code == 1) {
@@ -53,12 +32,31 @@ public class UsuarioView {
             System.out.println("Senha incorreta!");
         }
 
-        return this.usuarioService.getUserByEmail(email);
+        return code;
+    }
+
+    public Usuario fazerLogin() {
+        System.out.println("\n# Login");
+        System.out.println("Digite seu e-mail: ");
+        String email = scan.next();
+        System.out.println("Digite sua senha: ");
+        String senha = scanLines.nextLine();
+
+        Usuario usuario = this.usuarioController.fazerLogin(email, senha);
+        if (usuario == null) {
+            System.out.println("Login efetuado com sucesso!");
+        } else {
+            System.out.println("Não foi possível efetuar o login, verifique suas credenciais.");
+        }
+
+        return usuario;
     }
 
     public void cadastrarUsuario() {
         System.out.println("\n# Cadastro de usuário");
 
+        System.out.println("Digite o nome: ");
+        String nome = scan.next();
         System.out.println("Digite o e-mail: ");
         String email = scan.next();
         System.out.println("Digite sua senha: ");
@@ -67,11 +65,13 @@ public class UsuarioView {
         String cpf = scan.next();
         System.out.println("Digite o seu papel (0 - Admin, 1 - Bibliotecário, 2 - Cliente): ");
         int papel = scan.nextInt();
-        UsuarioDTO dadosUsuario = new UsuarioDTO(email, senha, cpf, papel);
 
-        this.usuarioService.cadastrarUsuario(dadosUsuario);
-        System.out.println("Usuário cadastrado!");
-
+        Usuario usuario = this.usuarioController.cadastrarUsuario(nome, email, senha, cpf, papel);
+        if (usuario != null) {
+            System.out.println("Usuário cadastrado com sucesso!");
+        } else {
+            System.out.println("Não foi possível cadastrar o usuário.");
+        }
     }
 
     public int excluirConta(int usuarioId) {
@@ -81,17 +81,10 @@ public class UsuarioView {
             return code;
         }
 
-        // Isso provavelmente não deveria estar aqui
-        int quantEmprestimos = this.emprestimoService.getAllEmprestimosByUsuarioId(usuarioId).size();
-        if (quantEmprestimos >= 1) {
-            System.out.println("Não é possível prosseguir. Ainda há empréstimos em aberto na conta.");
-            return 1;
-        }
-
-        code = this.usuarioService.excluirUsuario(usuarioId);
+        code = this.usuarioController.excluirUsuario(usuarioId);
         if (code != 0) {
             System.out.println("Erro: Não foi possível excluir a conta.");
-            return 1;
+            return code;
         }
 
         System.out.println("Conta excluída com sucesso!");
@@ -100,15 +93,23 @@ public class UsuarioView {
 
     public Usuario cadastrarCliente() {
         System.out.println("\n# Cadastro de cliente");
+        System.out.println("Digite o nome: ");
+        String nome = scan.next();
         System.out.println("Digite o e-mail: ");
         String email = scan.next();
         System.out.println("Digite sua senha: ");
         String senha = scanLines.nextLine();
         System.out.println("Digite o seu CPF: ");
         String cpf = scan.next();
-        UsuarioDTO dadosUsuario = new UsuarioDTO(email, senha, cpf, 2);
 
-        return this.usuarioService.cadastrarUsuario(dadosUsuario);
+        Usuario usuario = this.usuarioController.cadastrarUsuario(nome, email, senha, cpf, 2);
+        if (usuario != null) {
+            System.out.println("Você foi cadastrado com sucesso!");
+        } else {
+            System.out.println("Não foi possível completar o cadastro.");
+        }
+
+        return usuario;
     }
 
     public void alterarDadosDaConta(int usuarioId) {
@@ -120,21 +121,17 @@ public class UsuarioView {
         }
 
         System.out.println("Digite . nas propriedades que deseja conservar.");
-        String aux;
 
+        System.out.println("Digite seu novo nome (ou .): ");
+        String nome = scan.next();
         System.out.println("Digite seu novo e-mail (ou .): ");
-        aux = scan.next();
-        String email = aux.charAt(0) == '.' ? null : aux;
+        String email = scan.next();
         System.out.println("Digite sua nova senha (ou .): ");
-        aux = scanLines.nextLine();
-        String senha = aux.charAt(0) == '.' ? null : aux;
+        String senha = scanLines.nextLine();
         System.out.println("Digite um novo CPF (ou .): ");
-        aux = scan.next();
-        String cpf = aux.charAt(0) == '.' ? null : aux;
+        String cpf = scan.next();
 
-        UsuarioDTO dadosAtualizados = new UsuarioDTO(email, senha, cpf, 2);
-
-        code = this.usuarioService.atualizarUsuario(usuarioId, dadosAtualizados);
+        code = this.usuarioController.alterarDadosUsuario(usuarioId, nome, email, senha, cpf);
 
         if (code != 0) {
             System.out.println("Não foi possível alterar os dados da conta ;(");
@@ -146,16 +143,10 @@ public class UsuarioView {
 
     public void removerUsuario() {
         System.out.println("\n# Remoção de usuário");
-        System.out.println("Digite o email da conta a ser removida: ");
-        String email = scan.next();
+        System.out.println("Digite o ID da conta a ser removida: ");
+        int id = scan.nextInt();
 
-        Usuario usuario = this.usuarioService.getUserByEmail(email);
-        if (usuario == null) {
-            System.out.println("Erro: Usuário não encontrado. Por favor, verifique o email fornecido.");
-            return;
-        }
-
-        int code = this.usuarioService.excluirUsuario(usuario.getId());
+        int code = this.usuarioController.excluirUsuario(id);
         if (code != 0) {
             System.out.println("Erro: Não foi possível excluir a conta.");
             return;
