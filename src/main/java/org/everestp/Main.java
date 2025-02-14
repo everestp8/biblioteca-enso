@@ -18,8 +18,6 @@ import org.everestp.views_cli.MenuCLI;
 import org.everestp.views_gui.TelaPrincipal;
 
 public class Main {
-    private static Usuario usuario;
-
     public static void main(String[] args) {
         DatabaseConnection.createConnection();
 
@@ -28,10 +26,6 @@ public class Main {
         ExemplarDAO exemplarDAO = new ExemplarDAO();
         EmprestimoDAO emprestimoDAO = new EmprestimoDAO();
         RenovacaoDAO renovacaoDAO = new RenovacaoDAO();
-        
-        // Dados de Teste -- START
-        usuarioDAO.save(new Usuario(0, "John Doe", "@@@", "123", "cpf1", 0));
-        usuario = usuarioDAO.getById(1);
 
         livroDAO.save(new Livro(0, "l1", "autor1", "genero1", "desc1", 2001));
         livroDAO.save(new Livro(0, "l2", "autor2", "genero2", "desc2", 2002));

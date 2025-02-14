@@ -1,13 +1,35 @@
 package org.everestp.views_gui;
 
+import javax.swing.JFrame;
 import org.everestp.controllers.UsuarioController;
+import org.everestp.models.Usuario;
 
 public class TelaPrincipal extends javax.swing.JFrame {
+
+    private static Usuario usuario;
+    private static javax.swing.JFrame telaAtiva;
+
+    public static void setTelaAtiva(JFrame telaAtiva) {
+        if (TelaPrincipal.telaAtiva != null)
+            TelaPrincipal.telaAtiva.setVisible(false);
+        
+        TelaPrincipal.telaAtiva = telaAtiva;
+        TelaPrincipal.telaAtiva.setVisible(true);
+    }
+
+    public static Usuario getUsuario() {
+        return usuario;
+    }
+
+    public static void setUsuario(Usuario usuario) {
+        TelaPrincipal.usuario = usuario;
+    }
+
     public TelaPrincipal(UsuarioController usuarioController) {
         initComponents();
-        new TelaLogin(usuarioController).setVisible(true);
+        setTelaAtiva(new TelaLogin(usuarioController));
     }
-    
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {

@@ -4,7 +4,9 @@
  */
 package org.everestp.views_gui;
 
+import javax.swing.JOptionPane;
 import org.everestp.controllers.UsuarioController;
+import org.everestp.models.Usuario;
 
 /**
  *
@@ -41,7 +43,7 @@ public class TelaLogin extends javax.swing.JFrame {
 
         jLabel7.setText("jLabel7");
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Tela de Login");
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
@@ -76,6 +78,11 @@ public class TelaLogin extends javax.swing.JFrame {
         });
 
         botaoLogin.setText("Login");
+        botaoLogin.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botaoLoginActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -133,9 +140,21 @@ public class TelaLogin extends javax.swing.JFrame {
     }//GEN-LAST:event_inputEmailActionPerformed
 
     private void botaoCadastrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoCadastrarActionPerformed
-        TelaCadastro telaCadastro = new TelaCadastro();
-        telaCadastro.setVisible(true);
+        TelaPrincipal.setTelaAtiva(new TelaCadastro(usuarioController));
     }//GEN-LAST:event_botaoCadastrarActionPerformed
+
+    private void botaoLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoLoginActionPerformed
+        String email = this.inputEmail.getText();
+        String senha = this.inputSenha.getText();
+        Usuario usuario = this.usuarioController.fazerLogin(email, senha);
+        if (usuario != null){
+            JOptionPane.showMessageDialog(null, "Login realizado com sucesso.", "Login", 1);
+            TelaPrincipal.setUsuario(usuario);
+            TelaPrincipal.setTelaAtiva(new Menu(usuarioController));
+        } else {
+            JOptionPane.showMessageDialog(null, "ERRO, Email ou senha incorretos!", "Login", 0);
+        }
+    }//GEN-LAST:event_botaoLoginActionPerformed
 
     /**
      * @param args the command line arguments

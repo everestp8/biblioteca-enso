@@ -14,7 +14,6 @@ import java.util.Scanner;
 import org.everestp.services.RenovacaoService;
 
 public class MenuCLI {
-
     private final Scanner scan = new Scanner(System.in);
 
     private final UsuarioView usuarioView;
