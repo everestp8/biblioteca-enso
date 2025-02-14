@@ -27,8 +27,8 @@ public class UsuarioController {
         return null;
     }
 
-    public Usuario cadastrarUsuario(String email, String senha, String cpf, int papel) {
-        UsuarioDTO usuarioDTO = new UsuarioDTO(email, senha, cpf, papel);
+    public Usuario cadastrarUsuario(String nome, String email, String senha, String cpf, int papel) {
+        UsuarioDTO usuarioDTO = new UsuarioDTO(nome, email, senha, cpf, papel);
         return usuarioService.cadastrarUsuario(usuarioDTO);
     }
 
@@ -39,8 +39,9 @@ public class UsuarioController {
         return usuarioService.excluirUsuario(usuarioId);
     }
 
-    public int alterarDadosUsuario(int usuarioId, String email, String senha, String cpf) {
+    public int alterarDadosUsuario(int usuarioId, String nome, String email, String senha, String cpf) {
         UsuarioDTO usuarioDTO = new UsuarioDTO(
+                nome.equals(".") ? null : nome,
                 email.equals(".") ? null : email,
                 senha.equals(".") ? null : senha,
                 cpf.equals(".") ? null : cpf,

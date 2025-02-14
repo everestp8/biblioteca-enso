@@ -21,6 +21,8 @@ public class Main {
     private static Usuario usuario;
 
     public static void main(String[] args) {
+        DatabaseConnection.createConnection();
+
         UsuarioDAO usuarioDAO = new UsuarioDAO();
         LivroDAO livroDAO = new LivroDAO();
         ExemplarDAO exemplarDAO = new ExemplarDAO();
@@ -28,7 +30,7 @@ public class Main {
         RenovacaoDAO renovacaoDAO = new RenovacaoDAO();
         
         // Dados de Teste -- START
-        usuarioDAO.save(new Usuario(0, "@@@", "123", "cpf1", 0));
+        usuarioDAO.save(new Usuario(0, "John Doe", "@@@", "123", "cpf1", 0));
         usuario = usuarioDAO.getById(1);
 
         livroDAO.save(new Livro(0, "l1", "autor1", "genero1", "desc1", 2001));
@@ -51,8 +53,8 @@ public class Main {
 
         UsuarioController usuarioController = new UsuarioController(usuarioService, emprestimoService);
         
-        DatabaseConnection.createConnection();
         // MenuCLI menuCLI = new MenuCLI(usuario, usuarioController, livroService, exemplarService, emprestimoService, renovacaoService);
+        
         new TelaPrincipal(usuarioController).setVisible(false);
     }
 }

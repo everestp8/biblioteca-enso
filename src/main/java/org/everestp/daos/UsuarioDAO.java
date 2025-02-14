@@ -29,7 +29,7 @@ public class UsuarioDAO implements DAO<Usuario> {
     @Override
     public Usuario getById(int id) {
         try {
-            PreparedStatement stmt = this.conn.prepareStatement("select * from usuario where id = ?;");
+            PreparedStatement stmt = this.conn.prepareStatement("select * from Usuario where id_usuario = ?;");
             stmt.setInt(1, id);
 
             ResultSet rs = stmt.executeQuery();
@@ -40,10 +40,9 @@ public class UsuarioDAO implements DAO<Usuario> {
             String email = rs.getString("email");
             String senha = rs.getString("senha");
             String cpf = rs.getString("cpf");
-            LocalDate dataNascimento = rs.getDate("datanascimento").toLocalDate();
             int papel = rs.getInt("papel");
 
-            return new Usuario(id, nome, email, senha, cpf, dataNascimento, papel);
+            return new Usuario(id, nome, email, senha, cpf, papel);
         } catch (SQLException e) {
             System.out.println(e.getMessage());
             return null;
@@ -54,7 +53,7 @@ public class UsuarioDAO implements DAO<Usuario> {
     public List<Usuario> getAll() {
         List<Usuario> usuarios = new ArrayList<>();
         try {
-            PreparedStatement stmt = this.conn.prepareStatement("select * from usuario;");
+            PreparedStatement stmt = this.conn.prepareStatement("select * from Usuario;");
             ResultSet rs = stmt.executeQuery();
 
             while(rs.next()){
@@ -63,10 +62,9 @@ public class UsuarioDAO implements DAO<Usuario> {
                 String email = rs.getString("email");
                 String senha = rs.getString("senha");
                 String cpf = rs.getString("cpf");
-                LocalDate dataNascimento = rs.getDate("datanascimento").toLocalDate();
                 int papel = rs.getInt("papel");
 
-                usuarios.add(new Usuario(id, nome, email, senha, cpf, dataNascimento, papel));
+                usuarios.add(new Usuario(id, nome, email, senha, cpf, papel));
             }
         } catch (SQLException e) {
             System.out.println(e.getMessage());
@@ -78,13 +76,12 @@ public class UsuarioDAO implements DAO<Usuario> {
     @Override
     public void save(Usuario usuario) {
         try {
-            PreparedStatement stmt = this.conn.prepareStatement("insert into usuario(nome, email, senha, cpf, datanascimento, papel) values (?, ?, ?, ?, ?, ?);");
+            PreparedStatement stmt = this.conn.prepareStatement("insert into Usuario(nome, email, senha, cpf, papel) values (?, ?, ?, ?, ?);");
             stmt.setString(1, usuario.getNome());
             stmt.setString(2, usuario.getEmail());
             stmt.setString(3, usuario.getSenha());
             stmt.setString(4, usuario.getCpf());
-            stmt.setDate(5, (Date) Date.from(usuario.getDtNasc().atStartOfDay(ZoneId.systemDefault()).toInstant()));
-            stmt.setInt(6, usuario.getPapel());
+            stmt.setInt(5, usuario.getPapel());
             stmt.executeUpdate();
         } catch (SQLException e) {
             System.out.println(e.getMessage());

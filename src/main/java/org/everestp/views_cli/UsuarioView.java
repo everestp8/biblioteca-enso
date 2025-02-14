@@ -55,6 +55,8 @@ public class UsuarioView {
     public void cadastrarUsuario() {
         System.out.println("\n# Cadastro de usuário");
 
+        System.out.println("Digite o nome: ");
+        String nome = scan.next();
         System.out.println("Digite o e-mail: ");
         String email = scan.next();
         System.out.println("Digite sua senha: ");
@@ -64,7 +66,7 @@ public class UsuarioView {
         System.out.println("Digite o seu papel (0 - Admin, 1 - Bibliotecário, 2 - Cliente): ");
         int papel = scan.nextInt();
 
-        Usuario usuario = this.usuarioController.cadastrarUsuario(email, senha, cpf, papel);
+        Usuario usuario = this.usuarioController.cadastrarUsuario(nome, email, senha, cpf, papel);
         if (usuario != null) {
             System.out.println("Usuário cadastrado com sucesso!");
         } else {
@@ -91,6 +93,8 @@ public class UsuarioView {
 
     public Usuario cadastrarCliente() {
         System.out.println("\n# Cadastro de cliente");
+        System.out.println("Digite o nome: ");
+        String nome = scan.next();
         System.out.println("Digite o e-mail: ");
         String email = scan.next();
         System.out.println("Digite sua senha: ");
@@ -98,7 +102,7 @@ public class UsuarioView {
         System.out.println("Digite o seu CPF: ");
         String cpf = scan.next();
 
-        Usuario usuario = this.usuarioController.cadastrarUsuario(email, senha, cpf, 2);
+        Usuario usuario = this.usuarioController.cadastrarUsuario(nome, email, senha, cpf, 2);
         if (usuario != null) {
             System.out.println("Você foi cadastrado com sucesso!");
         } else {
@@ -118,6 +122,8 @@ public class UsuarioView {
 
         System.out.println("Digite . nas propriedades que deseja conservar.");
 
+        System.out.println("Digite seu novo nome (ou .): ");
+        String nome = scan.next();
         System.out.println("Digite seu novo e-mail (ou .): ");
         String email = scan.next();
         System.out.println("Digite sua nova senha (ou .): ");
@@ -125,7 +131,7 @@ public class UsuarioView {
         System.out.println("Digite um novo CPF (ou .): ");
         String cpf = scan.next();
 
-        code = this.usuarioController.alterarDadosUsuario(usuarioId, email, senha, cpf);
+        code = this.usuarioController.alterarDadosUsuario(usuarioId, nome, email, senha, cpf);
 
         if (code != 0) {
             System.out.println("Não foi possível alterar os dados da conta ;(");

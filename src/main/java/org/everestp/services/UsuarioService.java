@@ -27,18 +27,19 @@ public class UsuarioService {
         if (usuarioExistente == null) {
             return 1;
         }
+        String novoNome = dadosAtualizados.nome() != null ? dadosAtualizados.nome() : usuarioExistente.getNome();
         String novoEmail = dadosAtualizados.email() != null ? dadosAtualizados.email() : usuarioExistente.getEmail();
         String novaSenha = dadosAtualizados.senha() != null ? dadosAtualizados.senha() : usuarioExistente.getSenha();
         String novoCpf = dadosAtualizados.cpf() != null ? dadosAtualizados.cpf() : usuarioExistente.getCpf();
         Integer novoPapel = dadosAtualizados.papel() != null ? dadosAtualizados.papel() : usuarioExistente.getPapel();
-        usuarioAtualizado = new Usuario(usuarioExistente.getId(), novoEmail, novaSenha, novoCpf, novoPapel);
+        usuarioAtualizado = new Usuario(usuarioExistente.getId(), novoNome, novoEmail, novaSenha, novoCpf, novoPapel);
 
         this.usuarioDAO.update(usuarioAtualizado);
         return 0;
     }
 
     public Usuario cadastrarUsuario(UsuarioDTO dados) {
-        Usuario usuario = new Usuario(0, dados.email(), dados.senha(), dados.cpf(), dados.papel());
+        Usuario usuario = new Usuario(0, dados.nome(), dados.email(), dados.senha(), dados.cpf(), dados.papel());
         this.usuarioDAO.save(usuario);
         return usuario;
     }
