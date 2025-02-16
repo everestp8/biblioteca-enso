@@ -40,7 +40,7 @@ public class UsuarioService {
     public Usuario cadastrarUsuario(UsuarioDTO dados) {
         Usuario usuario = new Usuario(0, dados.nome(), dados.email(), dados.senha(), dados.cpf(), dados.papel());
         this.usuarioDAO.save(usuario);
-        return usuario;
+        return this.usuarioDAO.getByEmail(dados.email());
     }
 
     public void autenticarUsuario(String email, String senha) {

@@ -5,6 +5,8 @@
 package org.everestp.views_gui;
 
 import javax.swing.JOptionPane;
+
+import org.everestp.controllers.Response;
 import org.everestp.controllers.UsuarioController;
 import org.everestp.models.Usuario;
 
@@ -14,10 +16,10 @@ import org.everestp.models.Usuario;
  */
 public class TelaLogin extends javax.swing.JFrame {
     private final UsuarioController usuarioController;
-    
-    public TelaLogin(UsuarioController usuarioController) {
+
+    public TelaLogin() {
         initComponents();
-        this.usuarioController = usuarioController;
+        this.usuarioController = TelaPrincipal.getUsuarioController();
     }
 
     /**
@@ -140,20 +142,22 @@ public class TelaLogin extends javax.swing.JFrame {
     }//GEN-LAST:event_inputEmailActionPerformed
 
     private void botaoCadastrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoCadastrarActionPerformed
-        TelaPrincipal.setTelaAtiva(new TelaCadastro(usuarioController));
+        TelaPrincipal.setTelaAtiva(new TelaCadastro());
     }//GEN-LAST:event_botaoCadastrarActionPerformed
 
     private void botaoLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoLoginActionPerformed
         String email = this.inputEmail.getText();
-        String senha = this.inputSenha.getText();
-        Usuario usuario = this.usuarioController.fazerLogin(email, senha);
-        if (usuario != null){
-            JOptionPane.showMessageDialog(null, "Login realizado com sucesso.", "Login", 1);
-            TelaPrincipal.setUsuario(usuario);
-            TelaPrincipal.setTelaAtiva(new Menu(usuarioController));
-        } else {
-            JOptionPane.showMessageDialog(null, "ERRO, Email ou senha incorretos!", "Login", 0);
+        String senha = new String(this.inputSenha.getPassword());
+
+        Response<Usuario> response = this.usuarioController.fazerLogin(email, senha);
+        if (response.isError()) {
+            JOptionPane.showMessageDialog(null, response.getError().getMessage(), "Login", JOptionPane.ERROR_MESSAGE);
+            return;
         }
+
+        JOptionPane.showMessageDialog(null, "Login realizado com sucesso.", "Login", JOptionPane.INFORMATION_MESSAGE);
+        TelaPrincipal.setUsuario(response.getData());
+        TelaPrincipal.setTelaAtiva(new Menu());
     }//GEN-LAST:event_botaoLoginActionPerformed
 
     /**
@@ -186,7 +190,7 @@ public class TelaLogin extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new TelaLogin(null).setVisible(true);
+                new TelaLogin().setVisible(true);
             }
         });
     }

@@ -5,7 +5,10 @@
 package org.everestp.views_gui;
 
 import javax.swing.JOptionPane;
+
+import org.everestp.controllers.Response;
 import org.everestp.controllers.UsuarioController;
+import org.everestp.dtos.UsuarioDTO;
 import org.everestp.models.Usuario;
 
 /**
@@ -137,11 +140,18 @@ public class TelaAlterarDados extends javax.swing.JFrame {
         Usuario usuario = TelaPrincipal.getUsuario();
         String nome = this.inputNome.getText();
         String email = this.inputEmail.getText();
-        String senha = this.inputSenha.getText();
+        String senha = new String(this.inputSenha.getPassword());
         String cpf = this.inputCpf.getText();
+        UsuarioDTO dadosUsuario = new UsuarioDTO(nome, email, senha, cpf, null);
         
-        this.usuarioController.alterarDadosUsuario(usuario.getId(), nome, email, senha, cpf);
-        JOptionPane.showMessageDialog(null, "Alteração realizada com sucesso.", "Alterar dados da conta", 1);
+        Response<Void> response = this.usuarioController.alterarDadosUsuario(usuario.getId(), dadosUsuario);
+        if (response.isError()) {
+            JOptionPane.showMessageDialog(null, response.getError().getMessage(), "Alterar dados da conta", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        JOptionPane.showMessageDialog(null, "Alteração realizada com sucesso.", "Alterar dados da conta", JOptionPane.INFORMATION_MESSAGE);
+        this.dispose();
     }//GEN-LAST:event_botaoConfirmarActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton botaoCancelar;

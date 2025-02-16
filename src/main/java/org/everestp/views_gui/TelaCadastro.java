@@ -5,7 +5,10 @@
 package org.everestp.views_gui;
 
 import javax.swing.JOptionPane;
+
+import org.everestp.controllers.Response;
 import org.everestp.controllers.UsuarioController;
+import org.everestp.dtos.UsuarioDTO;
 import org.everestp.models.Usuario;
 
 /**
@@ -13,12 +16,11 @@ import org.everestp.models.Usuario;
  * @author Erick
  */
 public class TelaCadastro extends javax.swing.JFrame {
+    private UsuarioController usuarioController;
 
-    private final UsuarioController usuarioController;
-    
-    public TelaCadastro(UsuarioController usuarioController) {
+    public TelaCadastro() {
         initComponents();
-        this.usuarioController = usuarioController;
+        this.usuarioController = TelaPrincipal.getUsuarioController();
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -178,19 +180,26 @@ public class TelaCadastro extends javax.swing.JFrame {
     }//GEN-LAST:event_inputEmailActionPerformed
 
     private void botaoLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoLoginActionPerformed
-        TelaPrincipal.setTelaAtiva(new TelaLogin(usuarioController));
+        TelaPrincipal.setTelaAtiva(new TelaLogin());
     }//GEN-LAST:event_botaoLoginActionPerformed
 
     private void botaoCadastrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoCadastrarActionPerformed
         String nome = this.inputNome.getText();
         String cpf = this.inputCpf.getText();
         String email = this.inputEmail.getText();
-        String senha = this.inputSenha.getText();
-        
-        Usuario usuario = this.usuarioController.cadastrarUsuario(nome, email, senha, cpf, 0);
-        JOptionPane.showMessageDialog(null, "Cadastro relizado com sucesso.", "Cadastro", 1);
-        TelaPrincipal.setUsuario(usuario);
-        TelaPrincipal.setTelaAtiva(new Menu(usuarioController));
+        String senha = new String(this.inputSenha.getPassword());
+
+        UsuarioDTO dadosUsuario = new UsuarioDTO(nome, email, senha, cpf, 2);
+        Response<Usuario> response = this.usuarioController.cadastrarUsuario(dadosUsuario);
+
+        if (response.isError()) {
+            JOptionPane.showMessageDialog(null, response.getError().getMessage(), "Cadastro", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        JOptionPane.showMessageDialog(null, "Cadastro realizado com sucesso.", "Cadastro", JOptionPane.INFORMATION_MESSAGE);
+        TelaPrincipal.setUsuario(response.getData());
+        TelaPrincipal.setTelaAtiva(new Menu());
     }//GEN-LAST:event_botaoCadastrarActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

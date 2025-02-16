@@ -6,6 +6,8 @@ package org.everestp.views_gui;
 
 import java.awt.event.WindowEvent;
 import javax.swing.JOptionPane;
+
+import org.everestp.controllers.Response;
 import org.everestp.controllers.UsuarioController;
 import org.everestp.models.Usuario;
 
@@ -16,9 +18,9 @@ import org.everestp.models.Usuario;
 public class Menu extends javax.swing.JFrame {
     private final UsuarioController usuarioController;
     
-    public Menu(UsuarioController usuarioController) {
+    public Menu() {
         initComponents();
-        this.usuarioController = usuarioController;
+        this.usuarioController = TelaPrincipal.getUsuarioController();
     }
 
     /**
@@ -125,18 +127,24 @@ public class Menu extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
-        int confirm = JOptionPane.showConfirmDialog(null, "Deseja sair do serviço?", "Sair", 1);
+        int confirm = JOptionPane.showConfirmDialog(null, "Deseja sair do serviço?", "Sair", JOptionPane.YES_NO_OPTION);
         if (confirm != 0) return;
         this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
     }//GEN-LAST:event_jButton7ActionPerformed
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
-        int confirm = JOptionPane.showConfirmDialog(null, "Deseja excluir sua conta?", "Excluir conta", 1);
+        int confirm = JOptionPane.showConfirmDialog(null, "Deseja excluir sua conta?", "Excluir conta", JOptionPane.YES_NO_OPTION);
         if (confirm != 0) return;
+
         Usuario usuario = TelaPrincipal.getUsuario();
-        this.usuarioController.excluirUsuario(usuario.getId());
-        JOptionPane.showMessageDialog(null, "Conta excluída com sucesso!", "Exclusão de conta", 1);
-        TelaPrincipal.setTelaAtiva(new TelaCadastro(usuarioController));
+        Response<Void> response = this.usuarioController.excluirUsuario(usuario.getId());
+        if (response.isError()) {
+            JOptionPane.showMessageDialog(null, response.getError().getMessage(), "Excluir conta", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        JOptionPane.showMessageDialog(null, "Conta excluída com sucesso!", "Excluir conta", JOptionPane.INFORMATION_MESSAGE);
+        TelaPrincipal.setUsuario(null);
+        TelaPrincipal.setTelaAtiva(new TelaCadastro());
     }//GEN-LAST:event_jButton6ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed

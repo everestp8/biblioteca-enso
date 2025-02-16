@@ -1,11 +1,16 @@
 package org.everestp.views_gui;
 
 import javax.swing.JFrame;
+
+import org.everestp.controllers.EmprestimoController;
+import org.everestp.controllers.LivroController;
 import org.everestp.controllers.UsuarioController;
 import org.everestp.models.Usuario;
 
 public class TelaPrincipal extends javax.swing.JFrame {
-
+    private static UsuarioController usuarioController;
+    private static LivroController livroController;
+    private static EmprestimoController emprestimoController;
     private static Usuario usuario;
     private static javax.swing.JFrame telaAtiva;
 
@@ -25,9 +30,24 @@ public class TelaPrincipal extends javax.swing.JFrame {
         TelaPrincipal.usuario = usuario;
     }
 
-    public TelaPrincipal(UsuarioController usuarioController) {
+    public static UsuarioController getUsuarioController() {
+        return usuarioController;
+    }
+
+    public static LivroController getLivroController() {
+        return livroController;
+    }
+
+    public static EmprestimoController getEmprestimoController() {
+        return emprestimoController;
+    }
+
+    public TelaPrincipal(UsuarioController usuarioController, LivroController livroController, EmprestimoController emprestimoController) {
+        TelaPrincipal.usuarioController = usuarioController;
+        TelaPrincipal.livroController = livroController;
+        TelaPrincipal.emprestimoController = emprestimoController;
         initComponents();
-        setTelaAtiva(new TelaLogin(usuarioController));
+        setTelaAtiva(new TelaLogin());
     }
 
     @SuppressWarnings("unchecked")
