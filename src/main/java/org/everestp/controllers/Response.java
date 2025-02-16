@@ -1,8 +1,8 @@
 package org.everestp.controllers;
 
 public class Response<T> {
-    private T data;
-    private Exception error;
+    private final T data;
+    private final Exception error;
 
     public Response(T data, Exception error) {
         this.data = data;
@@ -31,5 +31,16 @@ public class Response<T> {
 
     public Exception getError() {
         return error;
+    }
+
+    public String getErrorMessage() {
+        if (error == null)
+            return null;
+
+        String message = error.getMessage();
+        if (error.getCause() != null)
+            message += " (causado por: " + error.getCause().getMessage() + ")";
+
+        return message;
     }
 }

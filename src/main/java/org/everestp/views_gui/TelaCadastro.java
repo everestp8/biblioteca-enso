@@ -193,7 +193,7 @@ public class TelaCadastro extends javax.swing.JFrame {
         Response<Usuario> response = this.usuarioController.cadastrarUsuario(dadosUsuario);
 
         if (response.isError()) {
-            JOptionPane.showMessageDialog(null, response.getError().getMessage(), "Cadastro", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, response.getErrorMessage(), "Cadastro", JOptionPane.ERROR_MESSAGE);
             return;
         }
 

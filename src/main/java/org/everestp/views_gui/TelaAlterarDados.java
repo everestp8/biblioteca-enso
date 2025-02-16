@@ -146,7 +146,7 @@ public class TelaAlterarDados extends javax.swing.JFrame {
         
         Response<Void> response = this.usuarioController.alterarDadosUsuario(usuario.getId(), dadosUsuario);
         if (response.isError()) {
-            JOptionPane.showMessageDialog(null, response.getError().getMessage(), "Alterar dados da conta", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, response.getErrorMessage(), "Alterar dados da conta", JOptionPane.ERROR_MESSAGE);
             return;
         }
 

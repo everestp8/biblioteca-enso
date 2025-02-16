@@ -139,7 +139,7 @@ public class Menu extends javax.swing.JFrame {
         Usuario usuario = TelaPrincipal.getUsuario();
         Response<Void> response = this.usuarioController.excluirUsuario(usuario.getId());
         if (response.isError()) {
-            JOptionPane.showMessageDialog(null, response.getError().getMessage(), "Excluir conta", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, response.getErrorMessage(), "Excluir conta", JOptionPane.ERROR_MESSAGE);
             return;
         }
         JOptionPane.showMessageDialog(null, "Conta excluída com sucesso!", "Excluir conta", JOptionPane.INFORMATION_MESSAGE);

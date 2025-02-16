@@ -151,7 +151,7 @@ public class TelaLogin extends javax.swing.JFrame {
 
         Response<Usuario> response = this.usuarioController.fazerLogin(email, senha);
         if (response.isError()) {
-            JOptionPane.showMessageDialog(null, response.getError().getMessage(), "Login", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, response.getErrorMessage(), "Login", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
