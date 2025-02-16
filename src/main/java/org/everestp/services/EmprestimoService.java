@@ -2,12 +2,14 @@ package org.everestp.services;
 
 import org.everestp.daos.EmprestimoDAO;
 import org.everestp.daos.ExemplarDAO;
-import org.everestp.daos.RenovacaoDAO;
 import org.everestp.daos.UsuarioDAO;
 import org.everestp.dtos.EmprestimoDTO;
+import org.everestp.exceptions.EmprestimoNaoEncontradoException;
+import org.everestp.exceptions.ExemplarNaoDisponivelException;
+import org.everestp.exceptions.ExemplarNaoEncontradoException;
+import org.everestp.exceptions.UsuarioNaoEncontradoException;
 import org.everestp.models.Emprestimo;
 import org.everestp.models.Exemplar;
-import org.everestp.models.Renovacao;
 import org.everestp.models.Usuario;
 
 import java.time.LocalDate;
@@ -24,17 +26,17 @@ public class EmprestimoService {
         this.usuarioDAO = usuarioDAO;
     }
 
-    // TODO: Adicionar validação de punição antes de permitir o empréstimo (Sim ela deve ser feita aqui [ou não?])
-    public int fazerEmprestimo(EmprestimoDTO dadosEmprestimo) {
+    // TODO: Adicionar validação de punição antes de permitir o empréstimo
+    public void fazerEmprestimo(EmprestimoDTO dadosEmprestimo) {
         Exemplar exemplar = this.exemplarDAO.getByIdFisico(dadosEmprestimo.exemplarIdFIsico());
         if (exemplar == null)
-            return 1;
+            throw new ExemplarNaoEncontradoException();
         if (!exemplar.getDisponivel())
-            return 2;
+            throw new ExemplarNaoDisponivelException();
 
         Usuario usuario = this.usuarioDAO.getByCpf(dadosEmprestimo.cpfUsuario());
         if (usuario == null)
-            return 1;
+            throw new UsuarioNaoEncontradoException();
 
         LocalDate dtEmprestimo = LocalDate.now();
         LocalDate dtPrazo = LocalDate
@@ -45,25 +47,27 @@ public class EmprestimoService {
         this.emprestimoDAO.save(novoEmprestimo);
 
         this.exemplarDAO.setDisponibilidadeById(exemplar.getId(), false);
-
-        return 0;
     }
 
-    public int devolverEmprestimo(Emprestimo emprestimo) {
-        try {
-            this.emprestimoDAO.setDtDevolucao(emprestimo.getId(), LocalDate.now());
-            this.exemplarDAO.setDisponibilidadeById(emprestimo.getExemplarFk(), true);
-        } catch (Exception e) {
-            return 1;
-        }
-        return 0;
+    public void devolverEmprestimo(String idFisico, int usuarioId) {
+        Emprestimo emprestimo = this.emprestimoDAO.getAtivoByExemplarIdFisico(usuarioId, idFisico);
+        if (emprestimo == null)
+            throw new EmprestimoNaoEncontradoException();
+        this.emprestimoDAO.setDtDevolucao(emprestimo.getId(), LocalDate.now());
+        this.exemplarDAO.setDisponibilidadeById(emprestimo.getExemplarFk(), true);
     }
 
-    public Emprestimo getEemprestimoPendenteByExemplarId(int usuarioId, int exemplarId) {
-        return this.emprestimoDAO.getPendenteByExemplarFk(usuarioId, exemplarId);
+    public Emprestimo getEemprestimoAtivoByExemplarId(int usuarioId, String idFIsico) {
+        Emprestimo emprestimo = this.emprestimoDAO.getAtivoByExemplarIdFisico(usuarioId, idFIsico);
+        if (emprestimo == null)
+            throw new EmprestimoNaoEncontradoException();
+        return emprestimo;
     }
 
     public List<Emprestimo> getAllEmprestimosByUsuarioId(int usuarioId) {
-        return this.emprestimoDAO.getByUsuarioFk(usuarioId);
+        List<Emprestimo> emprestimos = this.emprestimoDAO.getByUsuarioFk(usuarioId);
+        if (emprestimos == null)
+            throw new EmprestimoNaoEncontradoException();
+        return emprestimos;
     }
 }

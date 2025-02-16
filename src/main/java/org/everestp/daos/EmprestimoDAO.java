@@ -15,13 +15,15 @@ public class EmprestimoDAO extends InMemoryDAO<Emprestimo> {
         return emprestimos;
     }
 
-    public Emprestimo getPendenteByExemplarFk(int usuarioId, int exemplarId) {
+    public Emprestimo getAtivoByExemplarIdFisico(int usuarioId, String idFIsico) {
         for (Emprestimo e : this.getByUsuarioFk(usuarioId)) {
             if (e.getDtDevolucao() != null)
                 continue;
-            if (e.getExemplarFk() == exemplarId)
-                return e;
         }
+        return null;
+    }
+
+    public Emprestimo getByExemplarIdFisico(int usuarioId, String idFisico) {
         return null;
     }
 

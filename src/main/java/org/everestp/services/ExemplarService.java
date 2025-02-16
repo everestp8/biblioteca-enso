@@ -2,6 +2,8 @@ package org.everestp.services;
 
 import org.everestp.daos.ExemplarDAO;
 import org.everestp.daos.LivroDAO;
+import org.everestp.exceptions.ExemplarNaoEncontradoException;
+import org.everestp.exceptions.LivroNaoEncontradoException;
 import org.everestp.models.Exemplar;
 import org.everestp.models.Livro;
 
@@ -32,47 +34,51 @@ public class ExemplarService {
     }
 
     public Exemplar getExemplarById(int exemplarId) {
-        return this.exemplarDAO.getById(exemplarId);
+        Exemplar exemplar = this.exemplarDAO.getById(exemplarId);
+        if (exemplar == null)
+            throw new ExemplarNaoEncontradoException();
+        return exemplar;
     }
 
     public Exemplar getExemplarByIdFisico(String idFisico) {
-        return this.exemplarDAO.getByIdFisico(idFisico);
+        Exemplar exemplar = this.exemplarDAO.getByIdFisico(idFisico);
+        if (exemplar == null)
+            throw new ExemplarNaoEncontradoException();
+        return exemplar;
     }
 
     public List<Exemplar> getExemplaresByTitulo(String tituloLivro) {
         Livro livro = this.livroDAO.getByTitulo(tituloLivro);
-
         if (livro == null)
-            return null;
+            throw new LivroNaoEncontradoException();
 
-        return this.exemplarDAO.getAllByLivroFk(livro.getId());
+        List<Exemplar> exemplares = this.exemplarDAO.getAllByLivroFk(livro.getId());
+        if (exemplares == null)
+            throw new ExemplarNaoEncontradoException();
+        return exemplares;
     }
 
-    public int adicionarExemplarPorTitulo(String tituloLivro, int quantidade) {
+    public void adicionarExemplarPorTitulo(String tituloLivro, int quantidade) {
         Livro livro = this.livroDAO.getByTitulo(tituloLivro);
 
         if (livro == null)
-            return 1;
+            throw new LivroNaoEncontradoException();
 
         for (int i=0; i<quantidade; i++) {
             Exemplar novoExemplar = new Exemplar(0, livro.getId(), this.geradorIdFisico(), true);
             this.exemplarDAO.save(novoExemplar);
         }
-        return 0;
     }
 
-    public int removerExemplarByIdFisico(String idFisico) {
-        try {
-            this.exemplarDAO.deleteByIdFisico(idFisico);
-        } catch (Exception e) {
-            return 1;
-        }
-        return 0;
+    // TODO: Não permitir remoção caso algum exemplar esteja sendo emprestado
+    public void removerExemplarByIdFisico(String idFisico) {
+        this.exemplarDAO.deleteByIdFisico(idFisico);
     }
 
-    public int remocveExemplaresByLivroId(int livroId) {
+    // TODO: 1. Não permitir remoção caso algum exemplar esteja sendo emprestado
+    // TODO: 2. Essa operação provavelmente pode virar apenas uma query
+    public void removerExemplaresByLivroId(int livroId) {
         for (Exemplar e : this.exemplarDAO.getAllByLivroFk(livroId))
             this.exemplarDAO.delete(e.getId());
-        return 0;
     }
 }
