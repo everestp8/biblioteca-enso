@@ -199,7 +199,7 @@ public class TelaCadastro extends javax.swing.JFrame {
 
         JOptionPane.showMessageDialog(null, "Cadastro realizado com sucesso.", "Cadastro", JOptionPane.INFORMATION_MESSAGE);
         TelaPrincipal.setUsuario(response.getData());
-        TelaPrincipal.setTelaAtiva(new Menu());
+        TelaPrincipal.setTelaAtiva(new TelaCatalogo());
     }//GEN-LAST:event_botaoCadastrarActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

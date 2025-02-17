@@ -157,7 +157,7 @@ public class TelaLogin extends javax.swing.JFrame {
 
         JOptionPane.showMessageDialog(null, "Login realizado com sucesso.", "Login", JOptionPane.INFORMATION_MESSAGE);
         TelaPrincipal.setUsuario(response.getData());
-        TelaPrincipal.setTelaAtiva(new Menu());
+        TelaPrincipal.setTelaAtiva(new TelaCatalogo());
     }//GEN-LAST:event_botaoLoginActionPerformed
 
     /**
