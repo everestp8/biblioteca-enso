@@ -3,6 +3,7 @@ package org.everestp.services;
 import org.everestp.daos.ExemplarDAO;
 import org.everestp.daos.LivroDAO;
 import org.everestp.exceptions.ExemplarNaoEncontradoException;
+import org.everestp.exceptions.ExemplaresEmUsoException;
 import org.everestp.exceptions.LivroNaoEncontradoException;
 import org.everestp.models.Exemplar;
 import org.everestp.models.Livro;
@@ -40,13 +41,6 @@ public class ExemplarService {
         return exemplar;
     }
 
-    public Exemplar getExemplarByIdFisico(String idFisico) {
-        Exemplar exemplar = this.exemplarDAO.getByIdFisico(idFisico);
-        if (exemplar == null)
-            throw new ExemplarNaoEncontradoException();
-        return exemplar;
-    }
-
     public List<Exemplar> getExemplaresByTitulo(String tituloLivro) {
         Livro livro = this.livroDAO.getByTitulo(tituloLivro);
         if (livro == null)
@@ -70,15 +64,17 @@ public class ExemplarService {
         }
     }
 
-    // TODO: Não permitir remoção caso algum exemplar esteja sendo emprestado
     public void removerExemplarByIdFisico(String idFisico) {
+        Exemplar exemplar = this.exemplarDAO.getByIdFisico(idFisico);
+        if (!exemplar.getDisponivel())
+            throw new ExemplaresEmUsoException();
         this.exemplarDAO.deleteByIdFisico(idFisico);
     }
 
-    // TODO: 1. Não permitir remoção caso algum exemplar esteja sendo emprestado
-    // TODO: 2. Essa operação provavelmente pode virar apenas uma query
     public void removerExemplaresByLivroId(int livroId) {
         for (Exemplar e : this.exemplarDAO.getAllByLivroFk(livroId))
-            this.exemplarDAO.delete(e.getId());
+            if (!e.getDisponivel())
+                throw new ExemplaresEmUsoException();
+        this.exemplarDAO.deleteByLivroFk(livroId);
     }
 }

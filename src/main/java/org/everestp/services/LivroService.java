@@ -59,7 +59,7 @@ public class LivroService {
         String novoAutor = dadosAtualizados.autor() != null ? dadosAtualizados.autor() : livroExistente.getAutor();
         String novoGenero = dadosAtualizados.genero()!= null ? dadosAtualizados.genero(): livroExistente.getGenero();
         String novaDescricao = dadosAtualizados.descricao()!= null ? dadosAtualizados.descricao(): livroExistente.getDescricao();
-        Integer novoAno = dadosAtualizados.ano()!= null ? dadosAtualizados.ano(): livroExistente.getAno();
+        int novoAno = dadosAtualizados.ano()!= null ? dadosAtualizados.ano(): livroExistente.getAno();
         livroAtualizado = new Livro(livroExistente.getId(), novoTitulo, novoAutor, novoGenero, novaDescricao, novoAno);
 
         this.livroDAO.update(livroAtualizado);

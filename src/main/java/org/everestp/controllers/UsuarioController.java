@@ -7,22 +7,12 @@ import org.everestp.services.EmprestimoService;
 import org.everestp.services.UsuarioService;
 
 public class UsuarioController {
-
     private final UsuarioService usuarioService;
     private final EmprestimoService emprestimoService;
 
     public UsuarioController(UsuarioService usuarioService, EmprestimoService emprestimoService) {
         this.usuarioService = usuarioService;
         this.emprestimoService = emprestimoService;
-    }
-
-    public Response<Boolean> autenticarUsuario(String email, String senha) {
-        try {
-            this.usuarioService.autenticarUsuario(email, senha);
-            return Response.sucesso(true);
-        } catch (Exception e) {
-            return Response.falha(e);
-        }
     }
 
     public Response<Usuario> fazerLogin(String email, String senha) {

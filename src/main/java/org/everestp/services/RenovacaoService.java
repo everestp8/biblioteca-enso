@@ -2,6 +2,7 @@ package org.everestp.services;
 
 import org.everestp.daos.EmprestimoDAO;
 import org.everestp.daos.RenovacaoDAO;
+import org.everestp.exceptions.MaximoDeRenovacoesAtingidoException;
 import org.everestp.models.Emprestimo;
 import org.everestp.models.Renovacao;
 
@@ -21,18 +22,13 @@ public class RenovacaoService {
         return this.renovacaoDAO.getByUsuarioIdAndEmprestimo(usuarioId, emprestimoId);
     }
 
-    public int renovarEmprestimo(String idFisico, int usuarioId) {
-        Emprestimo emprestimo = this.emprestimoDAO.getAtivoByExemplarIdFisico(usuarioId, idFisico);
+    public void renovarEmprestimo(String idFisico, int usuarioId) {
+        Emprestimo emprestimo = this.emprestimoDAO.getAtivoByExemplarIdFisico(idFisico);
         int quantRenovacoes = this.renovacaoDAO.getByUsuarioIdAndEmprestimo(usuarioId, emprestimo.getId()).size();
         if (quantRenovacoes > 3)
-            return 2;
-        try {
-            this.emprestimoDAO.setDtPrazo(emprestimo.getId(), emprestimo.getDtPrazo().plusDays(7));
-        } catch (Exception e) {
-            return 1;
-        }
+            throw new MaximoDeRenovacoesAtingidoException();
+        this.emprestimoDAO.setDtPrazo(emprestimo.getId(), emprestimo.getDtPrazo().plusDays(7));
         Renovacao renovacao = new Renovacao(0, emprestimo.getId(), usuarioId, LocalDate.now());
         this.renovacaoDAO.save(renovacao);
-        return 0;
     }
 }

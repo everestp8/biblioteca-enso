@@ -47,9 +47,9 @@ public class EmprestimoController {
         }
     }
 
-    public Response<Void> devolverExemplar(int usuarioId, String idFisico) {
+    public Response<Void> devolverExemplar(String idFisico) {
         try {
-            this.emprestimoService.devolverEmprestimo(idFisico, usuarioId);
+            this.emprestimoService.devolverEmprestimo(idFisico);
             return Response.sucesso();
         } catch (Exception e) {
             return Response.falha(e);

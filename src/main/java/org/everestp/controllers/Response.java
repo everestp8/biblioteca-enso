@@ -29,10 +29,6 @@ public class Response<T> {
         return data;
     }
 
-    public Exception getError() {
-        return error;
-    }
-
     public String getErrorMessage() {
         if (error == null)
             return null;

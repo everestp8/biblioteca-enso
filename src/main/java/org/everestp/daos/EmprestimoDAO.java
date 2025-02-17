@@ -1,41 +1,90 @@
 package org.everestp.daos;
 
+import org.everestp.exceptions.DatabaseException;
 import org.everestp.models.Emprestimo;
 
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EmprestimoDAO extends InMemoryDAO<Emprestimo> {
+public class EmprestimoDAO extends DatabaseDAO<Emprestimo> {
+    @Override
+    protected Emprestimo mapResultSetToEntity(ResultSet rs) throws SQLException {
+        return new Emprestimo(
+                rs.getInt("id"),
+                rs.getInt("exemplarFk"),
+                rs.getInt("usuarioFk"),
+                rs.getDate("dtEmprestimo").toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),
+                rs.getDate("dtDevolucao").toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),
+                rs.getDate("dtPrazo").toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
+        );
+    }
+
+    @Override
+    protected String getTableName() {
+        return "Emprestimo";
+    }
+
     public List<Emprestimo> getByUsuarioFk(int usuarioId) {
-        List<Emprestimo> emprestimos = new ArrayList<>();
-        for (Emprestimo e : this.getAll())
-            if (e.getUsuarioFk() == usuarioId)
-                emprestimos.add(e);
-        return emprestimos;
-    }
+        try {
+            String query = "select * from Renovacao where usuarioFk = ?;";
+            PreparedStatement pstm = this.conn.prepareStatement(query);
+            pstm.setInt(1, usuarioId);
 
-    public Emprestimo getAtivoByExemplarIdFisico(int usuarioId, String idFIsico) {
-        for (Emprestimo e : this.getByUsuarioFk(usuarioId)) {
-            if (e.getDtDevolucao() != null)
-                continue;
+            ResultSet rs = pstm.executeQuery();
+            List<Emprestimo> emprestimos = new ArrayList<>();
+
+            while (rs.next())
+                emprestimos.add(mapResultSetToEntity(rs));
+
+            return emprestimos;
+        } catch (SQLException e) {
+            throw new DatabaseException("Erro ao buscar todos os empréstimos do usuário.", e);
         }
-        return null;
     }
 
-    public Emprestimo getByExemplarIdFisico(int usuarioId, String idFisico) {
-        return null;
+    public Emprestimo getAtivoByExemplarIdFisico(String idFIsico) {
+        try {
+            String query = "SELECT emp.* FROM Emprestimo emp JOIN Exemplar ex ON emp.exemplarFk = ex.id WHERE ex.idFisico = ? AND emp.dtDevolucao IS NULL;";
+            PreparedStatement pstm = this.conn.prepareStatement(query);
+            pstm.setString(1, idFIsico);
+            ResultSet rs = pstm.executeQuery();
+
+            if (!rs.next())
+                throw new DatabaseException("Registro não encontrado.");
+
+            return mapResultSetToEntity(rs);
+        } catch (SQLException e) {
+            throw new DatabaseException("Erro ao buscar por .", e);
+        }
     }
 
     public void setDtPrazo(int emprestimoId, LocalDate novaDtPrazo) {
-        Emprestimo e = this.getById(emprestimoId);
-        Emprestimo novoEmprestimo = new Emprestimo(e.getId(), e.getExemplarFk(), e.getUsuarioFk(), e.getDtEmprestimo(), e.getDtDevolucao(), novaDtPrazo);
-        this.update(novoEmprestimo);
+        try {
+            String query = "update Emprestimmo set dtPrazo = ? where id = ?;";
+            PreparedStatement pstm = this.conn.prepareStatement(query);
+            pstm.setDate(1, (Date) Date.from(novaDtPrazo.atStartOfDay(ZoneId.systemDefault()).toInstant()));
+            pstm.setInt(2, emprestimoId);
+            pstm.executeUpdate();
+        } catch (SQLException e) {
+            throw new DatabaseException("Erro ao atualizar o prazo.", e);
+        }
     }
 
     public void setDtDevolucao(int emprestimoId, LocalDate novaDtDevolucao) {
-        Emprestimo e = this.getById(emprestimoId);
-        Emprestimo novoEmprestimo = new Emprestimo(e.getId(), e.getExemplarFk(), e.getUsuarioFk(), e.getDtEmprestimo(), novaDtDevolucao, e.getDtPrazo());
-        this.update(novoEmprestimo);
+        try {
+            String query = "update Emprestimmo set dtDevolucao = ? where id = ?;";
+            PreparedStatement pstm = this.conn.prepareStatement(query);
+            pstm.setDate(1, (Date) Date.from(novaDtDevolucao.atStartOfDay(ZoneId.systemDefault()).toInstant()));
+            pstm.setInt(2, emprestimoId);
+            pstm.executeUpdate();
+        } catch (SQLException e) {
+            throw new DatabaseException("Erro ao atualizar a data de devolução.", e);
+        }
     }
 }

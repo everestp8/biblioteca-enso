@@ -49,19 +49,12 @@ public class EmprestimoService {
         this.exemplarDAO.setDisponibilidadeById(exemplar.getId(), false);
     }
 
-    public void devolverEmprestimo(String idFisico, int usuarioId) {
-        Emprestimo emprestimo = this.emprestimoDAO.getAtivoByExemplarIdFisico(usuarioId, idFisico);
+    public void devolverEmprestimo(String idFisico) {
+        Emprestimo emprestimo = this.emprestimoDAO.getAtivoByExemplarIdFisico(idFisico);
         if (emprestimo == null)
             throw new EmprestimoNaoEncontradoException();
         this.emprestimoDAO.setDtDevolucao(emprestimo.getId(), LocalDate.now());
         this.exemplarDAO.setDisponibilidadeById(emprestimo.getExemplarFk(), true);
-    }
-
-    public Emprestimo getEemprestimoAtivoByExemplarId(int usuarioId, String idFIsico) {
-        Emprestimo emprestimo = this.emprestimoDAO.getAtivoByExemplarIdFisico(usuarioId, idFIsico);
-        if (emprestimo == null)
-            throw new EmprestimoNaoEncontradoException();
-        return emprestimo;
     }
 
     public List<Emprestimo> getAllEmprestimosByUsuarioId(int usuarioId) {

@@ -3,8 +3,8 @@ package org.everestp.models;
 import java.time.LocalDate;
 
 public class Emprestimo implements Model {
-    private int id, exemplarFk, usuarioFk;
-    private LocalDate dtEmprestimo, dtDevolucao, dtPrazo;
+    private final int id, exemplarFk, usuarioFk;
+    private final LocalDate dtEmprestimo, dtDevolucao, dtPrazo;
 
     public Emprestimo(int id, int exemplarFk, int usuarioFk, LocalDate dtEmprestimo, LocalDate dtDevolucao, LocalDate dtPrazo) {
         this.id = id;
@@ -17,10 +17,6 @@ public class Emprestimo implements Model {
 
     public int getId() {
         return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public int getExemplarFk() {
