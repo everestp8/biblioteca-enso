@@ -57,7 +57,6 @@ public class TelaHistóricoEmprestimos extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, res.getErrorMessage(), "Exibir empréstimos", JOptionPane.ERROR_MESSAGE);
             return;
         }
-		System.out.println(res.getData().size());
         
         DefaultTableModel model = (DefaultTableModel) jTable2.getModel();
         model.setRowCount(0);
@@ -82,7 +81,6 @@ public class TelaHistóricoEmprestimos extends javax.swing.JFrame {
             int quantRenovacoes = resRenov.getData();
             
             model.addRow(new Object[]{l.getTitulo(), ex.getIdFisico(), quantRenovacoes, emp.getDtEmprestimo(), emp.getDtPrazo(), emp.getDtDevolucao()});
-			System.out.println("Sucesso!");
         }
     }
     
@@ -357,7 +355,7 @@ public class TelaHistóricoEmprestimos extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-		// TelaPrincipal.setPopUp(new TelaFiltrarEmprestimos);
+        TelaPrincipal.setPopUp(new TelaFiltroDatas());
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed

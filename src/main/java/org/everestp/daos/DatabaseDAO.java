@@ -35,7 +35,7 @@ public abstract class DatabaseDAO<T extends Model> implements DAO<T>{
         }
     }
 
-	protected List<T> getAllBy(String columnName, Object value) {
+	public List<T> getAllBy(String columnName, Object value) {
 		try {
             String query = "select * from " + getTableName() + " where " + columnName  + " = ?;";
             PreparedStatement pstm = this.conn.prepareStatement(query);

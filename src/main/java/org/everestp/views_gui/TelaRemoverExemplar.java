@@ -4,16 +4,21 @@
  */
 package org.everestp.views_gui;
 
+import javax.swing.JOptionPane;
+import org.everestp.controllers.LivroController;
+import org.everestp.controllers.Response;
+
 /**
  *
  * @author Aluno
  */
 public class TelaRemoverExemplar extends javax.swing.JFrame {
-
+    private LivroController livroController;
     /**
      * Creates new form PianelBibliotecario
      */
     public TelaRemoverExemplar() {
+        this.livroController = TelaPrincipal.getLivroController();
         initComponents();
     }
 
@@ -44,6 +49,11 @@ public class TelaRemoverExemplar extends javax.swing.JFrame {
         jButton1.setBackground(new java.awt.Color(255, 255, 255));
         jButton1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jButton1.setText("Painel Bibliotecário");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jLabel2.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel2.setText(">");
@@ -52,11 +62,21 @@ public class TelaRemoverExemplar extends javax.swing.JFrame {
         jLabel3.setText("Digite as informações para a remoção");
 
         jLabel4.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jLabel4.setText("ID físico do livro");
+        jLabel4.setText("ID físico do exemplar");
 
         botaoCancelar.setText("Cancelar");
+        botaoCancelar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botaoCancelarActionPerformed(evt);
+            }
+        });
 
         botaoConfirmar.setText("Confirmar");
+        botaoConfirmar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botaoConfirmarActionPerformed(evt);
+            }
+        });
 
         jLabel6.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel6.setText("dos exemplares:");
@@ -114,6 +134,25 @@ public class TelaRemoverExemplar extends javax.swing.JFrame {
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
+
+    private void botaoConfirmarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoConfirmarActionPerformed
+        String idFisico = jTextField1.getText();
+        Response<Void> res = this.livroController.removerExemplarDoLivro(idFisico);
+        if (res.isError()) {
+            JOptionPane.showMessageDialog(null, res.getErrorMessage(), "Remover exemplar", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        JOptionPane.showMessageDialog(null, "Exemplar exlcuido com sucesso.");
+        this.dispose();
+    }//GEN-LAST:event_botaoConfirmarActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        this.dispose();
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void botaoCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoCancelarActionPerformed
+        this.dispose();
+    }//GEN-LAST:event_botaoCancelarActionPerformed
 
     /**
      * @param args the command line arguments

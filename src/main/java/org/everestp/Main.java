@@ -36,7 +36,7 @@ public class Main {
         EmprestimoController emprestimoController = new EmprestimoController(emprestimoService, renovacaoService);
         
         // MenuCLI menuCLI = new MenuCLI(usuarioController, livroController, emprestimoController);
-        
+
         new TelaPrincipal(usuarioController, livroController, emprestimoController).setVisible(false);
     }
 }

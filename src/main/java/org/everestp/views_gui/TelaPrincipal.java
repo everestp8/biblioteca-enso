@@ -1,11 +1,16 @@
 package org.everestp.views_gui;
 
-import javax.swing.JFrame;
+import javax.swing.*;
 
 import org.everestp.controllers.EmprestimoController;
 import org.everestp.controllers.LivroController;
+import org.everestp.controllers.Response;
 import org.everestp.controllers.UsuarioController;
+import org.everestp.models.Emprestimo;
+import org.everestp.models.Exemplar;
 import org.everestp.models.Usuario;
+
+import java.util.List;
 
 public class TelaPrincipal extends javax.swing.JFrame {
     private static UsuarioController usuarioController;

@@ -15,13 +15,22 @@ import java.util.List;
 public class EmprestimoDAO extends DatabaseDAO<Emprestimo> {
     @Override
     protected Emprestimo mapResultSetToEntity(ResultSet rs) throws SQLException {
+        java.sql.Date sqlDateEmprestimo = rs.getDate("dtEmprestimo");
+        LocalDate dtEmprestimo = (sqlDateEmprestimo != null) ? sqlDateEmprestimo.toLocalDate() : null;
+
+        java.sql.Date sqlDateDevolucao = rs.getDate("dtDevolucao");
+        LocalDate dtDevolucao = (sqlDateDevolucao != null) ? sqlDateDevolucao.toLocalDate() : null;
+
+        java.sql.Date sqlDatePrazo = rs.getDate("dtPrazo");
+        LocalDate dtPrazo = (sqlDatePrazo != null) ? sqlDatePrazo.toLocalDate() : null;
+
         return new Emprestimo(
                 rs.getInt("id"),
                 rs.getInt("exemplarFk"),
                 rs.getInt("usuarioFk"),
-                rs.getDate("dtEmprestimo").toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),
-                rs.getDate("dtDevolucao").toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),
-                rs.getDate("dtPrazo").toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
+                dtEmprestimo,
+                dtDevolucao,
+                dtPrazo
         );
     }
 
@@ -52,9 +61,9 @@ public class EmprestimoDAO extends DatabaseDAO<Emprestimo> {
 
     public void setDtPrazo(int emprestimoId, LocalDate novaDtPrazo) {
         try {
-            String query = "update Emprestimmo set dtPrazo = ? where id = ?;";
+            String query = "update Emprestimo set dtPrazo = ? where id = ?;";
             PreparedStatement pstm = this.conn.prepareStatement(query);
-            pstm.setDate(1, (Date) Date.from(novaDtPrazo.atStartOfDay(ZoneId.systemDefault()).toInstant()));
+            pstm.setDate(1, java.sql.Date.valueOf(novaDtPrazo));
             pstm.setInt(2, emprestimoId);
             pstm.executeUpdate();
         } catch (SQLException e) {
@@ -64,9 +73,9 @@ public class EmprestimoDAO extends DatabaseDAO<Emprestimo> {
 
     public void setDtDevolucao(int emprestimoId, LocalDate novaDtDevolucao) {
         try {
-            String query = "update Emprestimmo set dtDevolucao = ? where id = ?;";
+            String query = "update Emprestimo set dtDevolucao = ? where id = ?;";
             PreparedStatement pstm = this.conn.prepareStatement(query);
-            pstm.setDate(1, (Date) Date.from(novaDtDevolucao.atStartOfDay(ZoneId.systemDefault()).toInstant()));
+            pstm.setDate(1, java.sql.Date.valueOf(novaDtDevolucao));
             pstm.setInt(2, emprestimoId);
             pstm.executeUpdate();
         } catch (SQLException e) {

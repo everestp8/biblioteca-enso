@@ -196,15 +196,15 @@ public class TelaPainelBibliotecario extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton5ActionPerformed
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
-
+        TelaPrincipal.setPopUp(new TelaRemoverExemplar());
     }//GEN-LAST:event_jButton6ActionPerformed
 
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
-		// TelaPrincipal.setTelaAtiva(new TelaDevolverEmprestimo()));
+        TelaPrincipal.setPopUp(new TelaDelvolverEmprestimo());
     }//GEN-LAST:event_jButton7ActionPerformed
 
     private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
-		TelaPrincipal.setPopUp(new TelaAdicionarEmprestimo());
+        TelaPrincipal.setPopUp(new TelaAdicionarEmprestimo());
     }//GEN-LAST:event_jButton8ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed

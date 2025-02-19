@@ -7,17 +7,21 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.ZoneId;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 public class RenovacaoDAO extends DatabaseDAO<Renovacao> {
     @Override
     protected Renovacao mapResultSetToEntity(ResultSet rs) throws SQLException {
+        java.sql.Date sqlDateRenovacao = rs.getDate("dtRenovacao");
+        LocalDate dtRenovacao = (sqlDateRenovacao != null) ? sqlDateRenovacao.toLocalDate() : null;
+
         return new Renovacao(
             rs.getInt("id"),
             rs.getInt("emprestimoFk"),
             rs.getInt("usuarioFk"),
-            rs.getDate("dtRenovacao").toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
+            dtRenovacao
         );
     }
 
