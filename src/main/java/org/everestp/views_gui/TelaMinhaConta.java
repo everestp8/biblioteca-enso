@@ -49,10 +49,10 @@ public class TelaMinhaConta extends javax.swing.JFrame {
         jLabel7.setText(usuario.getEmail());
         jLabel8.setText(usuario.getCpf());
         
-        if (usuario.getPapel() != 1 && usuario.getPapel() != 0)
+        if (usuario.getPapel() == 2)
             jButton3.setEnabled(false);
         if (usuario.getPapel() != 0)
-            jButton3.setEnabled(false);
+            jButton4.setEnabled(false);
     }
 
     /**

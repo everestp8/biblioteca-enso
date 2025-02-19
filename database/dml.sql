@@ -3,7 +3,7 @@ use BibliotecaDatabase;
 insert into Usuario(nome, email, senha, cpf, papel) values
 	('Bárbara', 'bgss@', '123321', '132.132.132-13', 0),
 	('Erick', 'edas@', '123321', '321.321.321-32', 0),
-	('Bárbara', 'ceps@', '123321', '123.123.123-12', 0);
+	('Evaristo', 'ceps@', '123321', '123.123.123-12', 0);
 
 insert into Livro(titulo, autor, genero, descricao, ano) values
 	('1984', 'George Orwell', 'Ficção Distópica', 'Coisas acontecem', 1949),
