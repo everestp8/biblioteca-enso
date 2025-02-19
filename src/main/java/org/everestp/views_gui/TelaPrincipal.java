@@ -21,6 +21,10 @@ public class TelaPrincipal extends javax.swing.JFrame {
         TelaPrincipal.telaAtiva = telaAtiva;
         TelaPrincipal.telaAtiva.setVisible(true);
     }
+    
+    public static void setPopUp(JFrame telaPopUp) {
+        telaPopUp.setVisible(true);
+    }
 
     public static Usuario getUsuario() {
         return usuario;

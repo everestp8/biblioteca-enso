@@ -11,12 +11,10 @@ import java.util.List;
 
 public class EmprestimoController {
     private final EmprestimoService emprestimoService;
-    private final ExemplarService exemplarService;
     private final RenovacaoService renovacaoService;
 
-    public EmprestimoController(EmprestimoService emprestimoService, ExemplarService exemplarService, RenovacaoService renovacaoService) {
+    public EmprestimoController(EmprestimoService emprestimoService, RenovacaoService renovacaoService) {
         this.emprestimoService = emprestimoService;
-        this.exemplarService = exemplarService;
         this.renovacaoService = renovacaoService;
     }
 
@@ -24,15 +22,6 @@ public class EmprestimoController {
         try {
             List<Emprestimo> emprestimos = this.emprestimoService.getAllEmprestimosByUsuarioId(usuarioId);
             return Response.sucesso(emprestimos);
-        } catch (Exception e) {
-            return Response.falha(e);
-        }
-    }
-
-    public Response<Exemplar> exemplarPorId(int exemplarId) {
-        try {
-            Exemplar exemplar = this.exemplarService.getExemplarById(exemplarId);
-            return Response.sucesso(exemplar);
         } catch (Exception e) {
             return Response.falha(e);
         }

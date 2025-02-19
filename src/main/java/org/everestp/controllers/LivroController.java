@@ -35,6 +35,15 @@ public class LivroController {
         }
     }
 
+    public Response<Livro> livroPorTitulo(String titulo) {
+        try {
+            Livro livro = this.livroService.getLivroByTitulo(titulo);
+            return Response.sucesso(livro);
+        } catch (Exception e) {
+            return Response.falha(e);
+        }
+    }
+
     public Response<List<Exemplar>> listarExemplares(String tituloLivro) {
         try {
             List<Exemplar> exemplares = this.exemplarService.getExemplaresByTitulo(tituloLivro);
@@ -43,7 +52,25 @@ public class LivroController {
             return Response.falha(e);
         }
     }
+    
+    public Response<Exemplar> exemplarPorId(int exemplarId) {
+        try {
+            Exemplar exemplar = this.exemplarService.getExemplarById(exemplarId);
+            return Response.sucesso(exemplar);
+        } catch (Exception e) {
+            return Response.falha(e);
+        }
+    }
 
+    public Response<List<Exemplar>> inserirExemplares(String titulo, int quantExemplares) {
+        try {
+            List<Exemplar> exemplares = this.exemplarService.adicionarExemplarPorTitulo(titulo, quantExemplares);
+            return Response.sucesso(exemplares);
+        } catch (Exception e) {
+            return Response.falha(e);
+        }
+    }
+    
     public Response<Void> inserirLivro(LivroDTO dadosLivro, int quantExemplares) {
         try {
             this.exemplarService.adicionarExemplarPorTitulo(dadosLivro.titulo(), quantExemplares);

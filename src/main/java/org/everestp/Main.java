@@ -33,7 +33,7 @@ public class Main {
 
         UsuarioController usuarioController = new UsuarioController(usuarioService, emprestimoService);
         LivroController livroController = new LivroController(livroService, exemplarService);
-        EmprestimoController emprestimoController = new EmprestimoController(emprestimoService, exemplarService, renovacaoService);
+        EmprestimoController emprestimoController = new EmprestimoController(emprestimoService, renovacaoService);
         
         // MenuCLI menuCLI = new MenuCLI(usuarioController, livroController, emprestimoController);
         

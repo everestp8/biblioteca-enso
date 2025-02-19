@@ -86,6 +86,12 @@ public class TelaLogin extends javax.swing.JFrame {
             }
         });
 
+        inputSenha.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                inputSenhaActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -93,7 +99,7 @@ public class TelaLogin extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(50, 50, 50)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(inputSenha, javax.swing.GroupLayout.DEFAULT_SIZE, 300, Short.MAX_VALUE)
+                    .addComponent(inputSenha)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel6)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -159,6 +165,10 @@ public class TelaLogin extends javax.swing.JFrame {
         TelaPrincipal.setUsuario(response.getData());
         TelaPrincipal.setTelaAtiva(new TelaCatalogo());
     }//GEN-LAST:event_botaoLoginActionPerformed
+
+    private void inputSenhaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inputSenhaActionPerformed
+        this.botaoLoginActionPerformed(evt);
+    }//GEN-LAST:event_inputSenhaActionPerformed
 
     /**
      * @param args the command line arguments

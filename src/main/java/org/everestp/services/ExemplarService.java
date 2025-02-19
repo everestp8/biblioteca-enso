@@ -1,5 +1,6 @@
 package org.everestp.services;
 
+import java.util.ArrayList;
 import org.everestp.daos.ExemplarDAO;
 import org.everestp.daos.LivroDAO;
 import org.everestp.exceptions.ExemplarNaoEncontradoException;
@@ -52,16 +53,19 @@ public class ExemplarService {
         return exemplares;
     }
 
-    public void adicionarExemplarPorTitulo(String tituloLivro, int quantidade) {
+    public List<Exemplar> adicionarExemplarPorTitulo(String tituloLivro, int quantidade) {
         Livro livro = this.livroDAO.getByTitulo(tituloLivro);
 
         if (livro == null)
             throw new LivroNaoEncontradoException();
-
+        
+        List<Exemplar> exemplares = new ArrayList<>();
         for (int i=0; i<quantidade; i++) {
             Exemplar novoExemplar = new Exemplar(0, livro.getId(), this.geradorIdFisico(), true);
             this.exemplarDAO.save(novoExemplar);
+            exemplares.add(novoExemplar);
         }
+        return exemplares;
     }
 
     public void removerExemplarByIdFisico(String idFisico) {

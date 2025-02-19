@@ -86,6 +86,12 @@ public class TelaCadastro extends javax.swing.JFrame {
 
         jLabel5.setText("Senha");
 
+        inputSenha.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                inputSenhaActionPerformed(evt);
+            }
+        });
+
         jLabel6.setForeground(new java.awt.Color(102, 102, 102));
         jLabel6.setText("Já possui uma conta?");
 
@@ -142,7 +148,7 @@ public class TelaCadastro extends javax.swing.JFrame {
                 .addComponent(jLabel2)
                 .addGap(50, 50, 50)
                 .addComponent(jLabel3)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 22, Short.MAX_VALUE)
+                .addGap(22, 22, 22)
                 .addComponent(jLabel9)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(inputNome, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -164,7 +170,7 @@ public class TelaCadastro extends javax.swing.JFrame {
                     .addComponent(botaoLogin))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(botaoCadastrar)
-                .addGap(23, 23, 23))
+                .addContainerGap(23, Short.MAX_VALUE))
         );
 
         pack();
@@ -201,6 +207,10 @@ public class TelaCadastro extends javax.swing.JFrame {
         TelaPrincipal.setUsuario(response.getData());
         TelaPrincipal.setTelaAtiva(new TelaCatalogo());
     }//GEN-LAST:event_botaoCadastrarActionPerformed
+
+    private void inputSenhaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inputSenhaActionPerformed
+        this.botaoCadastrarActionPerformed(evt);
+    }//GEN-LAST:event_inputSenhaActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton botaoCadastrar;

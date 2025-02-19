@@ -4,17 +4,55 @@
  */
 package org.everestp.views_gui;
 
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import javax.swing.JOptionPane;
+import org.everestp.controllers.Response;
+import org.everestp.controllers.UsuarioController;
+import org.everestp.models.Usuario;
+
 /**
  *
  * @author Aluno
  */
 public class TelaMinhaConta extends javax.swing.JFrame {
-
+    private UsuarioController usuarioController;
     /**
      * Creates new form MinhaConta
      */
     public TelaMinhaConta() {
+        this.usuarioController = TelaPrincipal.getUsuarioController();
         initComponents();
+        configMenuBar();
+        loadInfo();
+    }
+    
+    private void configMenuBar() {
+        jMenu1.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                TelaPrincipal.setTelaAtiva(new TelaCatalogo());
+            }
+        });
+        
+        jMenu2.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                TelaPrincipal.setTelaAtiva(new TelaHistóricoEmprestimos());
+            }
+        });
+    }
+    
+    private void loadInfo() {
+        Usuario usuario = TelaPrincipal.getUsuario();
+        jLabel6.setText(usuario.getNome());
+        jLabel7.setText(usuario.getEmail());
+        jLabel8.setText(usuario.getCpf());
+        
+        if (usuario.getPapel() != 1 && usuario.getPapel() != 0)
+            jButton3.setEnabled(false);
+        if (usuario.getPapel() != 0)
+            jButton3.setEnabled(false);
     }
 
     /**
@@ -54,15 +92,35 @@ public class TelaMinhaConta extends javax.swing.JFrame {
 
         jButton1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jButton1.setText("Excluir conta");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jButton2.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jButton2.setText("Alterar dados da conta");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         jButton3.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jButton3.setText("Painel do bibliotecário");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
 
         jButton4.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jButton4.setText("Painel do administrador");
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
 
         jLabel3.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel3.setText("Nome:");
@@ -84,6 +142,11 @@ public class TelaMinhaConta extends javax.swing.JFrame {
 
         jButton5.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jButton5.setText("Sair da conta");
+        jButton5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton5ActionPerformed(evt);
+            }
+        });
 
         jMenu1.setText("Home");
         jMenuBar1.add(jMenu1);
@@ -168,6 +231,39 @@ public class TelaMinhaConta extends javax.swing.JFrame {
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+        int confirm = JOptionPane.showConfirmDialog(null, "Quer mesmo sair da sua conta?", "Sair da conta", JOptionPane.YES_NO_OPTION);
+        if (confirm != 0)
+            return;
+        TelaPrincipal.setUsuario(null);
+        TelaPrincipal.setTelaAtiva(new TelaLogin());
+    }//GEN-LAST:event_jButton5ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        int confirm = JOptionPane.showConfirmDialog(null, "Quer mesmo apagar sua conta?\nEssa ação é irrevesível.", "Deletar conta", JOptionPane.YES_NO_OPTION);
+        if (confirm != 0)
+            return;
+        Response<Void> res = this.usuarioController.excluirUsuario(TelaPrincipal.getUsuario().getId());
+        if (res.isError()) {
+            JOptionPane.showMessageDialog(null, res.getErrorMessage(), "Deletar conta", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        TelaPrincipal.setUsuario(null);
+        TelaPrincipal.setTelaAtiva(new TelaLogin());
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        TelaPrincipal.setPopUp(new TelaAlterarDadosDoUsuario());
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        TelaPrincipal.setTelaAtiva(new TelaPainelBibliotecario());
+    }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        TelaPrincipal.setTelaAtiva(new TelaPainelAdm());
+    }//GEN-LAST:event_jButton4ActionPerformed
 
     /**
      * @param args the command line arguments

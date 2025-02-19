@@ -18,9 +18,9 @@ import org.everestp.models.Usuario;
 public class TelaAlterarDadosDoUsuario extends javax.swing.JFrame {
     private final UsuarioController usuarioController;
     
-    public TelaAlterarDadosDoUsuario(UsuarioController usuarioController) {
+    public TelaAlterarDadosDoUsuario() {
+        this.usuarioController = TelaPrincipal.getUsuarioController();
         initComponents();
-        this.usuarioController = usuarioController;
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -84,35 +84,39 @@ public class TelaAlterarDadosDoUsuario extends javax.swing.JFrame {
 
         jButton3.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jButton3.setText("Minha conta");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(29, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jButton3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jLabel6)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jLabel7))
                     .addComponent(botaoConfirmar)
-                    .addComponent(inputCpf, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(inputSenha, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(inputNome, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(layout.createSequentialGroup()
-                            .addGap(50, 50, 50)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(jLabel1)
-                                .addComponent(jLabel5)
-                                .addComponent(jLabel4)
-                                .addComponent(jLabel2)
-                                .addComponent(jLabel3)
-                                .addComponent(inputEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGroup(layout.createSequentialGroup()
-                            .addGap(29, 29, 29)
-                            .addComponent(jButton3)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                            .addComponent(jLabel6)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                            .addComponent(jLabel7))))
-                .addContainerGap(50, Short.MAX_VALUE))
+                        .addComponent(jLabel2)
+                        .addComponent(inputNome, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel1))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jLabel5)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(inputCpf, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 300, Short.MAX_VALUE)
+                            .addComponent(inputSenha, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel3)
+                            .addComponent(inputEmail, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel4))))
+                .addGap(50, 50, 50))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -122,9 +126,9 @@ public class TelaAlterarDadosDoUsuario extends javax.swing.JFrame {
                     .addComponent(jButton3)
                     .addComponent(jLabel6)
                     .addComponent(jLabel7))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 50, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 52, Short.MAX_VALUE)
                 .addComponent(jLabel1)
-                .addGap(30, 30, 30)
+                .addGap(28, 28, 28)
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(inputNome, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -155,7 +159,13 @@ public class TelaAlterarDadosDoUsuario extends javax.swing.JFrame {
         String email = this.inputEmail.getText();
         String senha = new String(this.inputSenha.getPassword());
         String cpf = this.inputCpf.getText();
-        UsuarioDTO dadosUsuario = new UsuarioDTO(nome, email, senha, cpf, null);
+        UsuarioDTO dadosUsuario = new UsuarioDTO(
+            nome.equals("") ? null : nome,
+            email.equals("") ? null : email,
+            senha.equals("") ? null : senha,
+            cpf.equals("   .   .   -  ") ? null : cpf,
+            null
+        );
         
         Response<Void> response = this.usuarioController.alterarDadosUsuario(usuario.getId(), dadosUsuario);
         if (response.isError()) {
@@ -166,6 +176,11 @@ public class TelaAlterarDadosDoUsuario extends javax.swing.JFrame {
         JOptionPane.showMessageDialog(null, "Alteração realizada com sucesso.", "Alterar dados da conta", JOptionPane.INFORMATION_MESSAGE);
         this.dispose();
     }//GEN-LAST:event_botaoConfirmarActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        this.dispose();
+    }//GEN-LAST:event_jButton3ActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton botaoConfirmar;
     private javax.swing.JFormattedTextField inputCpf;

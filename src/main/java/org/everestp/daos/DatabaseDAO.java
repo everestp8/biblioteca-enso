@@ -77,7 +77,6 @@ public abstract class DatabaseDAO<T extends Model> implements DAO<T>{
 
             String query = "insert into " + getTableName() + " (" + columns + ") values (" + placeholders + ");";
             PreparedStatement pstm = this.conn.prepareStatement(query);
-            System.out.println(query);
 
             int index = 1;
             for (Field field : fields) {
