@@ -35,6 +35,24 @@ public abstract class DatabaseDAO<T extends Model> implements DAO<T>{
         }
     }
 
+	protected List<T> getAllBy(String columnName, Object value) {
+		try {
+            String query = "select * from " + getTableName() + " where " + columnName  + " = ?;";
+            PreparedStatement pstm = this.conn.prepareStatement(query);
+            pstm.setObject(1, value);
+
+            ResultSet rs = pstm.executeQuery();
+			List<T> entities = new ArrayList<>();
+
+            while (rs.next())
+                entities.add(mapResultSetToEntity(rs));
+
+            return entities;
+        } catch (SQLException e) {
+            throw new DatabaseException("Erro ao buscar todos os registros.", e);
+        }
+	}
+
     @Override
     public T getById(int id) {
         return this.getBy("id", id);

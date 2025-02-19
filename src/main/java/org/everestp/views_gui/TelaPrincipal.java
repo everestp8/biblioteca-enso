@@ -23,6 +23,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
     }
     
     public static void setPopUp(JFrame telaPopUp) {
+        telaPopUp.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         telaPopUp.setVisible(true);
     }
 

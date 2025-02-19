@@ -57,24 +57,32 @@ public class TelaHistóricoEmprestimos extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, res.getErrorMessage(), "Exibir empréstimos", JOptionPane.ERROR_MESSAGE);
             return;
         }
+		System.out.println(res.getData().size());
         
         DefaultTableModel model = (DefaultTableModel) jTable2.getModel();
         model.setRowCount(0);
         for (Emprestimo emp : res.getData()) {
             Response<Exemplar> resExemplar = this.livroController.exemplarPorId(emp.getExemplarFk());
-            if (resExemplar.isError())
+            if (resExemplar.isError()) {
+				System.out.println(resExemplar.getErrorMessage());
                 continue;
+			}
             Exemplar ex = resExemplar.getData();
             Response<Livro> resLivro = this.livroController.livroPorId(ex.getLivroFk());
-            if (resLivro.isError())
+            if (resLivro.isError()) {
+				System.out.println(resLivro.getErrorMessage());
                 continue;
+			}
             Livro l = resLivro.getData();
             Response<Integer> resRenov = this.emprestimoController.quantidadeRenovacoes(usuarioId, emp.getId());
-            if (resRenov.isError())
+            if (resRenov.isError()) {
+				System.out.println(resRenov.getErrorMessage());
                 continue;
+			}
             int quantRenovacoes = resRenov.getData();
             
             model.addRow(new Object[]{l.getTitulo(), ex.getIdFisico(), quantRenovacoes, emp.getDtEmprestimo(), emp.getDtPrazo(), emp.getDtDevolucao()});
+			System.out.println("Sucesso!");
         }
     }
     
@@ -349,7 +357,7 @@ public class TelaHistóricoEmprestimos extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
+		// TelaPrincipal.setPopUp(new TelaFiltrarEmprestimos);
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed

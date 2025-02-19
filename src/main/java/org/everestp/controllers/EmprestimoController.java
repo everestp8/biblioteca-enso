@@ -23,7 +23,8 @@ public class EmprestimoController {
             List<Emprestimo> emprestimos = this.emprestimoService.getAllEmprestimosByUsuarioId(usuarioId);
             return Response.sucesso(emprestimos);
         } catch (Exception e) {
-            return Response.falha(e);
+			throw new RuntimeException(e);
+            // return Response.falha(e);
         }
     }
 

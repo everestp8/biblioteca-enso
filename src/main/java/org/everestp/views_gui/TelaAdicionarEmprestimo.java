@@ -4,16 +4,22 @@
  */
 package org.everestp.views_gui;
 
+import javax.swing.JOptionPane;
+import org.everestp.controllers.EmprestimoController;
+import org.everestp.controllers.Response;
+import org.everestp.dtos.EmprestimoDTO;
+
 /**
  *
  * @author Aluno
  */
 public class TelaAdicionarEmprestimo extends javax.swing.JFrame {
-
+	private EmprestimoController emprestimoController;
     /**
      * Creates new form PianelBibliotecario
      */
     public TelaAdicionarEmprestimo() {
+		this.emprestimoController = TelaPrincipal.getEmprestimoController();
         initComponents();
     }
 
@@ -43,9 +49,13 @@ public class TelaAdicionarEmprestimo extends javax.swing.JFrame {
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel1.setText("Adicionar Empréstimo");
 
-        jButton1.setBackground(new java.awt.Color(255, 255, 255));
         jButton1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jButton1.setText("Painel Bibliotecário");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jLabel2.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel2.setText(">");
@@ -60,8 +70,18 @@ public class TelaAdicionarEmprestimo extends javax.swing.JFrame {
         jLabel5.setText("CPF");
 
         botaoCancelar.setText("Cancelar");
+        botaoCancelar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botaoCancelarActionPerformed(evt);
+            }
+        });
 
         botaoConfirmar.setText("Confirmar");
+        botaoConfirmar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botaoConfirmarActionPerformed(evt);
+            }
+        });
 
         jLabel6.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel6.setText("do empréstimos:");
@@ -125,6 +145,28 @@ public class TelaAdicionarEmprestimo extends javax.swing.JFrame {
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
+
+    private void botaoCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoCancelarActionPerformed
+		this.dispose();
+    }//GEN-LAST:event_botaoCancelarActionPerformed
+
+    private void botaoConfirmarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoConfirmarActionPerformed
+		String idFisico = jTextField1.getText();
+		String cpf = jTextField2.getText();
+
+		EmprestimoDTO dadosEmprestimo = new EmprestimoDTO(idFisico, cpf);
+		Response<Void> res = this.emprestimoController.novoEmprestimo(dadosEmprestimo);
+		if (res.isError()) {
+            JOptionPane.showMessageDialog(null, res.getErrorMessage(), "Novo empréstimo", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+		JOptionPane.showMessageDialog(null, "Empréstimo realizado com sucesso!");
+		this.dispose();
+    }//GEN-LAST:event_botaoConfirmarActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+		this.dispose();
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments

@@ -31,21 +31,7 @@ public class EmprestimoDAO extends DatabaseDAO<Emprestimo> {
     }
 
     public List<Emprestimo> getByUsuarioFk(int usuarioId) {
-        try {
-            String query = "select * from Renovacao where usuarioFk = ?;";
-            PreparedStatement pstm = this.conn.prepareStatement(query);
-            pstm.setInt(1, usuarioId);
-
-            ResultSet rs = pstm.executeQuery();
-            List<Emprestimo> emprestimos = new ArrayList<>();
-
-            while (rs.next())
-                emprestimos.add(mapResultSetToEntity(rs));
-
-            return emprestimos;
-        } catch (SQLException e) {
-            throw new DatabaseException("Erro ao buscar todos os empréstimos do usuário.", e);
-        }
+        return this.getAllBy("usuarioFk", usuarioId);
     }
 
     public Emprestimo getAtivoByExemplarIdFisico(String idFIsico) {

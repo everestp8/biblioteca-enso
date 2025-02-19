@@ -30,21 +30,7 @@ public class ExemplarDAO extends DatabaseDAO<Exemplar> {
     }
 
     public List<Exemplar> getAllByLivroFk(int livroFk) {
-        try {
-            String query = "select * from Exemplar where livroFk = ?;";
-            PreparedStatement pstm = this.conn.prepareStatement(query);
-            pstm.setInt(1, livroFk);
-
-            ResultSet rs = pstm.executeQuery();
-            List<Exemplar> exemplares = new ArrayList<>();
-
-            while (rs.next())
-                exemplares.add(mapResultSetToEntity(rs));
-
-            return exemplares;
-        } catch (SQLException e) {
-            throw new DatabaseException(e);
-        }
+        return this.getAllBy("livroFk", livroFk);
     }
 
     public void setDisponibilidadeById(int exemplarId, boolean disponibilidade) {
