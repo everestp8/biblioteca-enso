@@ -1,39 +1,55 @@
 package org.everestp.daos;
 
+import org.everestp.exceptions.DatabaseException;
 import org.everestp.models.Exemplar;
 
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ExemplarDAO extends InMemoryDAO<Exemplar> {
+public class ExemplarDAO extends DatabaseDAO<Exemplar> {
+    @Override
+    protected Exemplar mapResultSetToEntity(ResultSet rs) throws SQLException {
+        return new Exemplar(
+            rs.getInt("id"),
+            rs.getInt("livroFk"),
+            rs.getString("idFisico"),
+            rs.getBoolean("disponivel")
+        );
+    }
+
+    @Override
+    protected String getTableName() {
+        return "Exemplar";
+    }
+
     public Exemplar getByIdFisico(String idFisico) {
-        for (Exemplar e : this.getAll())
-            if (e.getIdFisico().equals(idFisico))
-                return e;
-        return null;
+        return this.getBy("idFisico", idFisico);
     }
 
     public List<Exemplar> getAllByLivroFk(int livroFk) {
-        List<Exemplar> exemplares = new ArrayList<>();
-        for (Exemplar e : this.getAll())
-            if (e.getLivroFk() == livroFk)
-                exemplares.add(e);
-        return exemplares;
+        return this.getAllBy("livroFk", livroFk);
     }
 
     public void setDisponibilidadeById(int exemplarId, boolean disponibilidade) {
-        Exemplar e = this.getById(exemplarId);
-        Exemplar exemplarAtualizado = new Exemplar(e.getId(), e.getLivroFk(), e.getIdFisico(), disponibilidade);
-        this.update(exemplarAtualizado);
+        try {
+            String query = "update Exemplar set disponivel = ? where id = ?;";
+            PreparedStatement pstm = this.conn.prepareStatement(query);
+            pstm.setBoolean(1, disponibilidade);
+            pstm.setInt(2, exemplarId);
+            pstm.executeUpdate();
+        } catch (SQLException e) {
+            throw new DatabaseException("Não foi possível mudar a disponibilidade do exemplar.", e);
+        }
     }
 
     public void deleteByIdFisico(String idFisico) {
-        int idx = 0;
-        for (Exemplar e : this.getAll()) {
-            if (e.getIdFisico().equals(idFisico))
-                break;
-            idx++;
-        }
-        this.getAll().remove(idx);
+        this.deleteBy("idFisico", idFisico);
+    }
+
+    public void deleteByLivroFk(int livroFk) {
+        this.deleteBy("livroFk", livroFk);
     }
 }

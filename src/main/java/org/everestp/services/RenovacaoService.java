@@ -2,8 +2,11 @@ package org.everestp.services;
 
 import org.everestp.daos.EmprestimoDAO;
 import org.everestp.daos.RenovacaoDAO;
+import org.everestp.exceptions.DadosInvalidosException;
+import org.everestp.exceptions.MaximoDeRenovacoesAtingidoException;
 import org.everestp.models.Emprestimo;
 import org.everestp.models.Renovacao;
+import org.everestp.utils.Validator;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -21,18 +24,19 @@ public class RenovacaoService {
         return this.renovacaoDAO.getByUsuarioIdAndEmprestimo(usuarioId, emprestimoId);
     }
 
-    public int renovarEmprestimo(int emprestimoId, int usuarioId) {
-        Emprestimo emprestimo = this.emprestimoDAO.getById(emprestimoId);
-        int quantRenovacoes = this.renovacaoDAO.getByUsuarioIdAndEmprestimo(usuarioId, emprestimoId).size();
+    public void renovarEmprestimo(String idFisico, int usuarioId) {
+        if (!Validator.validarIdFisico(idFisico))
+            throw new DadosInvalidosException("ID físico inválido.");
+        Emprestimo emprestimo = this.emprestimoDAO.getAtivoByExemplarIdFisico(idFisico);
+        int quantRenovacoes = this.renovacaoDAO.getByUsuarioIdAndEmprestimo(usuarioId, emprestimo.getId()).size();
         if (quantRenovacoes > 3)
-            return 2;
-        try {
-            this.emprestimoDAO.setDtPrazo(emprestimoId, emprestimo.getDtPrazo().plusDays(7));
-        } catch (Exception e) {
-            return 1;
-        }
-        Renovacao renovacao = new Renovacao(0, emprestimoId, usuarioId, LocalDate.now());
+            throw new MaximoDeRenovacoesAtingidoException();
+        this.emprestimoDAO.setDtPrazo(emprestimo.getId(), emprestimo.getDtPrazo().plusDays(7));
+        Renovacao renovacao = new Renovacao(0, emprestimo.getId(), usuarioId, LocalDate.now());
         this.renovacaoDAO.save(renovacao);
-        return 0;
+    }
+
+    public int countRenovacoes() {
+        return this.renovacaoDAO.countAll();
     }
 }

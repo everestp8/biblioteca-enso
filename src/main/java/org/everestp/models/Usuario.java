@@ -2,11 +2,11 @@ package org.everestp.models;
 
 public class Usuario implements Model {
 
-    private int id;
-    private String nome, email, senha, cpf;
-    private Integer papel;
+    private final int id;
+    private final String nome, email, senha, cpf;
+    private final Integer papel;
 
-    public Usuario(int id, String nome, String email, String senha, String cpf, int papel) {
+    public Usuario(int id, String nome, String email, String senha, String cpf, Integer papel) {
         this.id = id;
         this.nome = nome;
         this.email = email;
@@ -21,10 +21,6 @@ public class Usuario implements Model {
 
     public int getId() {
         return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getEmail() {

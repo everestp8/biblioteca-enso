@@ -2,7 +2,11 @@ package org.everestp.services;
 
 import org.everestp.daos.UsuarioDAO;
 import org.everestp.dtos.UsuarioDTO;
+import org.everestp.exceptions.DadosInvalidosException;
+import org.everestp.exceptions.SenhaIncorretaException;
+import org.everestp.exceptions.UsuarioNaoEncontradoException;
 import org.everestp.models.Usuario;
+import org.everestp.utils.Validator;
 
 public class UsuarioService {
 
@@ -13,20 +17,20 @@ public class UsuarioService {
     }
 
     public Usuario getUserByEmail(String email) {
-        return this.usuarioDAO.getByEmail(email);
+        Usuario usuario = this.usuarioDAO.getByEmail(email);
+        if (usuario == null)
+            throw new UsuarioNaoEncontradoException();
+        return usuario;
     }
 
-    public Usuario getUserByCpf(String cpf) {
-        return this.usuarioDAO.getByEmail(cpf);
-    }
-
-    public int atualizarUsuario(int usuarioId, UsuarioDTO dadosAtualizados) {
+    public void atualizarUsuario(int usuarioId, UsuarioDTO dadosAtualizados) {
+        if (!Validator.validarUsuarioDTO(dadosAtualizados))
+            throw new DadosInvalidosException("Dados inválidos para livro.");
         Usuario usuarioExistente = this.usuarioDAO.getById(usuarioId);
         Usuario usuarioAtualizado;
+        if (usuarioExistente == null)
+            throw new UsuarioNaoEncontradoException();
 
-        if (usuarioExistente == null) {
-            return 1;
-        }
         String novoNome = dadosAtualizados.nome() != null ? dadosAtualizados.nome() : usuarioExistente.getNome();
         String novoEmail = dadosAtualizados.email() != null ? dadosAtualizados.email() : usuarioExistente.getEmail();
         String novaSenha = dadosAtualizados.senha() != null ? dadosAtualizados.senha() : usuarioExistente.getSenha();
@@ -35,28 +39,41 @@ public class UsuarioService {
         usuarioAtualizado = new Usuario(usuarioExistente.getId(), novoNome, novoEmail, novaSenha, novoCpf, novoPapel);
 
         this.usuarioDAO.update(usuarioAtualizado);
-        return 0;
     }
 
     public Usuario cadastrarUsuario(UsuarioDTO dados) {
+        if (!Validator.validarUsuarioDTO(dados))
+            throw new DadosInvalidosException("Dados inválidos para usuário.");
         Usuario usuario = new Usuario(0, dados.nome(), dados.email(), dados.senha(), dados.cpf(), dados.papel());
         this.usuarioDAO.save(usuario);
-        return usuario;
+        return this.usuarioDAO.getByEmail(dados.email());
     }
 
-    public int autenticarUsuario(String email, String senha) {
+    public void autenticarUsuario(String email, String senha) {
         Usuario usuario = this.usuarioDAO.getByEmail(email);
         if (usuario == null) {
-            return 1;
+            throw new UsuarioNaoEncontradoException();
         }
         if (!usuario.getSenha().equals(senha)) {
-            return 2;
+            throw new SenhaIncorretaException();
         }
-        return 0;
     }
 
-    public int excluirUsuario(int usuarioId) {
+    public void excluirUsuario(int usuarioId) {
+        Usuario usuario = this.usuarioDAO.getById(usuarioId);
+        if (usuario == null)
+            throw new UsuarioNaoEncontradoException();
         this.usuarioDAO.delete(usuarioId);
-        return 0;
+    }
+
+	public void deleteUsuarioByEmail(String email) {
+		Usuario usuario = this.usuarioDAO.getByEmail(email);
+        if (usuario == null)
+            throw new UsuarioNaoEncontradoException();
+		this.usuarioDAO.delete(usuario.getId());
+	}
+
+    public int countUsuarios() {
+        return this.usuarioDAO.countAll();
     }
 }

@@ -1,9 +1,9 @@
 package org.everestp.models;
 
 public class Exemplar implements Model {
-    private int id, livroFk;
-    private String idFisico;
-    private Boolean disponivel;
+    private final int id, livroFk;
+    private final String idFisico;
+    private final Boolean disponivel;
 
     public Exemplar(int id, int livroFk, String idFisico, Boolean disponivel) {
         this.id = id;
@@ -14,10 +14,6 @@ public class Exemplar implements Model {
 
     public int getId() {
         return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public int getLivroFk() {

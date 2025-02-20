@@ -5,7 +5,10 @@
 package org.everestp.views_gui;
 
 import javax.swing.JOptionPane;
+
+import org.everestp.controllers.Response;
 import org.everestp.controllers.UsuarioController;
+import org.everestp.dtos.UsuarioDTO;
 import org.everestp.models.Usuario;
 
 /**
@@ -13,12 +16,11 @@ import org.everestp.models.Usuario;
  * @author Erick
  */
 public class TelaCadastro extends javax.swing.JFrame {
+    private UsuarioController usuarioController;
 
-    private final UsuarioController usuarioController;
-    
-    public TelaCadastro(UsuarioController usuarioController) {
+    public TelaCadastro() {
         initComponents();
-        this.usuarioController = usuarioController;
+        this.usuarioController = TelaPrincipal.getUsuarioController();
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -31,6 +33,8 @@ public class TelaCadastro extends javax.swing.JFrame {
 
         jTextField1 = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
+        jLabel10 = new javax.swing.JLabel();
+        jLabel11 = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
@@ -45,6 +49,7 @@ public class TelaCadastro extends javax.swing.JFrame {
         botaoCadastrar = new javax.swing.JButton();
         inputNome = new javax.swing.JTextField();
         jLabel9 = new javax.swing.JLabel();
+        jLabel12 = new javax.swing.JLabel();
 
         jTextField1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -53,6 +58,10 @@ public class TelaCadastro extends javax.swing.JFrame {
         });
 
         jLabel7.setText("Email");
+
+        jLabel10.setText("jLabel10");
+
+        jLabel11.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Livros.png"))); // NOI18N
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Tela de Cadastro");
@@ -84,6 +93,12 @@ public class TelaCadastro extends javax.swing.JFrame {
 
         jLabel5.setText("Senha");
 
+        inputSenha.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                inputSenhaActionPerformed(evt);
+            }
+        });
+
         jLabel6.setForeground(new java.awt.Color(102, 102, 102));
         jLabel6.setText("Já possui uma conta?");
 
@@ -104,6 +119,8 @@ public class TelaCadastro extends javax.swing.JFrame {
         });
 
         jLabel9.setText("Nome");
+
+        jLabel12.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Livros.png"))); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -129,7 +146,9 @@ public class TelaCadastro extends javax.swing.JFrame {
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(botaoLogin))
                         .addComponent(inputNome)))
-                .addContainerGap(370, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 56, Short.MAX_VALUE)
+                .addComponent(jLabel12)
+                .addGap(44, 44, 44))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -138,31 +157,34 @@ public class TelaCadastro extends javax.swing.JFrame {
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel2)
-                .addGap(50, 50, 50)
-                .addComponent(jLabel3)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 22, Short.MAX_VALUE)
-                .addComponent(jLabel9)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(inputNome, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel4)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(inputCpf, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel8)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(inputEmail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel5)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(inputSenha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel6)
-                    .addComponent(botaoLogin))
+                .addGap(30, 30, 30)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel3)
+                        .addGap(22, 22, 22)
+                        .addComponent(jLabel9)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(inputNome, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel4)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(inputCpf, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel8)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(inputEmail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel5)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(inputSenha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel6)
+                            .addComponent(botaoLogin)))
+                    .addComponent(jLabel12))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(botaoCadastrar)
-                .addGap(23, 23, 23))
+                .addContainerGap(54, Short.MAX_VALUE))
         );
 
         pack();
@@ -178,20 +200,31 @@ public class TelaCadastro extends javax.swing.JFrame {
     }//GEN-LAST:event_inputEmailActionPerformed
 
     private void botaoLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoLoginActionPerformed
-        TelaPrincipal.setTelaAtiva(new TelaLogin(usuarioController));
+        TelaPrincipal.setTelaAtiva(new TelaLogin());
     }//GEN-LAST:event_botaoLoginActionPerformed
 
     private void botaoCadastrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoCadastrarActionPerformed
         String nome = this.inputNome.getText();
         String cpf = this.inputCpf.getText();
         String email = this.inputEmail.getText();
-        String senha = this.inputSenha.getText();
-        
-        Usuario usuario = this.usuarioController.cadastrarUsuario(nome, email, senha, cpf, 0);
-        JOptionPane.showMessageDialog(null, "Cadastro relizado com sucesso.", "Cadastro", 1);
-        TelaPrincipal.setUsuario(usuario);
-        TelaPrincipal.setTelaAtiva(new Menu(usuarioController));
+        String senha = new String(this.inputSenha.getPassword());
+
+        UsuarioDTO dadosUsuario = new UsuarioDTO(nome, email, senha, cpf, 2);
+        Response<Usuario> response = this.usuarioController.cadastrarUsuario(dadosUsuario);
+
+        if (response.isError()) {
+            JOptionPane.showMessageDialog(null, response.getErrorMessage(), "Cadastro", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        JOptionPane.showMessageDialog(null, "Cadastro realizado com sucesso.", "Cadastro", JOptionPane.INFORMATION_MESSAGE);
+        TelaPrincipal.setUsuario(response.getData());
+        TelaPrincipal.setTelaAtiva(new TelaCatalogo());
     }//GEN-LAST:event_botaoCadastrarActionPerformed
+
+    private void inputSenhaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inputSenhaActionPerformed
+        this.botaoCadastrarActionPerformed(evt);
+    }//GEN-LAST:event_inputSenhaActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton botaoCadastrar;
@@ -201,6 +234,9 @@ public class TelaCadastro extends javax.swing.JFrame {
     private javax.swing.JTextField inputNome;
     private javax.swing.JPasswordField inputSenha;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;

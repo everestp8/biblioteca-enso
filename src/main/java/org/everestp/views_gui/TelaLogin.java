@@ -5,6 +5,8 @@
 package org.everestp.views_gui;
 
 import javax.swing.JOptionPane;
+
+import org.everestp.controllers.Response;
 import org.everestp.controllers.UsuarioController;
 import org.everestp.models.Usuario;
 
@@ -14,10 +16,10 @@ import org.everestp.models.Usuario;
  */
 public class TelaLogin extends javax.swing.JFrame {
     private final UsuarioController usuarioController;
-    
-    public TelaLogin(UsuarioController usuarioController) {
+
+    public TelaLogin() {
         initComponents();
-        this.usuarioController = usuarioController;
+        this.usuarioController = TelaPrincipal.getUsuarioController();
     }
 
     /**
@@ -40,6 +42,7 @@ public class TelaLogin extends javax.swing.JFrame {
         botaoCadastrar = new javax.swing.JButton();
         botaoLogin = new javax.swing.JButton();
         inputSenha = new javax.swing.JPasswordField();
+        jLabel8 = new javax.swing.JLabel();
 
         jLabel7.setText("jLabel7");
 
@@ -84,6 +87,14 @@ public class TelaLogin extends javax.swing.JFrame {
             }
         });
 
+        inputSenha.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                inputSenhaActionPerformed(evt);
+            }
+        });
+
+        jLabel8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Livros.png"))); // NOI18N
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -91,7 +102,7 @@ public class TelaLogin extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(50, 50, 50)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(inputSenha, javax.swing.GroupLayout.DEFAULT_SIZE, 300, Short.MAX_VALUE)
+                    .addComponent(inputSenha)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel6)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -103,32 +114,40 @@ public class TelaLogin extends javax.swing.JFrame {
                     .addComponent(jLabel1)
                     .addComponent(inputEmail)
                     .addComponent(botaoLogin, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(370, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 76, Short.MAX_VALUE)
+                .addComponent(jLabel8)
+                .addGap(49, 49, 49))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(50, 50, 50)
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel2)
-                .addGap(100, 100, 100)
-                .addComponent(jLabel3)
-                .addGap(18, 18, 18)
-                .addComponent(jLabel4)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(inputEmail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jLabel5)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(inputSenha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel6)
-                    .addComponent(botaoCadastrar))
-                .addGap(18, 18, 18)
-                .addComponent(botaoLogin)
-                .addContainerGap(55, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(50, 50, 50)
+                        .addComponent(jLabel3)
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabel4)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(inputEmail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabel5)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(inputSenha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel6)
+                            .addComponent(botaoCadastrar))
+                        .addGap(18, 18, 18)
+                        .addComponent(botaoLogin)
+                        .addContainerGap(111, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel8)
+                        .addGap(100, 100, 100))))
         );
 
         pack();
@@ -140,21 +159,27 @@ public class TelaLogin extends javax.swing.JFrame {
     }//GEN-LAST:event_inputEmailActionPerformed
 
     private void botaoCadastrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoCadastrarActionPerformed
-        TelaPrincipal.setTelaAtiva(new TelaCadastro(usuarioController));
+        TelaPrincipal.setTelaAtiva(new TelaCadastro());
     }//GEN-LAST:event_botaoCadastrarActionPerformed
 
     private void botaoLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoLoginActionPerformed
         String email = this.inputEmail.getText();
-        String senha = this.inputSenha.getText();
-        Usuario usuario = this.usuarioController.fazerLogin(email, senha);
-        if (usuario != null){
-            JOptionPane.showMessageDialog(null, "Login realizado com sucesso.", "Login", 1);
-            TelaPrincipal.setUsuario(usuario);
-            TelaPrincipal.setTelaAtiva(new Menu(usuarioController));
-        } else {
-            JOptionPane.showMessageDialog(null, "ERRO, Email ou senha incorretos!", "Login", 0);
+        String senha = new String(this.inputSenha.getPassword());
+
+        Response<Usuario> response = this.usuarioController.fazerLogin(email, senha);
+        if (response.isError()) {
+            JOptionPane.showMessageDialog(null, response.getErrorMessage(), "Login", JOptionPane.ERROR_MESSAGE);
+            return;
         }
+
+        JOptionPane.showMessageDialog(null, "Login realizado com sucesso.", "Login", JOptionPane.INFORMATION_MESSAGE);
+        TelaPrincipal.setUsuario(response.getData());
+        TelaPrincipal.setTelaAtiva(new TelaCatalogo());
     }//GEN-LAST:event_botaoLoginActionPerformed
+
+    private void inputSenhaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inputSenhaActionPerformed
+        this.botaoLoginActionPerformed(evt);
+    }//GEN-LAST:event_inputSenhaActionPerformed
 
     /**
      * @param args the command line arguments
@@ -186,7 +211,7 @@ public class TelaLogin extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new TelaLogin(null).setVisible(true);
+                new TelaLogin().setVisible(true);
             }
         });
     }
@@ -203,5 +228,6 @@ public class TelaLogin extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
     // End of variables declaration//GEN-END:variables
 }

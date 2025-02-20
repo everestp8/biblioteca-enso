@@ -1,9 +1,15 @@
 package org.everestp.services;
 
+import java.util.ArrayList;
 import org.everestp.daos.ExemplarDAO;
 import org.everestp.daos.LivroDAO;
+import org.everestp.exceptions.DadosInvalidosException;
+import org.everestp.exceptions.ExemplarNaoEncontradoException;
+import org.everestp.exceptions.ExemplaresEmUsoException;
+import org.everestp.exceptions.LivroNaoEncontradoException;
 import org.everestp.models.Exemplar;
 import org.everestp.models.Livro;
+import org.everestp.utils.Validator;
 
 import java.util.List;
 import java.util.Random;
@@ -32,47 +38,57 @@ public class ExemplarService {
     }
 
     public Exemplar getExemplarById(int exemplarId) {
-        return this.exemplarDAO.getById(exemplarId);
-    }
-
-    public Exemplar getExemplarByIdFisico(String idFisico) {
-        return this.exemplarDAO.getByIdFisico(idFisico);
+        Exemplar exemplar = this.exemplarDAO.getById(exemplarId);
+        if (exemplar == null)
+            throw new ExemplarNaoEncontradoException();
+        return exemplar;
     }
 
     public List<Exemplar> getExemplaresByTitulo(String tituloLivro) {
         Livro livro = this.livroDAO.getByTitulo(tituloLivro);
-
         if (livro == null)
-            return null;
+            throw new LivroNaoEncontradoException();
 
-        return this.exemplarDAO.getAllByLivroFk(livro.getId());
+        List<Exemplar> exemplares = this.exemplarDAO.getAllByLivroFk(livro.getId());
+        if (exemplares == null)
+            throw new ExemplarNaoEncontradoException();
+        return exemplares;
     }
 
-    public int adicionarExemplarPorTitulo(String tituloLivro, int quantidade) {
+    public List<Exemplar> adicionarExemplarPorTitulo(String tituloLivro, int quantidade) {
         Livro livro = this.livroDAO.getByTitulo(tituloLivro);
 
         if (livro == null)
-            return 1;
-
+            throw new LivroNaoEncontradoException();
+        
+        List<Exemplar> exemplares = new ArrayList<>();
         for (int i=0; i<quantidade; i++) {
             Exemplar novoExemplar = new Exemplar(0, livro.getId(), this.geradorIdFisico(), true);
             this.exemplarDAO.save(novoExemplar);
+            exemplares.add(novoExemplar);
         }
-        return 0;
+        return exemplares;
     }
 
-    public int removerExemplarByIdFisico(String idFisico) {
-        try {
-            this.exemplarDAO.deleteByIdFisico(idFisico);
-        } catch (Exception e) {
-            return 1;
-        }
-        return 0;
+    public void removerExemplarByIdFisico(String idFisico) {
+        if (!Validator.validarIdFisico(idFisico))
+            throw new DadosInvalidosException("ID físico inválido.");
+        Exemplar exemplar = this.exemplarDAO.getByIdFisico(idFisico);
+        if (exemplar == null)
+            throw new ExemplarNaoEncontradoException();
+        if (!exemplar.getDisponivel())
+            throw new ExemplaresEmUsoException();
+        this.exemplarDAO.deleteByIdFisico(idFisico);
     }
 
-    public int remocveExemplaresByLivroId(int livroId) {
+    public void removerExemplaresByLivroId(int livroId) {
         for (Exemplar e : this.exemplarDAO.getAllByLivroFk(livroId))
-            this.exemplarDAO.delete(e.getId());
-        return 0;
+            if (!e.getDisponivel())
+                throw new ExemplaresEmUsoException();
+        this.exemplarDAO.deleteByLivroFk(livroId);
+    }
+
+    public int countExemplares() {
+        return this.exemplarDAO.countAll();
     }
 }

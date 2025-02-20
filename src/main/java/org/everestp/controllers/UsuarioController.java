@@ -1,12 +1,12 @@
 package org.everestp.controllers;
 
 import org.everestp.dtos.UsuarioDTO;
+import org.everestp.exceptions.EmprestimosPendentesException;
 import org.everestp.models.Usuario;
 import org.everestp.services.EmprestimoService;
 import org.everestp.services.UsuarioService;
 
 public class UsuarioController {
-
     private final UsuarioService usuarioService;
     private final EmprestimoService emprestimoService;
 
@@ -15,38 +15,63 @@ public class UsuarioController {
         this.emprestimoService = emprestimoService;
     }
 
-    public int autenticarUsuario(String email, String senha) {
-        return usuarioService.autenticarUsuario(email, senha);
-    }
-
-    public Usuario fazerLogin(String email, String senha) {
-        int code = usuarioService.autenticarUsuario(email, senha);
-        if (code == 0) {
-            return usuarioService.getUserByEmail(email);
+    public Response<Usuario> fazerLogin(String email, String senha) {
+        try {
+            this.usuarioService.autenticarUsuario(email, senha);
+            Usuario usuario = this.usuarioService.getUserByEmail(email);
+            return Response.sucesso(usuario);
+        } catch (Exception e) {
+            return Response.falha(e);
         }
-        return null;
     }
 
-    public Usuario cadastrarUsuario(String nome, String email, String senha, String cpf, int papel) {
-        UsuarioDTO usuarioDTO = new UsuarioDTO(nome, email, senha, cpf, papel);
-        return usuarioService.cadastrarUsuario(usuarioDTO);
-    }
-
-    public int excluirUsuario(int usuarioId) {
-        if (!emprestimoService.getAllEmprestimosByUsuarioId(usuarioId).isEmpty()) {
-            return 1;
+    public Response<Usuario> cadastrarUsuario(UsuarioDTO dadosUsuario) {
+        try {
+            Usuario usuario = this.usuarioService.cadastrarUsuario(dadosUsuario);
+            return Response.sucesso(usuario);
+        } catch (Exception e) {
+            return Response.falha(e);
         }
-        return usuarioService.excluirUsuario(usuarioId);
     }
 
-    public int alterarDadosUsuario(int usuarioId, String nome, String email, String senha, String cpf) {
-        UsuarioDTO usuarioDTO = new UsuarioDTO(
-                nome.equals(".") ? null : nome,
-                email.equals(".") ? null : email,
-                senha.equals(".") ? null : senha,
-                cpf.equals(".") ? null : cpf,
-                null
-        );
-        return usuarioService.atualizarUsuario(usuarioId, usuarioDTO);
+    public Response<Void> excluirUsuario(int usuarioId) {
+        try {
+            if (!this.emprestimoService.getAllEmprestimosByUsuarioId(usuarioId).isEmpty()) {
+                throw new EmprestimosPendentesException();
+            }
+            this.usuarioService.excluirUsuario(usuarioId);
+            return Response.sucesso();
+        } catch (Exception e) {
+            return Response.falha(e);
+        }
+
+    }
+
+	public Response<Void> excluirUsuarioPorEmail(String email) {
+        try {
+            this.usuarioService.deleteUsuarioByEmail(email);
+            return Response.sucesso();
+        } catch (Exception e) {
+            return Response.falha(e);
+        }
+
+    }
+
+    public Response<Void> alterarDadosUsuario(int usuarioId, UsuarioDTO dadosUsuario) {
+        try {
+            this.usuarioService.atualizarUsuario(usuarioId, dadosUsuario);
+            return Response.sucesso();
+        } catch (Exception e) {
+            return Response.falha(e);
+        }
+    }
+
+    public Response<Integer> contarUsuarios() {
+        try {
+            int quantUsuarios = this.usuarioService.countUsuarios();
+            return Response.sucesso(quantUsuarios);
+        } catch (Exception e) {
+            return Response.falha(e);
+        }
     }
 }
