@@ -4,16 +4,24 @@
  */
 package org.everestp.views_gui;
 
+import javax.swing.JOptionPane;
+import org.everestp.controllers.Response;
+import org.everestp.controllers.UsuarioController;
+import org.everestp.dtos.UsuarioDTO;
+import org.everestp.models.Usuario;
+
 /**
  *
  * @author Aluno
  */
 public class TelaCadastrarUsuario extends javax.swing.JFrame {
+	private UsuarioController usuarioController;
 
     /**
      * Creates new form PianelBibliotecario
      */
     public TelaCadastrarUsuario() {
+		this.usuarioController = TelaPrincipal.getUsuarioController();
         initComponents();
     }
 
@@ -51,6 +59,11 @@ public class TelaCadastrarUsuario extends javax.swing.JFrame {
 
         jButton1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jButton1.setText("Painel do Administrador");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jLabel2.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel2.setText(">");
@@ -62,8 +75,18 @@ public class TelaCadastrarUsuario extends javax.swing.JFrame {
         jLabel4.setText("Nome");
 
         botaoCancelar.setText("Cancelar");
+        botaoCancelar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botaoCancelarActionPerformed(evt);
+            }
+        });
 
         botaoConfirmar.setText("Confirmar");
+        botaoConfirmar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botaoConfirmarActionPerformed(evt);
+            }
+        });
 
         jLabel5.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel5.setText("Email");
@@ -73,6 +96,12 @@ public class TelaCadastrarUsuario extends javax.swing.JFrame {
 
         jLabel9.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel9.setText("CPF");
+
+        jTextField6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextField6ActionPerformed(evt);
+            }
+        });
 
         jLabel10.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel10.setText("Papel");
@@ -166,6 +195,44 @@ public class TelaCadastrarUsuario extends javax.swing.JFrame {
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
+
+    private void botaoConfirmarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoConfirmarActionPerformed
+		String nome = jTextField1.getText();
+		String email = jTextField2.getText();
+		String senha = new String(jPasswordField1.getPassword());
+		String cpf = jFormattedTextField1.getText();
+		String papelStr = jTextField6.getText();
+
+		int papel;
+		try {
+			papel = Integer.parseInt(papelStr);
+		} catch(Exception e) {
+			return;
+		}
+
+		UsuarioDTO dadosUsuario = new UsuarioDTO(nome, email, senha, cpf, papel);
+        Response<Usuario> response = this.usuarioController.cadastrarUsuario(dadosUsuario);
+
+		if (response.isError()) {
+            JOptionPane.showMessageDialog(null, response.getErrorMessage(), "Cadastro", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        JOptionPane.showMessageDialog(null, "Cadastro realizado com sucesso.", "Cadastro", JOptionPane.INFORMATION_MESSAGE);
+		this.dispose();
+    }//GEN-LAST:event_botaoConfirmarActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+		this.dispose();
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void botaoCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoCancelarActionPerformed
+		this.dispose();
+    }//GEN-LAST:event_botaoCancelarActionPerformed
+
+    private void jTextField6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField6ActionPerformed
+		this.botaoConfirmarActionPerformed(evt);
+    }//GEN-LAST:event_jTextField6ActionPerformed
 
     /**
      * @param args the command line arguments

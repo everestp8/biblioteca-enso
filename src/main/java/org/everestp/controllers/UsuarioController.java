@@ -47,6 +47,16 @@ public class UsuarioController {
 
     }
 
+	public Response<Void> excluirUsuarioPorEmail(String email) {
+        try {
+            this.usuarioService.deleteUsuarioByEmail(email);
+            return Response.sucesso();
+        } catch (Exception e) {
+            return Response.falha(e);
+        }
+
+    }
+
     public Response<Void> alterarDadosUsuario(int usuarioId, UsuarioDTO dadosUsuario) {
         try {
             this.usuarioService.atualizarUsuario(usuarioId, dadosUsuario);

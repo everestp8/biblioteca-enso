@@ -66,6 +66,13 @@ public class UsuarioService {
         this.usuarioDAO.delete(usuarioId);
     }
 
+	public void deleteUsuarioByEmail(String email) {
+		Usuario usuario = this.usuarioDAO.getByEmail(email);
+        if (usuario == null)
+            throw new UsuarioNaoEncontradoException();
+		this.usuarioDAO.delete(usuario.getId());
+	}
+
     public int countUsuarios() {
         return this.usuarioDAO.countAll();
     }

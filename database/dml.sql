@@ -16,17 +16,17 @@ INSERT INTO Livro(titulo, autor, genero, descricao, ano) VALUES
 
 INSERT INTO Exemplar(livroFk, idFisico, disponivel) VALUES
    (4, 'DQX001', true),
-   (4, 'DQX002', true),
+   (2, 'DQX002', true),
    (5, 'CRC001', true),
-   (5, 'CRC002', true),
-   (6, 'OEP001', true),
+   (2, 'CRC002', true),
+   (3, 'OEP001', true),
    (6, 'OEP002', true),
    (7, 'REB001', true),
    (7, 'REB002', true),
-   (8, 'SDA001', true),
-   (8, 'SDA002', true),
-   (8, 'SDA003', true),
-   (9, 'PPE001', true),
-   (9, 'PPE002', true),
-   (10, 'MBD001', true),
-   (10, 'MBD002', true);
+   (5, 'SDA001', true),
+   (6, 'SDA002', true),
+   (4, 'SDA003', true),
+   (1, 'PPE001', true),
+   (1, 'PPE002', true),
+   (3, 'MBD001', true),
+   (2, 'MBD002', true);
