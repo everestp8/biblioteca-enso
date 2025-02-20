@@ -4,16 +4,19 @@
  */
 package org.everestp.views_gui;
 
+import javax.swing.JOptionPane;
+import org.everestp.controllers.LivroController;
+import org.everestp.controllers.Response;
+
 /**
  *
  * @author Aluno
  */
 public class TelaRemoverLivro extends javax.swing.JFrame {
+	private LivroController livroController;
 
-    /**
-     * Creates new form PianelBibliotecario
-     */
     public TelaRemoverLivro() {
+		this.livroController = TelaPrincipal.getLivroController();
         initComponents();
     }
 
@@ -41,9 +44,13 @@ public class TelaRemoverLivro extends javax.swing.JFrame {
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel1.setText("Remover Livro");
 
-        jButton1.setBackground(new java.awt.Color(255, 255, 255));
         jButton1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jButton1.setText("Painel Bibliotecário");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jLabel2.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel2.setText(">");
@@ -54,9 +61,25 @@ public class TelaRemoverLivro extends javax.swing.JFrame {
         jLabel4.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel4.setText("Título do Livro");
 
+        jTextField1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextField1ActionPerformed(evt);
+            }
+        });
+
         botaoCancelar.setText("Cancelar");
+        botaoCancelar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botaoCancelarActionPerformed(evt);
+            }
+        });
 
         botaoConfirmar.setText("Confirmar");
+        botaoConfirmar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botaoConfirmarActionPerformed(evt);
+            }
+        });
 
         jLabel6.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel6.setText("do Livro:");
@@ -114,6 +137,30 @@ public class TelaRemoverLivro extends javax.swing.JFrame {
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
+
+    private void botaoConfirmarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoConfirmarActionPerformed
+		String titulo = jTextField1.getText();
+		Response<Void> res = this.livroController.excluirLivro(titulo);
+		if (res.isError()) {
+            JOptionPane.showMessageDialog(null, res.getErrorMessage(), "Excluir livro", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        JOptionPane.showMessageDialog(null, "Livro excluído.", "Excluir livro", JOptionPane.INFORMATION_MESSAGE);
+		this.dispose();
+    }//GEN-LAST:event_botaoConfirmarActionPerformed
+
+    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
+		this.botaoConfirmarActionPerformed(evt);
+    }//GEN-LAST:event_jTextField1ActionPerformed
+
+    private void botaoCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoCancelarActionPerformed
+		this.dispose();
+    }//GEN-LAST:event_botaoCancelarActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+		this.dispose();
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments

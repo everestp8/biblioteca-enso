@@ -4,7 +4,6 @@
  */
 package org.everestp.views_gui;
 
-import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
@@ -12,7 +11,6 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import org.everestp.controllers.LivroController;
 import org.everestp.controllers.Response;
-import org.everestp.models.Exemplar;
 import org.everestp.models.Livro;
 
 /**
@@ -20,7 +18,7 @@ import org.everestp.models.Livro;
  * @author Erick
  */
 public class TelaCatalogo extends javax.swing.JFrame {
-    private LivroController livroController;
+    private final LivroController livroController;
     /**
      * Creates new form TelaInicial
      */
@@ -43,6 +41,12 @@ public class TelaCatalogo extends javax.swing.JFrame {
             @Override
             public void mouseClicked(MouseEvent e) {
                 TelaPrincipal.setTelaAtiva(new TelaMinhaConta());
+            }
+        });
+		jMenu10.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                TelaPrincipal.setTelaAtiva(new TelaSobre());
             }
         });
     }
@@ -107,6 +111,7 @@ public class TelaCatalogo extends javax.swing.JFrame {
         jMenu1 = new javax.swing.JMenu();
         jMenu2 = new javax.swing.JMenu();
         jMenu9 = new javax.swing.JMenu();
+        jMenu10 = new javax.swing.JMenu();
 
         jMenu3.setText("jMenu3");
 
@@ -250,6 +255,9 @@ public class TelaCatalogo extends javax.swing.JFrame {
         jMenu9.setText("Minha Conta");
         jMenuBar1.add(jMenu9);
 
+        jMenu10.setText("Sobre");
+        jMenuBar1.add(jMenu10);
+
         setJMenuBar(jMenuBar1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -302,13 +310,17 @@ public class TelaCatalogo extends javax.swing.JFrame {
         String tituloLivro = jTextField1.getText();
         if (tituloLivro.equals(""))
             return;
-        Response<Livro> res = this.livroController.livroPorTitulo(tituloLivro);
+        Response<List<Livro>> res = this.livroController.pesquisarPorTitulo(tituloLivro);
         if (res.isError()) {
             JOptionPane.showMessageDialog(null, res.getErrorMessage(), "Buscar livro", JOptionPane.ERROR_MESSAGE);
             return;
         }
+		if (res.getData().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Não foi possível encontrar nenhum livro.", "Buscar livro", JOptionPane.ERROR_MESSAGE);
+            return;
+		}
         
-        TelaPrincipal.setTelaAtiva(new TelaInformacoesLivro(res.getData()));
+        TelaPrincipal.setTelaAtiva(new TelaInformacoesLivro(res.getData().get(0)));
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
@@ -361,6 +373,7 @@ public class TelaCatalogo extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JMenu jMenu1;
+    private javax.swing.JMenu jMenu10;
     private javax.swing.JMenu jMenu11;
     private javax.swing.JMenu jMenu12;
     private javax.swing.JMenu jMenu2;

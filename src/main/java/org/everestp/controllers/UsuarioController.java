@@ -55,4 +55,13 @@ public class UsuarioController {
             return Response.falha(e);
         }
     }
+
+    public Response<Integer> contarUsuarios() {
+        try {
+            int quantUsuarios = this.usuarioService.countUsuarios();
+            return Response.sucesso(quantUsuarios);
+        } catch (Exception e) {
+            return Response.falha(e);
+        }
+    }
 }

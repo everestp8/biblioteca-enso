@@ -46,7 +46,6 @@ public class TelaDelvolverEmprestimo extends javax.swing.JFrame {
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel1.setText("Filtro de Datas");
 
-        jButton1.setBackground(new java.awt.Color(255, 255, 255));
         jButton1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jButton1.setText("Painel do Bibliotecário");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -80,6 +79,12 @@ public class TelaDelvolverEmprestimo extends javax.swing.JFrame {
 
         jLabel6.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel6.setText("devolver o livro");
+
+        jTextField1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextField1ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -154,6 +159,10 @@ public class TelaDelvolverEmprestimo extends javax.swing.JFrame {
         JOptionPane.showMessageDialog(null, "Exemplar devolvido com sucesso!");
         this.dispose();
     }//GEN-LAST:event_botaoConfirmarActionPerformed
+
+    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
+		this.botaoConfirmarActionPerformed(evt);
+    }//GEN-LAST:event_jTextField1ActionPerformed
 
     /**
      * @param args the command line arguments

@@ -2,9 +2,11 @@ package org.everestp.services;
 
 import org.everestp.daos.UsuarioDAO;
 import org.everestp.dtos.UsuarioDTO;
+import org.everestp.exceptions.DadosInvalidosException;
 import org.everestp.exceptions.SenhaIncorretaException;
 import org.everestp.exceptions.UsuarioNaoEncontradoException;
 import org.everestp.models.Usuario;
+import org.everestp.utils.Validator;
 
 public class UsuarioService {
 
@@ -22,6 +24,8 @@ public class UsuarioService {
     }
 
     public void atualizarUsuario(int usuarioId, UsuarioDTO dadosAtualizados) {
+        if (!Validator.validarUsuarioDTO(dadosAtualizados))
+            throw new DadosInvalidosException("Dados inválidos para livro.");
         Usuario usuarioExistente = this.usuarioDAO.getById(usuarioId);
         Usuario usuarioAtualizado;
         if (usuarioExistente == null)
@@ -38,6 +42,8 @@ public class UsuarioService {
     }
 
     public Usuario cadastrarUsuario(UsuarioDTO dados) {
+        if (!Validator.validarUsuarioDTO(dados))
+            throw new DadosInvalidosException("Dados inválidos para usuário.");
         Usuario usuario = new Usuario(0, dados.nome(), dados.email(), dados.senha(), dados.cpf(), dados.papel());
         this.usuarioDAO.save(usuario);
         return this.usuarioDAO.getByEmail(dados.email());
@@ -58,5 +64,9 @@ public class UsuarioService {
         if (usuario == null)
             throw new UsuarioNaoEncontradoException();
         this.usuarioDAO.delete(usuarioId);
+    }
+
+    public int countUsuarios() {
+        return this.usuarioDAO.countAll();
     }
 }

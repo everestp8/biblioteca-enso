@@ -6,7 +6,15 @@ package org.everestp.views_gui;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 import org.everestp.controllers.EmprestimoController;
+import org.everestp.controllers.LivroController;
+import org.everestp.controllers.Response;
+import org.everestp.models.Emprestimo;
+import org.everestp.models.Exemplar;
+import org.everestp.models.Livro;
 
 /**
  *
@@ -14,8 +22,13 @@ import org.everestp.controllers.EmprestimoController;
  */
 public class TelaFiltroDatas extends javax.swing.JFrame {
     private EmprestimoController emprestimoController;
-    public TelaFiltroDatas() {
+    private LivroController livroController;
+	private DefaultTableModel tableModel;
+
+    public TelaFiltroDatas(DefaultTableModel tableModel) {
         this.emprestimoController = TelaPrincipal.getEmprestimoController();
+        this.livroController = TelaPrincipal.getLivroController();
+		this.tableModel = tableModel;
         initComponents();
     }
 
@@ -43,22 +56,31 @@ public class TelaFiltroDatas extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jLabel1.setText("Filtro de Datas");
+        jLabel1.setText("Filtro por Datas");
 
-        jButton1.setBackground(new java.awt.Color(255, 255, 255));
         jButton1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jButton1.setText("Histórico de Empréstimos");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jLabel2.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel2.setText(">");
 
         jLabel3.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
-        jLabel3.setText("Digite as informações para");
+        jLabel3.setText("Filtrar empréstimos por");
 
         jLabel4.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel4.setText("Data inicial");
 
         botaoCancelar.setText("Cancelar");
+        botaoCancelar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botaoCancelarActionPerformed(evt);
+            }
+        });
 
         botaoConfirmar.setText("Confirmar");
         botaoConfirmar.addActionListener(new java.awt.event.ActionListener() {
@@ -71,7 +93,7 @@ public class TelaFiltroDatas extends javax.swing.JFrame {
         jLabel5.setText("Data final");
 
         jLabel6.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
-        jLabel6.setText("filtrar as datas");
+        jLabel6.setText("intervalo de datas");
 
         try {
             jFormattedTextField2.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("##/##/####")));
@@ -84,6 +106,11 @@ public class TelaFiltroDatas extends javax.swing.JFrame {
         } catch (java.text.ParseException ex) {
             ex.printStackTrace();
         }
+        jFormattedTextField3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jFormattedTextField3ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -104,7 +131,7 @@ public class TelaFiltroDatas extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel6)
                             .addComponent(jLabel3))
-                        .addGap(0, 115, Short.MAX_VALUE))
+                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.LEADING)
@@ -115,7 +142,7 @@ public class TelaFiltroDatas extends javax.swing.JFrame {
                                 .addComponent(botaoConfirmar))
                             .addComponent(jFormattedTextField2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 306, Short.MAX_VALUE)
                             .addComponent(jFormattedTextField3, javax.swing.GroupLayout.Alignment.LEADING))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                        .addGap(50, 50, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -153,78 +180,63 @@ public class TelaFiltroDatas extends javax.swing.JFrame {
         String data2String = jFormattedTextField3.getText();
         
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+		LocalDate dtInicio;
+		LocalDate dtFim;
         
-        LocalDate dtInicio = LocalDate.parse(data1String, formatter);
-        LocalDate dFIm = LocalDate.parse(data2String, formatter);
+		try {
+			dtInicio = LocalDate.parse(data1String, formatter);
+			dtFim = LocalDate.parse(data2String, formatter);
+		} catch(Exception e) {
+			return;
+		}
 
+        int usuarioId = TelaPrincipal.getUsuario().getId();
+		Response<List<Emprestimo>> res = this.emprestimoController.listarEmprestimosEntreDatas(dtInicio, dtFim);
+		if (res.isError()) {
+            JOptionPane.showMessageDialog(null, res.getErrorMessage(), "Listar exemplares", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
         
+        this.tableModel.setRowCount(0);
+        for (Emprestimo emp : res.getData()) {
+            Response<Exemplar> resExemplar = this.livroController.exemplarPorId(emp.getExemplarFk());
+            if (resExemplar.isError()) {
+				System.out.println(resExemplar.getErrorMessage());
+                continue;
+			}
+            Exemplar ex = resExemplar.getData();
+            Response<Livro> resLivro = this.livroController.livroPorId(ex.getLivroFk());
+            if (resLivro.isError()) {
+				System.out.println(resLivro.getErrorMessage());
+                continue;
+			}
+            Livro l = resLivro.getData();
+            Response<Integer> resRenov = this.emprestimoController.quantidadeRenovacoes(usuarioId, emp.getId());
+            if (resRenov.isError()) {
+				System.out.println(resRenov.getErrorMessage());
+                continue;
+			}
+            int quantRenovacoes = resRenov.getData();
+            
+            this.tableModel.addRow(new Object[]{l.getTitulo(), ex.getIdFisico(), quantRenovacoes, emp.getDtEmprestimo(), emp.getDtPrazo(), emp.getDtDevolucao()});
+        }
     }//GEN-LAST:event_botaoConfirmarActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        this.dispose();
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void botaoCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoCancelarActionPerformed
+		this.dispose();
+    }//GEN-LAST:event_botaoCancelarActionPerformed
+
+    private void jFormattedTextField3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jFormattedTextField3ActionPerformed
+		this.botaoConfirmarActionPerformed(evt);
+    }//GEN-LAST:event_jFormattedTextField3ActionPerformed
 
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(TelaFiltroDatas.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(TelaFiltroDatas.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(TelaFiltroDatas.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(TelaFiltroDatas.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new TelaFiltroDatas().setVisible(true);
-            }
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton botaoCancelar;

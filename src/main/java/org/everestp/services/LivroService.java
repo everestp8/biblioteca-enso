@@ -2,8 +2,10 @@ package org.everestp.services;
 
 import org.everestp.daos.LivroDAO;
 import org.everestp.dtos.LivroDTO;
+import org.everestp.exceptions.DadosInvalidosException;
 import org.everestp.exceptions.LivroNaoEncontradoException;
 import org.everestp.models.Livro;
+import org.everestp.utils.Validator;
 
 import java.util.List;
 
@@ -36,7 +38,16 @@ public class LivroService {
         return livros;
     }
 
+    public List<Livro> searchLivros(String tituloIncompleto) {
+        List<Livro> livros = this.livroDAO.searchLivrosByTitulo(tituloIncompleto);
+        if (livros == null)
+            throw new LivroNaoEncontradoException();
+        return livros;
+    }
+
     public void cadastrarLivro(LivroDTO dados) {
+        if (!Validator.validarLivroDTO(dados))
+            throw new DadosInvalidosException("Dados inválidos para livro.");
         Livro livro = new Livro(0, dados.titulo(), dados.autor(), dados.genero(), dados.descricao(), dados.ano());
         this.livroDAO.save(livro);
     }
@@ -49,6 +60,8 @@ public class LivroService {
     }
     
     public void atualizarLivro(String titulo, LivroDTO dadosAtualizados) {
+        if (!Validator.validarLivroDTO(dadosAtualizados))
+            throw new DadosInvalidosException("Dados inválidos para livro.");
         Livro livroExistente = this.livroDAO.getByTitulo(titulo);
         Livro livroAtualizado;
 
@@ -63,5 +76,9 @@ public class LivroService {
         livroAtualizado = new Livro(livroExistente.getId(), novoTitulo, novoAutor, novoGenero, novaDescricao, novoAno);
 
         this.livroDAO.update(livroAtualizado);
+    }
+
+    public int countLivros() {
+        return this.livroDAO.countAll();
     }
 }

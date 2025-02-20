@@ -7,6 +7,7 @@ import org.everestp.services.EmprestimoService;
 import org.everestp.services.ExemplarService;
 import org.everestp.services.RenovacaoService;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public class EmprestimoController {
@@ -21,6 +22,15 @@ public class EmprestimoController {
     public Response<List<Emprestimo>> listarEmprestimosDoUsuario(int usuarioId) {
         try {
             List<Emprestimo> emprestimos = this.emprestimoService.getAllEmprestimosByUsuarioId(usuarioId);
+            return Response.sucesso(emprestimos);
+        } catch (Exception e) {
+            return Response.falha(e);
+        }
+    }
+
+    public Response<List<Emprestimo>> listarEmprestimosEntreDatas(LocalDate dataInicio, LocalDate dataFim) {
+        try {
+            List<Emprestimo> emprestimos = this.emprestimoService.getAllEmprestimosBetweenDates(dataInicio, dataFim);
             return Response.sucesso(emprestimos);
         } catch (Exception e) {
             return Response.falha(e);
@@ -59,6 +69,24 @@ public class EmprestimoController {
         try {
             this.emprestimoService.fazerEmprestimo(dadosEmprestimo);
             return Response.sucesso();
+        } catch (Exception e) {
+            return Response.falha(e);
+        }
+    }
+
+    public Response<Integer> contarEmprestimos() {
+        try {
+            int quantEmprestimos = this.emprestimoService.countEmprestimos();
+            return Response.sucesso(quantEmprestimos);
+        } catch (Exception e) {
+            return Response.falha(e);
+        }
+    }
+
+    public Response<Integer> contarRenovacoes() {
+        try {
+            int quantRenovacoes = this.renovacaoService.countRenovacoes();
+            return Response.sucesso(quantRenovacoes);
         } catch (Exception e) {
             return Response.falha(e);
         }

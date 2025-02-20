@@ -35,6 +35,15 @@ public class LivroController {
         }
     }
 
+    public Response<List<Livro>> pesquisarPorTitulo(String tituloIncompleto) {
+        try {
+            List<Livro> livros = this.livroService.searchLivros(tituloIncompleto);
+            return Response.sucesso(livros);
+        } catch (Exception e) {
+            return Response.falha(e);
+        }
+    }
+
     public Response<Livro> livroPorTitulo(String titulo) {
         try {
             Livro livro = this.livroService.getLivroByTitulo(titulo);
@@ -73,8 +82,8 @@ public class LivroController {
     
     public Response<Void> inserirLivro(LivroDTO dadosLivro, int quantExemplares) {
         try {
-            this.exemplarService.adicionarExemplarPorTitulo(dadosLivro.titulo(), quantExemplares);
             this.livroService.cadastrarLivro(dadosLivro);
+            this.exemplarService.adicionarExemplarPorTitulo(dadosLivro.titulo(), quantExemplares);
             return Response.sucesso();
         } catch (Exception e) {
             return Response.falha(e);
@@ -84,8 +93,8 @@ public class LivroController {
     public Response<Void> excluirLivro(String titulo) {
         try {
             Livro livro = this.livroService.getLivroByTitulo(titulo);
-            this.livroService.excluirLivro(livro.getId());
             this.exemplarService.removerExemplaresByLivroId(livro.getId());
+            this.livroService.excluirLivro(livro.getId());
             return Response.sucesso();
         } catch (Exception e) {
             return Response.falha(e);
@@ -105,6 +114,24 @@ public class LivroController {
         try {
             this.exemplarService.removerExemplarByIdFisico(idFisico);
             return Response.sucesso();
+        } catch (Exception e) {
+            return Response.falha(e);
+        }
+    }
+
+    public Response<Integer> contarLivros() {
+        try {
+            int quantLivros = this.livroService.countLivros();
+            return Response.sucesso(quantLivros);
+        } catch (Exception e) {
+            return Response.falha(e);
+        }
+    }
+
+    public Response<Integer> contarExemplares() {
+        try {
+            int quantExemplares = this.exemplarService.countExemplares();
+            return Response.sucesso(quantExemplares);
         } catch (Exception e) {
             return Response.falha(e);
         }

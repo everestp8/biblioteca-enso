@@ -4,16 +4,20 @@
  */
 package org.everestp.views_gui;
 
+import javax.swing.JOptionPane;
+import org.everestp.controllers.LivroController;
+import org.everestp.controllers.Response;
+import org.everestp.dtos.LivroDTO;
+
 /**
  *
  * @author Aluno
  */
 public class TelaInserirLivro extends javax.swing.JFrame {
+	private LivroController livroController;
 
-    /**
-     * Creates new form PianelBibliotecario
-     */
     public TelaInserirLivro() {
+		this.livroController = TelaPrincipal.getLivroController();
         initComponents();
     }
 
@@ -51,9 +55,13 @@ public class TelaInserirLivro extends javax.swing.JFrame {
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel1.setText("Inserir Livro");
 
-        jButton1.setBackground(new java.awt.Color(255, 255, 255));
         jButton1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jButton1.setText("Painel Bibliotecário");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jLabel2.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel2.setText(">");
@@ -65,8 +73,18 @@ public class TelaInserirLivro extends javax.swing.JFrame {
         jLabel4.setText("Título do Livro");
 
         botaoCancelar.setText("Cancelar");
+        botaoCancelar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botaoCancelarActionPerformed(evt);
+            }
+        });
 
         botaoConfirmar.setText("Confirmar");
+        botaoConfirmar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botaoConfirmarActionPerformed(evt);
+            }
+        });
 
         jLabel5.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel5.setText("Nome do Autor");
@@ -176,6 +194,41 @@ public class TelaInserirLivro extends javax.swing.JFrame {
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
+
+    private void botaoConfirmarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoConfirmarActionPerformed
+		String titulo = jTextField1.getText();
+		String autor = jTextField2.getText();
+		String genero = jTextField3.getText();
+		String quantExemplaresStr = jTextField5.getText();
+		String anoStr = jTextField6.getText();
+		String descricao = jTextArea1.getText();
+
+		int quantExemplares, ano;
+		try {
+			quantExemplares = Integer.parseInt(quantExemplaresStr);
+			ano = Integer.parseInt(anoStr);
+		} catch(Exception e) {
+			return;
+		}
+
+		LivroDTO dadosLivro = new LivroDTO(titulo, autor, genero, descricao, ano);
+		Response<Void> res = this.livroController.inserirLivro(dadosLivro, quantExemplares);
+		if (res.isError()) {
+            JOptionPane.showMessageDialog(null, res.getErrorMessage(), "Inserir livro", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+		JOptionPane.showMessageDialog(null, "Livro adicionado com sucesso!", "Inserir livro", JOptionPane.INFORMATION_MESSAGE);
+		this.dispose();
+    }//GEN-LAST:event_botaoConfirmarActionPerformed
+
+    private void botaoCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoCancelarActionPerformed
+		this.dispose();
+    }//GEN-LAST:event_botaoCancelarActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+		this.dispose();
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments

@@ -56,6 +56,11 @@ public class TelaAlterarDadosDoUsuario extends javax.swing.JFrame {
         } catch (java.text.ParseException ex) {
             ex.printStackTrace();
         }
+        inputCpf.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                inputCpfActionPerformed(evt);
+            }
+        });
 
         jLabel2.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel2.setText("Nome");
@@ -160,9 +165,9 @@ public class TelaAlterarDadosDoUsuario extends javax.swing.JFrame {
         String senha = new String(this.inputSenha.getPassword());
         String cpf = this.inputCpf.getText();
         UsuarioDTO dadosUsuario = new UsuarioDTO(
-            nome.equals("") ? null : nome,
-            email.equals("") ? null : email,
-            senha.equals("") ? null : senha,
+            nome.isBlank() ? null : nome,
+            email.isBlank() ? null : email,
+            senha.isBlank() ? null : senha,
             cpf.equals("   .   .   -  ") ? null : cpf,
             null
         );
@@ -180,6 +185,10 @@ public class TelaAlterarDadosDoUsuario extends javax.swing.JFrame {
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         this.dispose();
     }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void inputCpfActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inputCpfActionPerformed
+		this.botaoConfirmarActionPerformed(evt);
+    }//GEN-LAST:event_inputCpfActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton botaoConfirmar;

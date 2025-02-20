@@ -48,6 +48,12 @@ public class TelaHistóricoEmprestimos extends javax.swing.JFrame {
                 TelaPrincipal.setTelaAtiva(new TelaMinhaConta());
             }
         });
+		jMenu1.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                TelaPrincipal.setTelaAtiva(new TelaSobre());
+            }
+        });
     }
     
     private void loadInfo() {
@@ -134,6 +140,7 @@ public class TelaHistóricoEmprestimos extends javax.swing.JFrame {
         jMenu9 = new javax.swing.JMenu();
         jMenu10 = new javax.swing.JMenu();
         jMenu13 = new javax.swing.JMenu();
+        jMenu1 = new javax.swing.JMenu();
 
         jMenu3.setText("jMenu3");
 
@@ -292,6 +299,9 @@ public class TelaHistóricoEmprestimos extends javax.swing.JFrame {
         jMenu13.setText("Minha conta");
         jMenuBar4.add(jMenu13);
 
+        jMenu1.setText("Sobre");
+        jMenuBar4.add(jMenu1);
+
         setJMenuBar(jMenuBar4);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -355,12 +365,14 @@ public class TelaHistóricoEmprestimos extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        TelaPrincipal.setPopUp(new TelaFiltroDatas());
+        TelaPrincipal.setPopUp(new TelaFiltroDatas((DefaultTableModel) this.jTable2.getModel()));
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         int usuarioId = TelaPrincipal.getUsuario().getId();
         String idFisico = jTextField1.getText();
+		if (idFisico.isBlank())
+			return;
         Response<Void> res = this.emprestimoController.renovarEmprestimo(usuarioId, idFisico);
         if (res.isError()) {
             JOptionPane.showMessageDialog(null, res.getErrorMessage(), "Renovação de Emprestimo", JOptionPane.ERROR_MESSAGE);
@@ -423,6 +435,7 @@ public class TelaHistóricoEmprestimos extends javax.swing.JFrame {
     private javax.swing.JDialog jDialog4;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu10;
     private javax.swing.JMenu jMenu11;
     private javax.swing.JMenu jMenu12;

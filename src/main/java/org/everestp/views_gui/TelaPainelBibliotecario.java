@@ -188,11 +188,11 @@ public class TelaPainelBibliotecario extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        
+		TelaPrincipal.setPopUp(new TelaAlterarDadosDoLivro());
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
-        // TODO add your handling code here:
+		TelaPrincipal.setPopUp(new TelaInserirLivro());
     }//GEN-LAST:event_jButton5ActionPerformed
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
@@ -215,9 +215,9 @@ public class TelaPainelBibliotecario extends javax.swing.JFrame {
         TelaPrincipal.setPopUp(new TelaAdicionarExemplar());
     }//GEN-LAST:event_jButton1ActionPerformed
 
-        private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed
-                // TODO add your handling code here:
-        }//GEN-LAST:event_jButton9ActionPerformed
+    private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed
+		TelaPrincipal.setPopUp(new TelaRemoverLivro());
+    }//GEN-LAST:event_jButton9ActionPerformed
 
     /**
      * @param args the command line arguments

@@ -3,11 +3,13 @@ package org.everestp.services;
 import java.util.ArrayList;
 import org.everestp.daos.ExemplarDAO;
 import org.everestp.daos.LivroDAO;
+import org.everestp.exceptions.DadosInvalidosException;
 import org.everestp.exceptions.ExemplarNaoEncontradoException;
 import org.everestp.exceptions.ExemplaresEmUsoException;
 import org.everestp.exceptions.LivroNaoEncontradoException;
 import org.everestp.models.Exemplar;
 import org.everestp.models.Livro;
+import org.everestp.utils.Validator;
 
 import java.util.List;
 import java.util.Random;
@@ -69,7 +71,11 @@ public class ExemplarService {
     }
 
     public void removerExemplarByIdFisico(String idFisico) {
+        if (!Validator.validarIdFisico(idFisico))
+            throw new DadosInvalidosException("ID físico inválido.");
         Exemplar exemplar = this.exemplarDAO.getByIdFisico(idFisico);
+        if (exemplar == null)
+            throw new ExemplarNaoEncontradoException();
         if (!exemplar.getDisponivel())
             throw new ExemplaresEmUsoException();
         this.exemplarDAO.deleteByIdFisico(idFisico);
@@ -80,5 +86,9 @@ public class ExemplarService {
             if (!e.getDisponivel())
                 throw new ExemplaresEmUsoException();
         this.exemplarDAO.deleteByLivroFk(livroId);
+    }
+
+    public int countExemplares() {
+        return this.exemplarDAO.countAll();
     }
 }

@@ -27,7 +27,7 @@ public abstract class DatabaseDAO<T extends Model> implements DAO<T>{
             ResultSet rs = pstm.executeQuery();
 
             if (!rs.next())
-                throw new DatabaseException("Registro não encontrado.");
+                return null;
 
             return mapResultSetToEntity(rs);
         } catch (SQLException e) {
@@ -35,7 +35,7 @@ public abstract class DatabaseDAO<T extends Model> implements DAO<T>{
         }
     }
 
-	public List<T> getAllBy(String columnName, Object value) {
+	protected List<T> getAllBy(String columnName, Object value) {
 		try {
             String query = "select * from " + getTableName() + " where " + columnName  + " = ?;";
             PreparedStatement pstm = this.conn.prepareStatement(query);
@@ -52,6 +52,17 @@ public abstract class DatabaseDAO<T extends Model> implements DAO<T>{
             throw new DatabaseException("Erro ao buscar todos os registros.", e);
         }
 	}
+
+    protected void deleteBy(String columnName, Object value) {
+        try {
+            String query = "delete from " + getTableName() + " where " + columnName + " = ?;";
+            PreparedStatement pstm = conn.prepareStatement(query);
+            pstm.setObject(1, value);
+            pstm.executeUpdate();
+        } catch (SQLException e) {
+            throw new DatabaseException("Erro ao deletar registro.", e);
+        }
+    }
 
     @Override
     public T getById(int id) {
@@ -139,26 +150,23 @@ public abstract class DatabaseDAO<T extends Model> implements DAO<T>{
         }
     }
 
-    protected void deleteBy(String columnName, Object value) {
-        try {
-            String query = "delete from " + getTableName() + " where " + columnName + " = ?;";
-            PreparedStatement pstm = conn.prepareStatement(query);
-            pstm.setObject(1, value);
-            pstm.executeUpdate();
-        } catch (SQLException e) {
-            throw new DatabaseException("Erro ao deletar registro.", e);
-        }
-    }
-
     @Override
     public void delete(int id) {
+        this.deleteBy("id", id);
+    }
+
+    public int countAll() {
         try {
-            String query = "delete from " + getTableName() + " where id = ?;";
-            PreparedStatement pstm = conn.prepareStatement(query);
-            pstm.setInt(1, id);
-            pstm.executeUpdate();
+            String query = "select count(*) as total from " + getTableName() + ";";
+            PreparedStatement pstm = this.conn.prepareStatement(query);
+
+            ResultSet rs = pstm.executeQuery();
+
+            if (rs.next())
+                return rs.getInt("total");
+            return 0;
         } catch (SQLException e) {
-            throw new DatabaseException("Erro ao deletar registro.", e);
+            throw new DatabaseException("Erro ao contar registros.", e);
         }
     }
 }

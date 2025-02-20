@@ -43,6 +43,25 @@ public class EmprestimoDAO extends DatabaseDAO<Emprestimo> {
         return this.getAllBy("usuarioFk", usuarioId);
     }
 
+    public List<Emprestimo> getBetweenDates(LocalDate beginDate, LocalDate endDate) {
+        try {
+            String query = "select * from " + getTableName() + " where dtEmprestimo between ? and ?;";
+            PreparedStatement pstm = this.conn.prepareStatement(query);
+            pstm.setDate(1, java.sql.Date.valueOf(beginDate));
+            pstm.setDate(2, java.sql.Date.valueOf(endDate));
+
+            ResultSet rs = pstm.executeQuery();
+            List<Emprestimo> entities = new ArrayList<>();
+
+            while (rs.next())
+                entities.add(mapResultSetToEntity(rs));
+
+            return entities;
+        } catch (SQLException e) {
+            throw new DatabaseException("Erro ao buscar todos os registros.", e);
+        }
+    }
+
     public Emprestimo getAtivoByExemplarIdFisico(String idFIsico) {
         try {
             String query = "SELECT emp.* FROM Emprestimo emp JOIN Exemplar ex ON emp.exemplarFk = ex.id WHERE ex.idFisico = ? AND emp.dtDevolucao IS NULL;";
@@ -51,11 +70,11 @@ public class EmprestimoDAO extends DatabaseDAO<Emprestimo> {
             ResultSet rs = pstm.executeQuery();
 
             if (!rs.next())
-                throw new DatabaseException("Registro não encontrado.");
+                throw new DatabaseException("Empréstimo não encontrado.");
 
             return mapResultSetToEntity(rs);
         } catch (SQLException e) {
-            throw new DatabaseException("Erro ao buscar por .", e);
+            throw new DatabaseException("Erro ao buscar por empréstimo.", e);
         }
     }
 

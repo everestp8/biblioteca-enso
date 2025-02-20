@@ -4,13 +4,11 @@ import org.everestp.daos.EmprestimoDAO;
 import org.everestp.daos.ExemplarDAO;
 import org.everestp.daos.UsuarioDAO;
 import org.everestp.dtos.EmprestimoDTO;
-import org.everestp.exceptions.EmprestimoNaoEncontradoException;
-import org.everestp.exceptions.ExemplarNaoDisponivelException;
-import org.everestp.exceptions.ExemplarNaoEncontradoException;
-import org.everestp.exceptions.UsuarioNaoEncontradoException;
+import org.everestp.exceptions.*;
 import org.everestp.models.Emprestimo;
 import org.everestp.models.Exemplar;
 import org.everestp.models.Usuario;
+import org.everestp.utils.Validator;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -29,6 +27,8 @@ public class EmprestimoService {
     // TODO: Adicionar validação de punição antes de permitir o empréstimo
     public void fazerEmprestimo(EmprestimoDTO dadosEmprestimo) {
         Exemplar exemplar = this.exemplarDAO.getByIdFisico(dadosEmprestimo.exemplarIdFIsico());
+        if (!Validator.validarEmprestimoDTO(dadosEmprestimo))
+            throw new DadosInvalidosException("Dados inválidos para empréstimo.");
         if (exemplar == null)
             throw new ExemplarNaoEncontradoException();
         if (!exemplar.getDisponivel())
@@ -50,6 +50,8 @@ public class EmprestimoService {
     }
 
     public void devolverEmprestimo(String idFisico) {
+        if (!Validator.validarIdFisico(idFisico))
+            throw new DadosInvalidosException("ID físico inválido.");
         Emprestimo emprestimo = this.emprestimoDAO.getAtivoByExemplarIdFisico(idFisico);
         if (emprestimo == null)
             throw new EmprestimoNaoEncontradoException();
@@ -62,5 +64,16 @@ public class EmprestimoService {
         if (emprestimos == null)
             throw new EmprestimoNaoEncontradoException();
         return emprestimos;
+    }
+
+    public List<Emprestimo> getAllEmprestimosBetweenDates(LocalDate dataInicio, LocalDate dataFim) {
+        List<Emprestimo> emprestimos = this.emprestimoDAO.getBetweenDates(dataInicio, dataFim);
+        if (emprestimos == null)
+            throw new EmprestimoNaoEncontradoException();
+        return emprestimos;
+    }
+
+    public int countEmprestimos() {
+        return this.emprestimoDAO.countAll();
     }
 }

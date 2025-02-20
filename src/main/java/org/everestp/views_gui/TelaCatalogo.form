@@ -212,6 +212,11 @@
             <Property name="text" type="java.lang.String" value="Minha Conta"/>
           </Properties>
         </Menu>
+        <Menu class="javax.swing.JMenu" name="jMenu10">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Sobre"/>
+          </Properties>
+        </Menu>
       </SubComponents>
     </Menu>
   </NonVisualComponents>
